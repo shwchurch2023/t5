@@ -95,13 +95,6 @@ rangeGitAddPush(){
 	done
 }
 
-#gitAddCommitPush "categories"
-gitCommitByBulk "categories"
-#gitAddCommitPush "wp-content"
-gitCommitByBulk "wp-content"
-
-rangeGitAddPush page 1 10
-rangeGitAddPush "posts/page" 1 10
 
 # Commit changes.
 # Add changes to git.
@@ -117,6 +110,13 @@ do
    git reset "$i/"
 done
 #gitAddCommitPush "." "Commit all the rest"
+git add "index.html"
+gitCommitByBulk "index.html"
+gitCommitByBulk "categories"
+gitCommitByBulk "wp-content"
+
+rangeGitAddPush page 1 10
+rangeGitAddPush "posts/page" 1 10
 git commit -m "Commit all the rest"
 git push --set-upstream origin master  --force
 
