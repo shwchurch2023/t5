@@ -17,9 +17,7 @@ gitBaseOnFirstCommit(){
 	fi
 	git clean -fd
 	git reset --hard $rev
-	git gc
 	git push --set-upstream origin master --force
-	git prune
 	cd ..
 }
 #gitBaseOnFirstCommit
@@ -123,8 +121,6 @@ git push --set-upstream origin master  --force
 # Remove last commit
 git reset --hard
 git clean -fd
-git gc
-git prune
 
 
 # Come Back up to the Project Root

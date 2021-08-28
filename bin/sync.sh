@@ -20,6 +20,21 @@ wodrePressHugoExportPath=/home/ec2-user/data/shwchurch/web/wp-content/plugins/wo
 #echo "$(date)" > ${log}
 echo  "/home/ec2-user/hugo/github/t5/bin/sync.sh > ${log} 2>&1 &"
 
+detechIfSyncIsRunning(){
+	if pidof -x "`basename $0`" -o $$ >/dev/null; then
+		echo "Process already running"
+		exit
+	fi
+}
+
+detechIfSyncIsRunning
+
+killLongRunningGit(){
+	ps aux | egrep "\sgit\s" | awk '{print $2}' | xargs kill
+}
+
+killLongRunningGit
+
 updateRepo(){
 	dir=$1
 	echo "Update repo in $dir"
