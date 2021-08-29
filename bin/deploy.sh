@@ -7,6 +7,12 @@ cd "$(dirname "$0")"
 
 cd ..
 
+killLongRunningGit(){
+        ps aux | egrep "\sgit\s" | awk '{print $2}' | xargs kill
+}
+
+killLongRunningGit
+
 gitBaseOnFirstCommit(){
 	cd public
 	rev=$(git log --all --grep='[INIT]' | grep commit | awk '{print $2}')
@@ -48,6 +54,7 @@ gitCommitByBulk(){
 	countLines=$(git ls-files -dmo ${path} | head -n ${bulkSize} | wc -l)
 	echo "[INFO] Start git push at path $path"
 	git ls-files -dmo ${path} | head -n ${bulkSize}
+	rm .git/index.lock
 	while [[ "${countLines}" != "0"  ]]
 	do
 		git ls-files -dmo ${path} | head -n ${bulkSize} | xargs -t -I {} echo -e '{}' | xargs -I{} git add "{}"
