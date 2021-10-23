@@ -54,7 +54,8 @@ gitCommitByBulk(){
 	countLines=$(git ls-files -dmo ${path} | head -n ${bulkSize} | wc -l)
 	echo "[INFO] Start git push at path $path"
 	git ls-files -dmo ${path} | head -n ${bulkSize}
-	rm .git/index.lock
+	rm -rf .git/index.lock
+	rm -rf .git/index
 	while [[ "${countLines}" != "0"  ]]
 	do
 		git ls-files -dmo ${path} | head -n ${bulkSize} | xargs -t -I {} echo -e '{}' | xargs -I{} git add "{}"
