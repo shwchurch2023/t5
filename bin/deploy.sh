@@ -120,6 +120,9 @@ START=2005
 END=$(date +'%Y')
 MONTH=$(date +"%m")
 gitCommitByBulk "${END}/${MONTH}"
+gitCommitByBulk "wp-content/uploads/${END}/${MONTH}"
+gitCommitByBulk "index.html"
+gitCommitByBulk "404.html"
 #gitAddCommitPush "${END}/${MONTH}"
 
 
