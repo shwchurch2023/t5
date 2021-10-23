@@ -14,6 +14,7 @@ killLongRunningGit(){
 killLongRunningGit
 
 gitBaseOnFirstCommit(){
+	waitGitComplete
 	cd public
 	rev=$(git log --all --grep='[INIT]' | grep commit | awk '{print $2}')
 	if [[ -z "$rev" ]];then
@@ -44,7 +45,16 @@ find . -type f -name "*.html" -exec sed -i  "s#alt=[a-z0-9-]{1,}#alt=____#g" {} 
 
 git config --global core.quotePath false
 
+waitGitComplete(){
+	isGitRunning=$(ps aux |  grep git | grep -v grep)
+	while [[ !  -z "$(ps aux |  grep git | grep -v grep)"  ]];do
+		echo "Git is running"
+		sleep 3	
+	done
+}
+
 gitCommitByBulk(){
+	waitGitComplete
         path=$1
 	msg=$2
         bulkSize=$3
@@ -53,11 +63,13 @@ gitCommitByBulk(){
 	fi
 	countLines=$(git ls-files -dmo ${path} | head -n ${bulkSize} | wc -l)
 	echo "[INFO] Start git push at path $path"
+	waitGitComplete
 	git ls-files -dmo ${path} | head -n ${bulkSize}
 	#rm -rf .git/index.lock
 	#rm -rf .git/index
 	while [[ "${countLines}" != "0"  ]]
 	do
+		waitGitComplete
 		git ls-files -dmo ${path} | head -n ${bulkSize} | xargs -t -I {} echo -e '{}' | xargs -I{} git add "{}"
 		finaMsg="[Bulk] ${msg} - Added ${path}@${countLines} files"
 		echo "$finaMsg"
@@ -69,6 +81,7 @@ gitCommitByBulk(){
 
 
 gitAddCommitPush(){
+	waitGitComplete
 	path=$1
 	msg=$2
 	git add "${path}"
@@ -110,12 +123,16 @@ MONTH=$(date +"%m")
 gitCommitByBulk "${END}/${MONTH}"
 #gitAddCommitPush "${END}/${MONTH}"
 
+
+waitGitComplete
 git add .
 for i in $(seq $START $END)
 do
-   git reset "$i/"
+	waitGitComplete
+	git reset "$i/"
 done
 #gitAddCommitPush "." "Commit all the rest"
+waitGitComplete
 git add "index.html"
 gitCommitByBulk "index.html"
 gitCommitByBulk "categories"
@@ -123,6 +140,7 @@ gitCommitByBulk "wp-content"
 
 rangeGitAddPush page 1 10
 rangeGitAddPush "posts/page" 1 10
+waitGitComplete
 git commit -m "Commit all the rest"
 git push --set-upstream origin master  --force
 
