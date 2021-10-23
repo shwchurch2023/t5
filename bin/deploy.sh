@@ -46,7 +46,7 @@ find . -type f -name "*.html" -exec sed -i  "s#alt=[a-z0-9-]{1,}#alt=____#g" {} 
 git config --global core.quotePath false
 
 waitGitComplete(){
-	isGitRunning=$(ps aux |  grep git | grep -v grep)
+	isGitRunning=$(ps aux |  grep git | grep -v sync | grep -v grep | grep -v github)
 	while [[ !  -z "$(ps aux |  grep git | grep -v grep)"  ]];do
 		echo "Git is running"
 		sleep 3	
