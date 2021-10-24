@@ -29,6 +29,13 @@ gitBaseOnFirstCommit(){
 }
 #gitBaseOnFirstCommit
 
+# Reset master to remote
+cd public
+git fetch origin
+git reset --hard origin/master
+cd -
+
+
 # Build the project.
 /usr/local/bin/hugo --minify # if using a theme, replace with `hugo -t <YOURTHEME>`
 
