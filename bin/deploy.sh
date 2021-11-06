@@ -11,7 +11,7 @@ killLongRunningGit(){
         ps aux | egrep "\sgit\s" | awk '{print $2}' | xargs kill
 }
 
-killLongRunningGit
+#killLongRunningGit
 
 gitBaseOnFirstCommit(){
 	waitGitComplete

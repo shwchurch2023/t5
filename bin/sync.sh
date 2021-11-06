@@ -154,6 +154,6 @@ curl https://apkpure.com/signal-private-messenger/org.thoughtcrime.securesms/dow
 
 cd ${githubHugoPath}/bin/
 echo "[INFO] Deploy and publish to github pages"
-./deploy.sh
+#./deploy.sh
 #echo "$(date)" >> ${log}
 
