@@ -134,11 +134,11 @@ gitCommitByBulk "404.html"
 
 
 waitGitComplete
-git add .
 for i in $(seq $START $END)
 do
 	waitGitComplete
-	git reset "$i/"
+	#git reset "$i/"
+	gitCommitByBulk "$i/"
 done
 #gitAddCommitPush "." "Commit all the rest"
 waitGitComplete
@@ -154,8 +154,8 @@ git commit -m "Commit all the rest"
 git push --set-upstream origin master  --force
 
 # Remove last commit
-git reset --hard
-git clean -fd
+#git reset --hard
+#git clean -fd
 
 
 # Come Back up to the Project Root
