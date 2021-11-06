@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -o xtrace
+
 echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
 
 
@@ -31,23 +33,25 @@ gitBaseOnFirstCommit(){
 
 # Reset master to remote
 cd public
+echo "[INFO] Reset repo to remote origin to prevent big failure commit"
 git fetch origin
 git reset --hard origin/master
 cd -
 
 
 # Build the project.
+echo "[INFO] hugo minify for t5/content to t5/public"
 /usr/local/bin/hugo --minify # if using a theme, replace with `hugo -t <YOURTHEME>`
 
 
 # Remove unnecessary html markup to reduce git commit
 cd public
+echo "[INFO] Reduce files that may alter every compilation"
 find . -type f -name "*.html" -exec sed -i  "s/id=gallery-[[:digit:]]\+/id=gallery-replaced/g" {} \;
 find . -type f -name "*.html" -exec sed -i  "s/galleryid-[[:digit:]]\+/galleryid-replaced/g" {} \;
 find . -type f -name "*.html" -exec sed -i  "s#https\?:/wp-content#/wp-content#g" {} \;
 find . -type f -name "*.html" -exec sed -i  "s#title=[a-z0-9-]{1,}#title=____#g" {} \;
 find . -type f -name "*.html" -exec sed -i  "s#alt=[a-z0-9-]{1,}#alt=____#g" {} \;
-
 
 
 git config --global core.quotePath false
@@ -68,8 +72,7 @@ gitCommitByBulk(){
 		bulkSize=200
 	fi
 	countLines=$(git ls-files -dmo ${path} | head -n ${bulkSize} | wc -l)
-	echo "[INFO] Start git push at path $path"
-	waitGitComplete
+	echo "[INFO] Start git push at path $path at bulk $bulkSize"
 	git ls-files -dmo ${path} | head -n ${bulkSize}
 	#rm -rf .git/index.lock
 	#rm -rf .git/index
@@ -83,6 +86,9 @@ gitCommitByBulk(){
 		git push --set-upstream origin master  --force
 		countLines=$(git ls-files -dmo ${path} | head -n ${bulkSize} | wc -l)
 	done
+	git add ${path}
+	git commit -m "[INFO] last capture all of path $path, ${msg}"
+	git push --set-upstream origin master  --force
 }
 
 
