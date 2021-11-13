@@ -9,7 +9,6 @@ protectedMp3FromDeletedRequiredInMarkdownFileNamePattern="\.\/(2019|202|203|204)
 tmpPathPrefix=/home/ec2-user/hugo/tmp/
 hugoExportedPath=${tmpPathPrefix}/wp-hugo-delta-processing
 
-log=/home/ec2-user/hugo/github/sync.log
 
 githubHugoPath=/home/ec2-user/hugo/github/t5/
 githubHugoThemeWrapperPath=/home/ec2-user/hugo/github/hugo-theme
@@ -17,7 +16,7 @@ githubHugoThemePath=${githubHugoThemeWrapperPath}/themes/hugo-theme-shwchurch
 wodrePressHugoExportPath=/home/ec2-user/data/shwchurch/web/wp-content/plugins/wordpress-to-hugo-exporter
 
 
-#echo "$(date)" > ${log}
+log=/home/ec2-user/hugo/github/sync.log
 echo  "/home/ec2-user/hugo/github/t5/bin/sync.sh > ${log} 2>&1 &"
 
 detechIfSyncIsRunning(){
@@ -125,7 +124,7 @@ echo "[INFO] Copy all contents into Hugo folder for publishing"
 rm -rf ${githubHugoPath}/content/*
 if [[ ! -z "${hugoExportedPath}" && -d "${hugoExportedPath}"  ]];then
 	#cp -nr ${hugoExportedPath}/* ${githubHugoPath}/content/
-	cp -r "${hugoExportedPath}/*" ${githubHugoPath}/content/
+	cp -R "${hugoExportedPath}" ${githubHugoPath}/content/
 fi
 
 

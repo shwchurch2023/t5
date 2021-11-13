@@ -15,27 +15,27 @@ killLongRunningGit(){
 
 #killLongRunningGit
 
-gitBaseOnFirstCommit(){
-	waitGitComplete
-	cd public
-	rev=$(git log --all --grep='[INIT]' | grep commit | awk '{print $2}')
-	if [[ -z "$rev" ]];then
-		echo "You need to have a commit with comment '[INIT]' first"
-		echo "You could use ./bin/deploy-init.sh to create the first INIT"
-		exit 1
-	fi
-	git clean -fd
-	git reset --hard $rev
-	git push --set-upstream origin master --force
-	cd ..
-}
-#gitBaseOnFirstCommit
-
+###gitBaseOnFirstCommit(){
+###	waitGitComplete
+###	cd public
+###	rev=$(git log --all --grep='[INIT]' | grep commit | awk '{print $2}')
+###	if [[ -z "$rev" ]];then
+###		echo "You need to have a commit with comment '[INIT]' first"
+###		echo "You could use ./bin/deploy-init.sh to create the first INIT"
+###		exit 1
+###	fi
+###	git clean -fd
+###	git reset --hard $rev
+###	git push --set-upstream origin master --force
+###	cd ..
+###}
+####gitBaseOnFirstCommit
+###
 # Reset master to remote
 cd public
 echo "[INFO] Reset repo to remote origin to prevent big failure commit"
 git fetch origin
-git reset --hard origin/master
+#git reset --hard origin/master
 cd -
 
 
@@ -88,7 +88,7 @@ gitCommitByBulk(){
 	done
 	git add ${path}
 	git commit -m "[INFO] last capture all of path $path, ${msg}"
-	git push --set-upstream origin master  --force
+	git push 
 }
 
 
