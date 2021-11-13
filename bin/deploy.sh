@@ -35,7 +35,7 @@ killLongRunningGit(){
 cd public
 echo "[INFO] Reset repo to remote origin to prevent big failure commit"
 git fetch origin
-#git reset --hard origin/master
+git reset --hard origin/master
 cd -
 
 

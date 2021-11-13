@@ -124,7 +124,9 @@ echo "[INFO] Copy all contents into Hugo folder for publishing"
 rm -rf ${githubHugoPath}/content/*
 if [[ ! -z "${hugoExportedPath}" && -d "${hugoExportedPath}"  ]];then
 	#cp -nr ${hugoExportedPath}/* ${githubHugoPath}/content/
-	cp -R "${hugoExportedPath}" ${githubHugoPath}/content/
+	cd ${hugoExportedPath}
+	cp -R ./ ${githubHugoPath}/content/
+	cd -
 fi
 
 
