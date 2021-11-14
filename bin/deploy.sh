@@ -88,7 +88,7 @@ gitCommitByBulk(){
 	done
 	git add ${path}
 	git commit -m "[INFO] last capture all of path $path, ${msg}"
-	git push 
+	git push --set-upstream origin master --force
 }
 
 
