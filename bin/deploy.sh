@@ -34,6 +34,7 @@ killLongRunningGit(){
 # Reset master to remote
 cd public
 echo "[INFO] Reset repo to remote origin to prevent big failure commit"
+git status
 git fetch origin
 git reset --hard origin/master
 cd -
@@ -71,6 +72,7 @@ gitCommitByBulk(){
 	if [[ -z "$bulkSize" ]]; then
 		bulkSize=200
 	fi
+	echo "[INFO][gitCommitByBulk] Process $path"
 	countLines=$(git ls-files -dmo ${path} | head -n ${bulkSize} | wc -l)
 	echo "[INFO] Start git push at path $path at bulk $bulkSize"
 	git ls-files -dmo ${path} | head -n ${bulkSize}
@@ -90,6 +92,7 @@ gitCommitByBulk(){
 	git commit -m "[INFO] last capture all of path $path, ${msg}"
 	git push --set-upstream origin master --force
 }
+export -f gitCommitByBulk
 
 
 gitAddCommitPush(){
@@ -148,7 +151,6 @@ do
 done
 #gitAddCommitPush "." "Commit all the rest"
 waitGitComplete
-git add "index.html"
 gitCommitByBulk "index.html"
 gitCommitByBulk "categories"
 gitCommitByBulk "wp-content"
