@@ -161,6 +161,9 @@ gitCommitByBulk "wp-content"
 rangeGitAddPush page 1 10
 rangeGitAddPush "posts/page" 1 10
 waitGitComplete
+cd "$(dirname "$0")"
+cd ../public
+git add .
 git commit -m "Commit all the rest"
 git push --set-upstream origin master  --force
 
