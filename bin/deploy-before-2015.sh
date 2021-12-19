@@ -1,11 +1,12 @@
 #!/bin/bash
 
 # env > ~/.env
-export $(cat /home/ec2-user/.env | sed 's/#.*//g' | xargs)
+#export $(cat /home/ec2-user/.env | sed 's/#.*//g' | xargs)
 
 set -o xtrace
 
 echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
+export PATH=/usr/local/openssl/bin:/sbin:/bin:/usr/sbin:/usr/bin:/opt/aws/bin:$PATH
 
 cd "$(dirname "$0")"
 
@@ -14,7 +15,7 @@ cd ..
 BASE_PATH=$(pwd)
 
 githubUserName=shwchurch4
-githubKey=id_ed25519_shwchurch4.pub
+githubKey=id_ed25519_shwchurch4
 #githubKey=id_ed25519_shwchurch3+before-2015
 githubMainUserName=shwchurch3
 githubMainKey=id_ed25519
@@ -23,19 +24,28 @@ killLongRunningGit(){
         ps aux | egrep "\sgit\s" | awk '{print $2}' | xargs kill
 }
 
+addSshKey(){
+	key=$1
+	chmod 600 $key
+	chmod 644 $key.pub
+	eval `ssh-agent -s`
+	ssh-add $key
+	ssh-add -l 
+	git config --global core.sshCommand "ssh -i $key -F /dev/null"
+}
+
 switchSshKey(){
-	chmod 600 /root/.ssh/${githubKey}
-	git config --global core.sshCommand "ssh -i /root/.ssh/${githubKey} -F /dev/null"
+	addSshKey /home/ec2-user/.ssh/${githubKey}
 }
 restoreSshKey(){
-	chmod 600 /root/.ssh/${githubMainKey}
-	git config --global core.sshCommand "ssh -i /root/.ssh/${githubMainKey} -F /dev/null"
+	addSshKey /home/ec2-user/.ssh/${githubMainKey}
 }
 
 repo=${githubUserName}.github.io
 mainRepo=${githubMainUserName}.github.io
 sumoduleUrl=git@github.com:${githubUserName}/${repo}.git
 switchSshKey
+
 #git submodule add $sumoduleUrl
 git submodule add $sumoduleUrl
 restoreSshKey
@@ -90,12 +100,12 @@ gitCommitByBulk(){
 		finaMsg="[Bulk] ${msg} - Added ${path}@${countLines} files"
 		echo "$finaMsg"
 		git commit -m "$finaMsg"
-		git push --set-upstream origin master  --force
+		git push --set-upstream origin main  --force
 		countLines=$(git ls-files -dmo "${path}" | head -n ${bulkSize} | wc -l)
 	done
 	git add "${path}"
 	git commit -m "[INFO] last capture all of path $path, ${msg}"
-	git push --set-upstream origin master --force
+	git push --set-upstream origin main --force
 }
 export -f gitCommitByBulk
 
