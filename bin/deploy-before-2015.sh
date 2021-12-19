@@ -11,8 +11,11 @@ cd "$(dirname "$0")"
 
 cd ..
 
-githubUserName=shwchurch3-before-2015
-githubKey=id_ed25519_shwchurch3+before-2015
+BASE_PATH=$(pwd)
+
+githubUserName=shwchurch4
+githubKey=id_ed25519_shwchurch4.pub
+#githubKey=id_ed25519_shwchurch3+before-2015
 githubMainUserName=shwchurch3
 githubMainKey=id_ed25519
 
@@ -21,30 +24,37 @@ killLongRunningGit(){
 }
 
 switchSshKey(){
-	git confi --global core.sshCommand "ssh -i ~/.ssh/${githubKey} -F /dev/null"
+	chmod 600 /root/.ssh/${githubKey}
+	git config --global core.sshCommand "ssh -i /root/.ssh/${githubKey} -F /dev/null"
 }
 restoreSshKey(){
-	git config --global core.sshCommand "ssh -i ~/.ssh/${githubMainKey} -F /dev/null"
+	chmod 600 /root/.ssh/${githubMainKey}
+	git config --global core.sshCommand "ssh -i /root/.ssh/${githubMainKey} -F /dev/null"
 }
 
 repo=${githubUserName}.github.io
 mainRepo=${githubMainUserName}.github.io
+sumoduleUrl=git@github.com:${githubUserName}/${repo}.git
 switchSshKey
-git submodule add git@github.com:${githubUserName}/${repo}.git
+git submodule add $sumoduleUrl
 restoreSshKey
+git add .
+git commit -m "added submodule $sumoduleUrl"
+cat .gitmodules
 
-cd public
+cd $BASE_PATH/public
 
 splitFiles(){
 	path=$1
+	rm -rf ../${repo}/$path
 	mkdir -p ../${repo}/$path
 	mv $path/* ../${repo}/$path
-	find . -type f -name "*.html" -exec sed -i  "s#https://.*/$path#/$path#g" {} \;
 	find . -type f -name "*.html" -exec sed -i  "s#/$path#https://${repo}/$path#g" {} \;
-	cd ../${repo}
+	find . -type f -name "*.html" -exec sed -i  "s#https:https:#https:#g" {} \;
+	cd $BASE_PATH/${repo}
 	switchSshKey
 	gitCommitByBulk $path
-	cd -
+	cd $BASE_PATH/public
 	restoreSshKey
 }
 
@@ -66,6 +76,7 @@ gitCommitByBulk(){
 		bulkSize=200
 	fi
 	echo "[INFO][gitCommitByBulk] Process $path"
+	pwd
 	countLines=$(git ls-files -dmo ${path} | head -n ${bulkSize} | wc -l)
 	echo "[INFO] Start git push at path $path at bulk $bulkSize"
 	git ls-files -dmo ${path} | head -n ${bulkSize}
@@ -115,5 +126,4 @@ done
 waitGitComplete
 
 # Come Back up to the Project Root
-cd ..
-#gitBaseOnFirstCommit
+cd $BASE_PATH/

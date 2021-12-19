@@ -11,15 +11,16 @@ echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
 cd "$(dirname "$0")"
 
 cd ..
+path=$(pwd)
 
-cd public
+cd $path/public
 timestamp=$(date +%s)
 tmpGit=".git_${timestamp}"
 mv .git $tmpGit
 mv $tmpGit ../../
 git init
 git remote add origin git@github.com:shwchurch3/shwchurch3.github.io.git
-cd ../bin
+cd $path/bin
 ./deploy.sh
 #rm -rf .git
 #mv ../../$tmpGit ./

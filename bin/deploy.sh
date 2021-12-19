@@ -11,18 +11,18 @@ cd "$(dirname "$0")"
 
 cd ..
 
-path=$(pwd)
+BASE_PATH=$(pwd)
 
 killLongRunningGit(){
         ps aux | egrep "\sgit\s" | awk '{print $2}' | xargs kill
 }
 
-cd $pwd/public
+cd $BASE_PATH/public
 echo "[INFO] Reset repo to remote origin to prevent big failure commit"
-git status
-git fetch origin
-git reset --hard origin/master
-cd $pwd 
+##git status
+##git fetch origin
+##git reset --hard origin/master
+cd $BASE_PATH/
 
 
 # Build the project.
@@ -31,9 +31,9 @@ echo "[INFO] hugo minify for t5/content to t5/public"
 
 
 # Remove unnecessary html markup to reduce git commit
-cd $pwd/
+cd $BASE_PATH/
 ./bin/deploy-before-2015.sh
-cd $pwd/public
+cd $BASE_PATH/public
 echo "[INFO] Reduce files that may alter every compilation"
 #find . -type f -name "*.html" -exec sed -i  "s/id=gallery-[[:digit:]]\+/id=gallery-replaced/g" {} \;
 #find . -type f -name "*.html" -exec sed -i  "s/galleryid-[[:digit:]]\+/galleryid-replaced/g" {} \;
@@ -143,7 +143,7 @@ do
 done
 #gitAddCommitPush "." "Commit all the rest"
 waitGitComplete
-cd $pwd/public
+cd $BASE_PATH/public
 gitCommitByBulk "index.html"
 gitCommitByBulk "categories"
 gitCommitByBulk "wp-content"
@@ -151,7 +151,7 @@ gitCommitByBulk "wp-content"
 rangeGitAddPush page 1 10
 rangeGitAddPush "posts/page" 1 10
 waitGitComplete
-cd $pwd/public
+cd $BASE_PATH/public
 git add .
 git commit -m "Commit all the rest"
 git push --set-upstream origin master  --force
