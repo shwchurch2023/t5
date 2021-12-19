@@ -36,6 +36,7 @@ repo=${githubUserName}.github.io
 mainRepo=${githubMainUserName}.github.io
 sumoduleUrl=git@github.com:${githubUserName}/${repo}.git
 switchSshKey
+#git submodule add $sumoduleUrl
 git submodule add $sumoduleUrl
 restoreSshKey
 git add .
