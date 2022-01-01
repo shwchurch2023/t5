@@ -1,5 +1,12 @@
 #!/bin/bash
 
+publicGitUsername=shwchurch5
+publicFolder=${publicGitUsername}.github.io
+publicGitKey=/home/ec2-user/.ssh/id_ed25519_${publicGitUsername}
+export GIT_SSH_COMMAND="ssh -i $publicGitKey -o IdentitiesOnly=yes"
+
+echo "[INFO] Publish content to GithubPage https://$publicFolder"
+
 # env > ~/.env
 export $(cat /home/ec2-user/.env | sed 's/#.*//g' | xargs)
 
@@ -17,7 +24,7 @@ killLongRunningGit(){
         ps aux | egrep "\sgit\s" | awk '{print $2}' | xargs kill
 }
 
-cd $BASE_PATH/public
+cd $BASE_PATH/$publicFolder
 echo "[INFO] Reset repo to remote origin to prevent big failure commit"
 ##git status
 ##git fetch origin
@@ -26,14 +33,14 @@ cd $BASE_PATH/
 
 
 # Build the project.
-echo "[INFO] hugo minify for t5/content to t5/public"
+echo "[INFO] hugo minify for t5/content to t5/$publicFolder"
 /usr/local/bin/hugo --minify # if using a theme, replace with `hugo -t <YOURTHEME>`
 
 
 # Remove unnecessary html markup to reduce git commit
 cd $BASE_PATH/
 ./bin/deploy-before-2015.sh
-cd $BASE_PATH/public
+cd $BASE_PATH/$publicFolder
 echo "[INFO] Reduce files that may alter every compilation"
 find . -type f -name "*.html" -exec sed -i  "s/id=gallery-[[:digit:]]\+/id=gallery-replaced/g" {} \;
 find . -type f -name "*.html" -exec sed -i  "s/galleryid-[[:digit:]]\+/galleryid-replaced/g" {} \;
@@ -143,7 +150,7 @@ do
 done
 #gitAddCommitPush "." "Commit all the rest"
 waitGitComplete
-cd $BASE_PATH/public
+cd $BASE_PATH/$publicFolder
 gitCommitByBulk "index.html"
 gitCommitByBulk "categories"
 gitCommitByBulk "wp-content"
@@ -151,7 +158,7 @@ gitCommitByBulk "wp-content"
 rangeGitAddPush page 1 10
 rangeGitAddPush "posts/page" 1 10
 waitGitComplete
-cd $BASE_PATH/public
+cd $BASE_PATH/$publicFolder
 git add .
 git commit -m "Commit all the rest"
 git push --set-upstream origin master  --force
