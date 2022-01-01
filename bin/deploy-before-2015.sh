@@ -14,10 +14,11 @@ cd ..
 
 BASE_PATH=$(pwd)
 
+publicFolder=$1
+
 githubUserName=shwchurch4
 githubKey=id_ed25519_shwchurch4
 #githubKey=id_ed25519_shwchurch3+before-2015
-githubMainUserName=shwchurch3
 githubMainKey=id_ed25519
 
 killLongRunningGit(){
@@ -32,6 +33,8 @@ addSshKey(){
 	ssh-add $key
 	ssh-add -l 
 	git config --global core.sshCommand "ssh -i $key -F /dev/null"
+	#export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes"
+	
 }
 
 switchSshKey(){
@@ -42,7 +45,6 @@ restoreSshKey(){
 }
 
 repo=${githubUserName}.github.io
-mainRepo=${githubMainUserName}.github.io
 sumoduleUrl=git@github.com:${githubUserName}/${repo}.git
 switchSshKey
 
@@ -53,19 +55,19 @@ git add .
 git commit -m "added submodule $sumoduleUrl"
 cat .gitmodules
 
-cd $BASE_PATH/public
+cd $BASE_PATH/$publicFolder
 
 splitFiles(){
-	path=$1
-	rm -rf ../${repo}/$path
-	mkdir -p ../${repo}/$path
-	mv $path/* ../${repo}/$path
-	find . -type f -name "*.html" -exec sed -i  "s#/$path#https://${repo}/$path#g" {} \;
+	dir=$1
+	rm -rf ../${repo}/$dir
+	mkdir -p ../${repo}/$dir
+	mv $dir/* ../${repo}/$dir
+	find . -type f -name "*.html" -exec sed -i  "s#/$dir#https://${repo}/$dir#g" {} \;
 	find . -type f -name "*.html" -exec sed -i  "s#https:https:#https:#g" {} \;
 	cd $BASE_PATH/${repo}
 	switchSshKey
-	gitCommitByBulk $path
-	cd $BASE_PATH/public
+	gitCommitByBulk $dir
+	cd $BASE_PATH/$publicFolder
 	restoreSshKey
 }
 
@@ -80,31 +82,31 @@ waitGitComplete(){
 
 gitCommitByBulk(){
 	waitGitComplete
-        path=$1
+        dir=$1
 	msg=$2
         bulkSize=$3
 	if [[ -z "$bulkSize" ]]; then
 		bulkSize=200
 	fi
-	echo "[INFO][gitCommitByBulk] Process $path"
+	echo "[INFO][gitCommitByBulk] Process $dir"
 	pwd
-	countLines=$(git ls-files -dmo ${path} | head -n ${bulkSize} | wc -l)
-	echo "[INFO] Start git push at path $path at bulk $bulkSize"
-	git ls-files -dmo ${path} | head -n ${bulkSize}
+	countLines=$(git ls-files -dmo ${dir} | head -n ${bulkSize} | wc -l)
+	echo "[INFO] Start git push at dir $dir at bulk $bulkSize"
+	git ls-files -dmo ${dir} | head -n ${bulkSize}
 	#rm -rf .git/index.lock
 	#rm -rf .git/index
 	while [[ "${countLines}" != "0"  ]]
 	do
 		waitGitComplete
-		git ls-files -dmo "${path}" | head -n ${bulkSize} | xargs -t -I {} echo -e '{}' | xargs -I{} git add "{}"
-		finaMsg="[Bulk] ${msg} - Added ${path}@${countLines} files"
+		git ls-files -dmo "${dir}" | head -n ${bulkSize} | xargs -t -I {} echo -e '{}' | xargs -I{} git add "{}"
+		finaMsg="[Bulk] ${msg} - Added ${dir}@${countLines} files"
 		echo "$finaMsg"
 		git commit -m "$finaMsg"
 		git push --set-upstream origin master  --force
-		countLines=$(git ls-files -dmo "${path}" | head -n ${bulkSize} | wc -l)
+		countLines=$(git ls-files -dmo "${dir}" | head -n ${bulkSize} | wc -l)
 	done
-	git add "${path}"
-	git commit -m "[INFO] last capture all of path $path, ${msg}"
+	git add "${dir}"
+	git commit -m "[INFO] last capture all of dir $dir, ${msg}"
 	git push --set-upstream origin master --force
 }
 export -f gitCommitByBulk

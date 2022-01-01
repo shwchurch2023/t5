@@ -4,8 +4,12 @@
 export $(cat /home/ec2-user/.env | sed 's/#.*//g' | xargs)
 set -o xtrace
 
+scriptGitUsername=shwchurch3
+scriptGitKey=/home/ec2-user/.ssh/id_ed25519_${publicGitUsername}
+
 publicGitUsername=shwchurch5
 publicFolder=${publicGitUsername}.github.io
+publicRepo=git@github.com:$publicGitUsername/${publicGitUsername}.github.io
 publicGitKey=/home/ec2-user/.ssh/id_ed25519_${publicGitUsername}
 
 
@@ -21,32 +25,56 @@ killLongRunningGit(){
         ps aux | egrep "\sgit\s" | awk '{print $2}' | xargs kill
 }
 
+addSshKey(){
+        key=$1
+        chmod 600 $key
+        chmod 644 $key.pub
+        eval `ssh-agent -s`
+        ssh-add $key
+        ssh-add -l 
+        git config --global core.sshCommand "ssh -i $key -F /dev/null"
+        #export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes"
+
+}
+
+switchToPublicSshKey(){
+        addSshKey $publicGitKey
+}
+switchToScriptSshKey(){
+        addSshKey $scriptGitKey
+}
+
+cd $BASE_PATH
+switchToPublicSshKey
+git submodule add $publicRepo
 cd $BASE_PATH/$publicFolder
-echo "[INFO] Reset repo to remote origin to prevent big failure commit"
+git checkout -b main origin/main
+
+cd $BASE_PATH
+switchToScriptSshKey
+git add .
+git commit -m "Add submodule $publicFolder"
+
+
+#echo "[INFO] Reset repo to remote origin to prevent big failure commit"
 ##git status
 ##git fetch origin
 ##git reset --hard origin/main
-cd $BASE_PATH/
 
 
 # Build the project.
 echo "[INFO] hugo minify for t5/content to t5/$publicFolder"
 /usr/local/bin/hugo --minify # if using a theme, replace with `hugo -t <YOURTHEME>`
+mv -v ./public/* $publicFolder/
 
 
 # Remove unnecessary html markup to reduce git commit
-cd $BASE_PATH/
 ./bin/deploy-before-2015.sh $publicFolder
 
 echo "[INFO] Publish content to GithubPage https://$publicFolder"
 cd $BASE_PATH/$publicFolder
 
-export GIT_SSH_COMMAND="ssh -i $publicGitKey -o IdentitiesOnly=yes"
-chmod 600 $publicGitKey
-chmod 644 $publicGitKey.pub
-
-git submodule add 
-
+switchToPublicSshKey
 
 echo "[INFO] Reduce files that may alter every compilation"
 find . -type f -name "*.html" -exec sed -i  "s/id=gallery-[[:digit:]]\+/id=gallery-replaced/g" {} \;
@@ -169,6 +197,8 @@ cd $BASE_PATH/$publicFolder
 git add .
 git commit -m "Commit all the rest"
 git push --set-upstream origin main  --force
+
+switchToScriptSshKey
 
 # Remove last commit
 #git reset --hard
