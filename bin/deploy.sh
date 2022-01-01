@@ -67,16 +67,17 @@ echo "[INFO] hugo minify for t5/content to t5/$publicFolder"
 /usr/local/bin/hugo --minify # if using a theme, replace with `hugo -t <YOURTHEME>`
 mv -v ./public/* $publicFolder/
 
+cd $BASE_PATH/$publicFolder
+echo "Update domain to https://$publicFolder"
+find . -type f -name "*.html" -exec sed -i  "s/shwchurch[[:digit:]]\+/$publicGitUsername/g" {} \;
 
+cd $BASE_PATH
 # Remove unnecessary html markup to reduce git commit
 ./bin/deploy-before-2015.sh $publicFolder
 
 echo "[INFO] Publish content to GithubPage https://$publicFolder"
 cd $BASE_PATH/$publicFolder
-
 switchToPublicSshKey
-echo "Update domain to https://$publicFolder"
-find . -type f -name "*.html" -exec sed -i  "s/shwchurch[[:digit:]]\+/$publicGitUsername/g" {} \;
 
 echo "[INFO] Reduce files that may alter every compilation"
 find . -type f -name "*.html" -exec sed -i  "s/id=gallery-[[:digit:]]\+/id=gallery-replaced/g" {} \;
