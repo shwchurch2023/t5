@@ -10,6 +10,3 @@
 [submodule "sw-wechat"]
 	path = sw-wechat
 	url = https://github.com/sw-wechat/sw-wechat.github.io.git
-[submodule "shwchurch4.github.io"]
-	path = shwchurch4.github.io
-	url = git@github.com:shwchurch4/shwchurch4.github.io.git
