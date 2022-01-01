@@ -7,9 +7,7 @@ set -o xtrace
 publicGitUsername=shwchurch5
 publicFolder=${publicGitUsername}.github.io
 publicGitKey=/home/ec2-user/.ssh/id_ed25519_${publicGitUsername}
-export GIT_SSH_COMMAND="ssh -i $publicGitKey -o IdentitiesOnly=yes"
 
-echo "[INFO] Publish content to GithubPage https://$publicFolder"
 
 echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
 
@@ -39,7 +37,14 @@ echo "[INFO] hugo minify for t5/content to t5/$publicFolder"
 # Remove unnecessary html markup to reduce git commit
 cd $BASE_PATH/
 ./bin/deploy-before-2015.sh
+
+echo "[INFO] Publish content to GithubPage https://$publicFolder"
 cd $BASE_PATH/$publicFolder
+
+export GIT_SSH_COMMAND="ssh -i $publicGitKey -o IdentitiesOnly=yes"
+chmod 600 $publicGitKey
+chmod 644 $publicGitKey.pub
+
 echo "[INFO] Reduce files that may alter every compilation"
 find . -type f -name "*.html" -exec sed -i  "s/id=gallery-[[:digit:]]\+/id=gallery-replaced/g" {} \;
 find . -type f -name "*.html" -exec sed -i  "s/galleryid-[[:digit:]]\+/galleryid-replaced/g" {} \;
