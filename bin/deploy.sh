@@ -75,6 +75,8 @@ echo "[INFO] Publish content to GithubPage https://$publicFolder"
 cd $BASE_PATH/$publicFolder
 
 switchToPublicSshKey
+echo "Update domain to https://$publicFolder"
+find . -type f -name "*.html" -exec sed -i  "s/shwchurch[[:digit:]]\+/$publicGitUsername/g" {} \;
 
 echo "[INFO] Reduce files that may alter every compilation"
 find . -type f -name "*.html" -exec sed -i  "s/id=gallery-[[:digit:]]\+/id=gallery-replaced/g" {} \;
