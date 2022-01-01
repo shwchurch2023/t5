@@ -65,7 +65,7 @@ git commit -m "Add submodule $publicFolder"
 # Build the project.
 echo "[INFO] hugo minify for t5/content to t5/$publicFolder"
 /usr/local/bin/hugo --minify # if using a theme, replace with `hugo -t <YOURTHEME>`
-mv -v ./public/* $publicFolder/
+mv -v -f ./public/* $publicFolder/
 
 cd $BASE_PATH/$publicFolder
 echo "Update domain to https://$publicFolder"
