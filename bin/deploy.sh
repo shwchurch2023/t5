@@ -1,16 +1,15 @@
 #!/bin/bash
 
+# env > ~/.env
+export $(cat /home/ec2-user/.env | sed 's/#.*//g' | xargs)
+set -o xtrace
+
 publicGitUsername=shwchurch5
 publicFolder=${publicGitUsername}.github.io
 publicGitKey=/home/ec2-user/.ssh/id_ed25519_${publicGitUsername}
 export GIT_SSH_COMMAND="ssh -i $publicGitKey -o IdentitiesOnly=yes"
 
 echo "[INFO] Publish content to GithubPage https://$publicFolder"
-
-# env > ~/.env
-export $(cat /home/ec2-user/.env | sed 's/#.*//g' | xargs)
-
-set -o xtrace
 
 echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
 
