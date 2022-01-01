@@ -25,7 +25,7 @@ cd $BASE_PATH/$publicFolder
 echo "[INFO] Reset repo to remote origin to prevent big failure commit"
 ##git status
 ##git fetch origin
-##git reset --hard origin/master
+##git reset --hard origin/main
 cd $BASE_PATH/
 
 
@@ -36,7 +36,7 @@ echo "[INFO] hugo minify for t5/content to t5/$publicFolder"
 
 # Remove unnecessary html markup to reduce git commit
 cd $BASE_PATH/
-./bin/deploy-before-2015.sh
+./bin/deploy-before-2015.sh $publicFolder
 
 echo "[INFO] Publish content to GithubPage https://$publicFolder"
 cd $BASE_PATH/$publicFolder
@@ -44,6 +44,9 @@ cd $BASE_PATH/$publicFolder
 export GIT_SSH_COMMAND="ssh -i $publicGitKey -o IdentitiesOnly=yes"
 chmod 600 $publicGitKey
 chmod 644 $publicGitKey.pub
+
+git submodule add 
+
 
 echo "[INFO] Reduce files that may alter every compilation"
 find . -type f -name "*.html" -exec sed -i  "s/id=gallery-[[:digit:]]\+/id=gallery-replaced/g" {} \;
@@ -82,12 +85,12 @@ gitCommitByBulk(){
 		finaMsg="[Bulk] ${msg} - Added ${path}@${countLines} files"
 		echo "$finaMsg"
 		git commit -m "$finaMsg"
-		git push --set-upstream origin master  --force
+		git push --set-upstream origin main  --force
 		countLines=$(git ls-files -dmo "${path}" | head -n ${bulkSize} | wc -l)
 	done
 	git add "${path}"
 	git commit -m "[INFO] last capture all of path $path, ${msg}"
-	git push --set-upstream origin master --force
+	git push --set-upstream origin main --force
 }
 export -f gitCommitByBulk
 
@@ -107,7 +110,7 @@ gitAddCommitPush(){
 	git commit -m "$msg"
 	
 	# Push source and build repos.
-	git push --set-upstream origin master  --force
+	git push --set-upstream origin main  --force
 
 	
 }
@@ -165,7 +168,7 @@ waitGitComplete
 cd $BASE_PATH/$publicFolder
 git add .
 git commit -m "Commit all the rest"
-git push --set-upstream origin master  --force
+git push --set-upstream origin main  --force
 
 # Remove last commit
 #git reset --hard
