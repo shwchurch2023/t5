@@ -14,126 +14,39 @@ cd ..
 
 BASE_PATH=$(pwd)
 
+githubAccounts=("shwchurch3" "shwchurch3hugo")
 
-githubUserName=shwchurch4
-githubKey=id_ed25519_shwchurch4
-#githubKey=id_ed25519_shwchurch3+before-2015
-githubMainKey=id_ed25519
+useSSHKey(){
+        username=$1
+        key=/home/ec2-user/.ssh/id_ed25519_$username
+        chmod 600 $key
+        chmod 644 $key.pub
+        eval `ssh-agent -s`
+        ssh-add $key
+        ssh-add -l
+        #git config --global core.sshCommand "ssh -i $key -F /dev/null"
+        git config core.sshCommand "ssh -i $key -F /dev/null"
+        #export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes"
 
-killLongRunningGit(){
-        ps aux | egrep "\sgit\s" | awk '{print $2}' | xargs kill
 }
 
-addSshKey(){
-	key=$1
-	chmod 600 $key
-	chmod 644 $key.pub
-	eval `ssh-agent -s`
-	ssh-add $key
-	ssh-add -l 
-	#git config --global core.sshCommand "ssh -i $key -F /dev/null"
-	git config core.sshCommand "ssh -i $key -F /dev/null"
-	#export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes"
-	
-}
-
-switchSshKey(){
-	addSshKey /home/ec2-user/.ssh/${githubKey}
-}
-restoreSshKey(){
-	addSshKey /home/ec2-user/.ssh/${githubMainKey}
-}
-
-repo=${githubUserName}.github.io
-sumoduleUrl=git@github.com:${githubUserName}/${repo}.git
-switchSshKey
-
-#git submodule add $sumoduleUrl
-git submodule add $sumoduleUrl
-restoreSshKey
-git add .
-git commit -m "added submodule $sumoduleUrl"
-cat .gitmodules
-
-cd $BASE_PATH/$publicFolder
-
-splitFiles(){
+pushRemote(){
 	dir=$1
-	rm -rf ../${repo}/$dir
-	mkdir -p ../${repo}/$dir
-	mv $dir/* ../${repo}/$dir
-	find . -type f -name "*.html" -exec sed -i  "s#/$dir#https://${repo}/$dir#g" {} \;
-	find . -type f -name "*.html" -exec sed -i  "s#https:https:#https:#g" {} \;
-	cd $BASE_PATH/${repo}
-	switchSshKey
-	gitCommitByBulk $dir &
+	account=$2
+	cd $dir
+	useSSHKey $account
+	git remote add $account git@github.com:$account/t5.git
+	git add .
+	git pull $account main
+	git push $account main --force
+	cd -
+
 }
 
-git config --global core.quotePath false
-
-waitGitComplete(){
-	while [[ !  -z "$(ps aux |  grep git | grep -v sync | grep -v grep | grep -v github)"  ]];do
-		echo "$(date): Git is running"
-		sleep 10	
-	done
-}
-
-gitCommitByBulk(){
-	#waitGitComplete
-        dir=$1
-	msg=$2
-        bulkSize=$3
-	if [[ -z "$bulkSize" ]]; then
-		bulkSize=200
-	fi
-	echo "[INFO][gitCommitByBulk] Process $dir"
-	pwd
-	countLines=$(git ls-files -dmo ${dir} | head -n ${bulkSize} | wc -l)
-	echo "[INFO] Start git push at dir $dir at bulk $bulkSize"
-	git ls-files -dmo ${dir} | head -n ${bulkSize}
-	#rm -rf .git/index.lock
-	#rm -rf .git/index
-	while [[ "${countLines}" != "0"  ]]
-	do
-		#waitGitComplete
-		git ls-files -dmo "${dir}" | head -n ${bulkSize} | xargs -t -I {} echo -e '{}' | xargs -I{} git add "{}"
-		finaMsg="[Bulk] ${msg} - Added ${dir}@${countLines} files"
-		echo "$finaMsg"
-		git commit -m "$finaMsg"
-		git push --set-upstream origin master  --force
-		countLines=$(git ls-files -dmo "${dir}" | head -n ${bulkSize} | wc -l)
-	done
-	git add "${dir}"
-	git commit -m "[INFO] last capture all of dir $dir, ${msg}"
-	git push --set-upstream origin master --force
-}
-export -f gitCommitByBulk
-
-
-rangeGitAddPush(){
-	pathPrefix=$1
-	start=$2
-	end=$3
-
-	for i in $(seq $start $end)
-	do
-		gitCommitByBulk "$pathPrefix/${i}"
-		gitCommitByBulk "$pathPrefix/${i}*"
-	done
-}
-
-
-# Commit changes.
-# Add changes to git.
-START=2008
-END=2015
-
-for i in $(seq $START $END)
-do
-	#git reset "$i/"
-	splitFiles wp-content/uploads/$i
+for account in ${githubAccounts[@]}; do
+	pushRemote $BASE_PATH $account
+	pushRemote $BASE_PATH/themes/hugo-theme-shwchurch $account
 done
-#waitGitComplete
 
-# Come Back up to the Project Root
-cd $BASE_PATH/
+useSSHKey shwchurch3
+
