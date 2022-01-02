@@ -77,6 +77,7 @@ find . -type f -name "*.html" -exec sed -i  "s/shwchurch[[:digit:]]\+/$publicGit
 cd $BASE_PATH
 # Remove unnecessary html markup to reduce git commit
 ./bin/deploy-before-2015.sh $publicFolder
+./bin/deploy-before-2020.sh $publicFolder
 
 echo "[INFO] Publish content to GithubPage https://$publicFolder"
 cd $BASE_PATH/$publicFolder
@@ -99,7 +100,7 @@ waitGitComplete(){
 }
 
 gitCommitByBulk(){
-	waitGitComplete
+	#waitGitComplete
         path=$1
 	msg=$2
         bulkSize=$3
@@ -114,7 +115,7 @@ gitCommitByBulk(){
 	#rm -rf .git/index
 	while [[ "${countLines}" != "0"  ]]
 	do
-		waitGitComplete
+		#waitGitComplete
 		git ls-files -dmo "${path}" | head -n ${bulkSize} | xargs -t -I {} echo -e '{}' | xargs -I{} git add "{}"
 		finaMsg="[Bulk] ${msg} - Added ${path}@${countLines} files"
 		echo "$finaMsg"
@@ -130,7 +131,7 @@ export -f gitCommitByBulk
 
 
 gitAddCommitPush(){
-	waitGitComplete
+	#waitGitComplete
 	path=$1
 	msg=$2
 	git add "${path}"
@@ -180,17 +181,17 @@ gitCommitByBulk "scss"
 #gitAddCommitPush "${END}/${MONTH}"
 
 
-waitGitComplete
+#waitGitComplete
 echo "[INFO] Wait for GH Pages building pipeline"
 sleep 600
 for i in $(seq $START $END)
 do
-	waitGitComplete
+	#waitGitComplete
 	#git reset "$i/"
 	gitCommitByBulk "$i/"
 done
 #gitAddCommitPush "." "Commit all the rest"
-waitGitComplete
+#waitGitComplete
 cd $BASE_PATH/$publicFolder
 gitCommitByBulk "index.html"
 gitCommitByBulk "categories"

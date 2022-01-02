@@ -16,9 +16,8 @@ BASE_PATH=$(pwd)
 
 publicFolder=$1
 
-githubUserName=shwchurch4
-githubKey=id_ed25519_shwchurch4
-#githubKey=id_ed25519_shwchurch3+before-2015
+githubUserName=shwchurch2020
+githubKey=id_ed25519_shwchurch2020
 githubMainKey=id_ed25519
 
 killLongRunningGit(){
@@ -126,8 +125,8 @@ rangeGitAddPush(){
 
 # Commit changes.
 # Add changes to git.
-START=2008
-END=2015
+START=2016
+END=2020
 
 for i in $(seq $START $END)
 do
