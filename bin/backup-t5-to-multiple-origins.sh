@@ -38,7 +38,9 @@ pushRemote(){
 	cd $dir
 	useSSHKey $account
 	git remote add $account git@github.com:$account/$repo.git
+	git remote set-url $account git@github.com:$account/$repo.git
 	git add .
+	git commit -m "Backup"
 	git pull $account main
 	git push $account main --force
 	cd -
