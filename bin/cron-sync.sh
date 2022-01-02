@@ -6,21 +6,26 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 
 cronScriptPath=/etc/cron.d/hugo-sync
-cronScriptEnv=/etc/cron.d/hugo-sync.env.sh
-env > ${cronScriptEnv}
-cat ${cronScriptEnv}
 
 hugoGithubRoot=/home/ec2-user/hugo/github
 syncFile=${hugoGithubRoot}/t5/bin/sync.sh 
 logPath=${hugoGithubRoot}/sync.log
 
-scriptToRun="source ${cronScriptEnv}; /bin/bash ${syncFile} > ${logPath} 2>&1"
-echo "1 14 * * * root  ${scriptToRun}" > ${cronScriptPath}
-echo "1 21 * * 6 root  ${scriptToRun}" > "${cronScriptPath}_1"
+scriptToRun="/bin/bash ${syncFile} > ${logPath} 2>&1"
 
-cat ${cronScriptPath}
-cat ${cronScriptPath}_1
+currentUser=$(whoami)
+hugoUserGroup=hugo
+sudo useradd -U $hugoUserGroup
+sudo chown -R $hugoUserGroup.$hugoUserGroup .
+sudo usermod -a -G $hugoUserGroup $currentUser
+sudo chmod -R g+rw $hugoGithubRoot
+ls -la $hugoGithubRoot
+#echo "1 14 * * * $hugoUserGroup ${scriptToRun}" > ${cronScriptPath}
+sudo bash -c "echo \"1 19 * * 5,6 $hugoUserGroup ${scriptToRun}\" > \"${cronScriptPath}_1\""
 
-service crond restart
+#cat ${cronScriptPath}
+sudo cat ${cronScriptPath}_1
+
+sudo service crond restart
 echo "Crontab restart, new PID: $(pgrep cron)"
 echo "sudo tail -f  /var/log/cron*"

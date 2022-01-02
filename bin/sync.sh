@@ -1,5 +1,11 @@
 #!/bin/bash
 
+currentUser=$(whoami)
+if [[ "$currentUser" != "hugo" ]]; then
+	echo "[ERROR] You mush run this script with \"sudo -u hugo $(realpath $0)\""
+	exit 1
+
+fi
 # env > ~/.env
 export $(cat /home/ec2-user/.env | sed 's/#.*//g' | xargs)
 
@@ -17,10 +23,13 @@ githubHugoPath=/home/ec2-user/hugo/github/t5/
 githubHugoThemeWrapperPath=/home/ec2-user/hugo/github/hugo-theme
 githubHugoThemePath=${githubHugoThemeWrapperPath}/themes/hugo-theme-shwchurch
 wodrePressHugoExportPath=/home/ec2-user/data/shwchurch/web/wp-content/plugins/wordpress-to-hugo-exporter
+sudo chown -R ec2-user.hugo $wodrePressHugoExportPath
+sudo chmod g+rw $wodrePressHugoExportPath
+ls -la $wodrePressHugoExportPath
 
 
 log=/home/ec2-user/hugo/github/sync.log
-echo  "/home/ec2-user/hugo/github/t5/bin/sync.sh > ${log} 2>&1 &"
+echo  "sudo -u hugo /home/ec2-user/hugo/github/t5/bin/sync.sh > ${log} 2>&1 &"
 
 detechIfSyncIsRunning(){
 	if pidof -x "`basename $0`" -o $$ >/dev/null; then
