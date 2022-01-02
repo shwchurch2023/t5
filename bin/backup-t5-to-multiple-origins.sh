@@ -22,6 +22,7 @@ useSSHKey(){
         chmod 600 $key
         chmod 644 $key.pub
         eval `ssh-agent -s`
+        ssh-add -D $key
         ssh-add $key
         ssh-add -l
         #git config --global core.sshCommand "ssh -i $key -F /dev/null"
@@ -32,10 +33,11 @@ useSSHKey(){
 
 pushRemote(){
 	dir=$1
-	account=$2
+	repo=$2
+	account=$3
 	cd $dir
 	useSSHKey $account
-	git remote add $account git@github.com:$account/t5.git
+	git remote add $account git@github.com:$account/$repo.git
 	git add .
 	git pull $account main
 	git push $account main --force
@@ -44,8 +46,8 @@ pushRemote(){
 }
 
 for account in ${githubAccounts[@]}; do
-	pushRemote $BASE_PATH $account
-	pushRemote $BASE_PATH/themes/hugo-theme-shwchurch $account
+	pushRemote $BASE_PATH t5 $account
+	pushRemote $BASE_PATH/themes/hugo-theme-shwchurch hugo-theme-shwchurch $account
 done
 
 useSSHKey shwchurch3
