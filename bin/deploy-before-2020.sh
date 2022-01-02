@@ -100,12 +100,12 @@ gitCommitByBulk(){
 		finaMsg="[Bulk] ${msg} - Added ${dir}@${countLines} files"
 		echo "$finaMsg"
 		git commit -m "$finaMsg"
-		git push --set-upstream origin master  --force
+		git push --set-upstream origin main  --force
 		countLines=$(git ls-files -dmo "${dir}" | head -n ${bulkSize} | wc -l)
 	done
 	git add "${dir}"
 	git commit -m "[INFO] last capture all of dir $dir, ${msg}"
-	git push --set-upstream origin master --force
+	git push --set-upstream origin main --force
 }
 export -f gitCommitByBulk
 
