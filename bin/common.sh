@@ -2,6 +2,20 @@
 
 set -o xtrace
 
+export deployGitUsername=shwchurch3
+export publicGitUsername=shwchurch5
+
+export uploadsGitUsername1=shwchurch4
+export uploadsGitUsername2=shwchurch2020
+
+cd "$(dirname "$0")"  
+cd ..  
+export BASE_PATH=$(pwd) 
+
+export publicFolder=${publicGitUsername}.github.io
+export publicGitRepoName=git@github.com:$publicGitUsername/${publicGitUsername}.github.io
+
+
 useSSHKey(){
         username=$1
         key=/mnt/hugo/ssh/id_ed25519_$username
@@ -20,10 +34,133 @@ useSSHKey(){
 
 export -f useSSHKey
 
+killLongRunningGit(){
+	ps aux | egrep "\sgit\s" | awk '{print $2}' | xargs kill
+}
+export -f killLongRunningGit 
+
+updateRepo(){
+	dir=$1
+	echo "Update repo in $dir"
+	cd $dir
+	git add .
+	git commit -m "Add current changes"
+	git pull --no-edit
+	git push
+	echo "Try to update parent repo if any"
+	cd ..
+	git add .
+	git commit -m "Child repo changed"
+	git pull --no-edit
+	git push
+}
+export -f updateRepo
+
+addSubmodule(){
+	githubUserName=$1
+	repoName=$2
+	
+	submoduleUrl=git@github.com:${githubUserName}/${repoName}.git
+
+	cd $BASE_PATH
+	useSSHKey $githubUserName
+	git submodule add $submoduleUrl
+	cd $repoName
+	git checkout -b main origin/main
+	cd $BASE_PATH
+	useSSHKey $deployGitUsername
+	git add .
+	git commit -m "added submodule $submoduleUrl"
+	cat .gitmodules
+	git pull origin main
+	git push origin main 
+
+}
+export -f addSubmodule
+
+waitGitComplete(){
+	while [[ !  -z "$(ps aux |  grep git | grep -v sync | grep -v grep | grep -v github)"  ]];do
+		echo "$(date): Git is running"
+		sleep 10	
+	done
+}
+export -f waitGitComplete
+
+
+gitCommitByBulk(){
+	#waitGitComplete
+        dir=$1
+	gitUsername=$2
+	msg=$3
+        bulkSize=$4
+
+	if [[ -z "$gitUsername" ]];then
+		"[ERROR]{gitCommitByBulk} Must offer gitUsername"
+		return
+	fi
+
+	if [[ -z "$bulkSize" ]]; then
+		bulkSize=200
+	fi
+	echo "[INFO][gitCommitByBulk] Process $dir"
+	pwd
+	countLines=$(git ls-files -dmo ${dir} | head -n ${bulkSize} | wc -l)
+	echo "[INFO] Start git push at dir $dir at bulk $bulkSize"
+	git ls-files -dmo ${dir} | head -n ${bulkSize}
+	#rm -rf .git/index.lock
+	#rm -rf .git/index
+	while [[ "${countLines}" != "0"  ]]
+	do
+		#waitGitComplete
+		git ls-files -dmo "${dir}" | head -n ${bulkSize} | xargs -t -I {} echo -e '{}' | xargs -I{} git add "{}"
+		finaMsg="[Bulk] ${msg} - Added ${dir}@${countLines} files"
+		echo "$finaMsg"
+		useSSHKey $gitUsername
+		git commit -m "$finaMsg"
+		useSSHKey $gitUsername
+		git push --set-upstream origin main  --force
+		countLines=$(git ls-files -dmo "${dir}" | head -n ${bulkSize} | wc -l)
+	done
+	git add "${dir}"
+	useSSHKey $gitUsername
+	git commit -m "[INFO] last capture all of dir $dir, ${msg}"
+	useSSHKey $gitUsername
+	git push --set-upstream origin main --force
+}
+export -f gitCommitByBulk
+
+waitGitComplete(){
+	while [[ !  -z "$(ps aux |  grep git | grep -v sync | grep -v grep | grep -v github)"  ]];do
+		echo "$(date): Git is running"
+		sleep 10	
+	done
+}
+
+export -f waitGitComplete
+
+
+
+rangeGitAddPush(){
+	pathPrefix=$1
+	start=$2
+	end=$3
+	gitUsername=$4
+
+	for i in $(seq $start $end)
+	do
+		gitCommitByBulk "$pathPrefix/${i}" $gitUsername
+		gitCommitByBulk "$pathPrefix/${i}*" $gitUsername
+	done
+}
+export -f rangeGitAddPush
+
+
 export $(cat /home/ec2-user/.env | sed 's/#.*//g' | xargs)
 
 export SHELL=/bin/bash
 export PATH=/home/ec2-user/.nvm/versions/node/v11.13.0/bin:/usr/local/openssl/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin:/home/ec2-user/bin:$PATH
+
+useSSHKey $deployGitUsername
 
 currentUser=$(whoami)
 if [[ "$currentUser" != "hugo" ]]; then

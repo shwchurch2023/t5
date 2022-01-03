@@ -13,7 +13,6 @@ protectedMp3FromDeletedRequiredInMarkdownFileNamePattern="\.\/(2019|202|203|204)
 tmpPathPrefix=/home/ec2-user/hugo/tmp/
 hugoExportedPath=${tmpPathPrefix}/wp-hugo-delta-processing
 
-
 githubHugoPath=/home/ec2-user/hugo/github/t5/
 githubHugoThemeWrapperPath=/home/ec2-user/hugo/github/hugo-theme
 githubHugoThemePath=${githubHugoThemeWrapperPath}/themes/hugo-theme-shwchurch
@@ -21,7 +20,6 @@ wodrePressHugoExportPath=/home/ec2-user/data/shwchurch/web/wp-content/plugins/wo
 sudo chown -R ec2-user.hugo $wodrePressHugoExportPath
 sudo chmod g+rw $wodrePressHugoExportPath
 ls -la $wodrePressHugoExportPath
-
 
 log=/home/ec2-user/hugo/github/sync.log
 echo  "sudo -u hugo /home/ec2-user/hugo/github/t5/bin/sync.sh > ${log} 2>&1 &"
@@ -35,27 +33,7 @@ detechIfSyncIsRunning(){
 
 detechIfSyncIsRunning
 
-killLongRunningGit(){
-	ps aux | egrep "\sgit\s" | awk '{print $2}' | xargs kill
-}
-
 killLongRunningGit
-
-updateRepo(){
-	dir=$1
-	echo "Update repo in $dir"
-	cd $dir
-	git add .
-	git commit -m "Add current changes"
-	git pull --no-edit
-	git push
-	echo "Try to update parent repo if any"
-	cd ..
-	git add .
-	git commit -m "Child repo changed"
-	git pull --no-edit
-	git push
-}
 
 updateRepo $githubHugoThemePath
 updateRepo $githubHugoThemeWrapperPath
@@ -91,36 +69,6 @@ echo "" > ${uploadsDir}/${allMp3ToDeleteDescriptor}
 fileSizeOfFilesToRemove=+1M
 
 cd ${uploadsDir}
-
-###find . -type f -size ${fileSizeOfFilesToRemove} -printf '%s %p\n' | sort -nr | awk '{print $2}'  > ${allMp3Descriptor}
-
-###echo "[INFO] Generating all files to delete"
-###while IFS='' read -r line || [[ -n "$line" ]]; do
-###
-###	isMp3Required=$(cat ${postDir}/${allMp3RequiredDescriptor} | xargs -I {}  bash -c "[[ \"${line}\" =~ \"{}\" ]] && echo {}" )
-###
-###	if [[ -z "$isMp3Required" ]];then
-###		echo $line >> ${uploadsDir}/${allMp3ToDeleteDescriptor} 
-###	else
-###		echo "[INFO] Skip marking deletion: '$line' as it is required"
-###	fi
-###
-###	  
-###done < "${uploadsDir}/${allMp3Descriptor}"
-###
-###echo "[INFO] Delete files in ${uploadsDir}/${allMp3ToDeleteDescriptor}"
-###
-###cd ${uploadsDir}
-###
-###while IFS='' read -r line || [[ -n "$line" ]]; do
-###
-###	if [[ ! -z "$line" ]];then
-###		rm $line
-###	fi
-###
-###	  
-###done < "${uploadsDir}/${allMp3ToDeleteDescriptor}"
-###
 
 echo "[INFO] Delete other unnecessary files"
 
