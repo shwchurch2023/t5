@@ -1,16 +1,11 @@
 #!/bin/bash
 
-currentUser=$(whoami)
-if [[ "$currentUser" != "hugo" ]]; then
-	echo "[ERROR] You mush run this script with \"sudo -u hugo $(realpath $0)\""
-	exit 1
 
-fi
 # env > ~/.env
-export $(cat /home/ec2-user/.env | sed 's/#.*//g' | xargs)
-
-export SHELL=/bin/bash
-export PATH=/home/ec2-user/.nvm/versions/node/v11.13.0/bin:/usr/local/openssl/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin:/home/ec2-user/bin:$PATH
+cd "$(dirname "$0")"
+cd ..
+export BASE_PATH=$(pwd)
+source $BASE_PATH/bin/common.sh
 
 #protectedMp3FromDeletedRequiredInMarkdownFileNamePattern=2019
 protectedMp3FromDeletedRequiredInMarkdownFileNamePattern="\.\/(2019|202|203|204).{0,1}-"

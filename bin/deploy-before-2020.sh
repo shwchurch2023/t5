@@ -3,16 +3,12 @@
 # env > ~/.env
 #export $(cat /home/ec2-user/.env | sed 's/#.*//g' | xargs)
 
-set -o xtrace
+cd "$(dirname "$0")"
+cd ..
+export BASE_PATH=$(pwd)
+source $BASE_PATH/bin/common.sh
 
 echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
-export PATH=/usr/local/openssl/bin:/sbin:/bin:/usr/sbin:/usr/bin:/opt/aws/bin:$PATH
-
-cd "$(dirname "$0")"
-
-cd ..
-
-BASE_PATH=$(pwd)
 
 publicFolder=$1
 

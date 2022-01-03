@@ -1,9 +1,9 @@
 #!/bin/bash
 
-. ~/.bashrc
-
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-
+cd "$(dirname "$0")"
+cd ..
+export BASE_PATH=$(pwd)
+source $BASE_PATH/bin/common.sh
 
 cronScriptPath=/etc/cron.d/hugo-sync
 

@@ -18,7 +18,8 @@ githubAccounts=("shwchurch3" "shwchurch3hugo")
 
 useSSHKey(){
         username=$1
-        key=/home/ec2-user/.ssh/id_ed25519_$username
+        key=/mnt/hugo/ssh/id_ed25519_$username
+	
         chmod 600 $key
         chmod 644 $key.pub
         eval `ssh-agent -s`

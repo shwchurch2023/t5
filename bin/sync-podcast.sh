@@ -1,5 +1,10 @@
 #!/bin/bash
 
+cd "$(dirname "$0")"
+cd ..
+export BASE_PATH=$(pwd)
+source $BASE_PATH/bin/common.sh
+
 githubHugoPath=/home/ec2-user/hugo/github/t5/
 
 echo "[INFO] Add feeds for Apple Podcast"

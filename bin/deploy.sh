@@ -1,8 +1,12 @@
 #!/bin/bash
 
 # env > ~/.env
-export $(cat /home/ec2-user/.env | sed 's/#.*//g' | xargs)
 set -o xtrace
+
+cd "$(dirname "$0")"
+cd ..
+export BASE_PATH=$(pwd)
+source $BASE_PATH/bin/common.sh
 
 scriptGitUsername=shwchurch3
 scriptGitKey=/home/ec2-user/.ssh/id_ed25519_${publicGitUsername}
@@ -23,25 +27,6 @@ BASE_PATH=$(pwd)
 
 killLongRunningGit(){
         ps aux | egrep "\sgit\s" | awk '{print $2}' | xargs kill
-}
-
-addSshKey(){
-        key=$1
-        chmod 600 $key
-        chmod 644 $key.pub
-        eval `ssh-agent -s`
-        ssh-add $key
-        ssh-add -l 
-        git config --global core.sshCommand "ssh -i $key -F /dev/null"
-        #export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes"
-
-}
-
-switchToPublicSshKey(){
-        addSshKey $publicGitKey
-}
-switchToScriptSshKey(){
-        addSshKey $scriptGitKey
 }
 
 cd $BASE_PATH
