@@ -80,7 +80,7 @@ addSubmodule(){
 	cd $BASE_PATH
 	pwd
 	useSSHKey $githubUserName
-	git submodule add $submoduleUrl
+	git submodule add -f $submoduleUrl
 	cd $repoName
 	git checkout -b main origin/main
 	cd $BASE_PATH
