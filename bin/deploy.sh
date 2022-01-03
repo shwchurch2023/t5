@@ -12,7 +12,7 @@ echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
 
 cd $BASE_PATH
 
-addSubmodule $publicGitUsername $publicGitRepoName
+addSubmodule $publicGitUsername $publicFolder
 
 #echo "[INFO] Reset repo to remote origin to prevent big failure commit"
 ##git status

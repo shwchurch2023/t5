@@ -13,7 +13,6 @@ cd ..
 export BASE_PATH=$(pwd) 
 
 export publicFolder=${publicGitUsername}.github.io
-export publicGitRepoName=git@github.com:$publicGitUsername/${publicGitUsername}.github.io
 
 gitSetUser(){
 	git config user.email "shwchurch3@gmail.com"
