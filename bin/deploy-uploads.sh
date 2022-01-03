@@ -23,7 +23,7 @@ cd $BASE_PATH/$publicFolder
 
 splitFiles(){
 	dir=$1
-	rmSafe "../${toGitRepoName}/$dir"
+	rmSafe "../${toGitRepoName}/$dir" "t5"
 	mkdir -p ../${toGitRepoName}/$dir
 	mv $dir/* ../${toGitRepoName}/$dir
 	find . -type f -name "*.html" -exec sed -i  "s#/$dir#https://${toGitRepoName}/$dir#g" {} \;

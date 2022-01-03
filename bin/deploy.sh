@@ -24,7 +24,7 @@ addSubmodule $publicGitUsername $publicGitRepoName
 echo "[INFO] hugo minify for t5/content to t5/$publicFolder"
 /usr/local/bin/hugo --minify # if using a theme, replace with `hugo -t <YOURTHEME>`
 cd $BASE_PATH/$publicFolder
-rmSafe "*"
+rmSafe "*" "t5"
 
 cd $BASE_PATH
 mv -v -f ./public/* $publicFolder/

@@ -24,7 +24,8 @@ export -f gitSetUser
 
 rmSafe() {
 	dir=$1
-	if [[ ! -z "$dir" && "$dir" =~ t5 ]]; then
+	expectPathPart=$2
+	if [[ ! -z "$dir" && "$dir" =~ "$expectPathPart" ]]; then
 		rm -rf "$dir"
 	else
 		echo "[ERROR][rmSafe] $dir is a dangerous path that couldn't be rm -rf "
