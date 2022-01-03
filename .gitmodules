@@ -16,3 +16,6 @@
 [submodule "shwchurch5.github.io"]
 	path = shwchurch5.github.io
 	url = git@github.com:shwchurch5/shwchurch5.github.io.git
+[submodule "shwchurch2020.github.io"]
+	path = shwchurch2020.github.io
+	url = git@github.com:shwchurch2020/shwchurch2020.github.io.git
