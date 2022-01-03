@@ -8,11 +8,6 @@ export publicGitUsername=shwchurch5
 export uploadsGitUsername1=shwchurch4
 export uploadsGitUsername2=shwchurch2020
 
-cd "$(dirname "$0")"  
-cd ..  
-export BASE_PATH=$(pwd)
-echo "[INFO] Common.sh executed. Now BASE_PATH: $BASE_PATH"
-
 export publicFolder=${publicGitUsername}.github.io
 
 gitSetUser(){
