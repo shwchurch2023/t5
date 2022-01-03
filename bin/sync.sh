@@ -38,7 +38,7 @@ updateRepo $githubHugoPath
 echo "[INFO] Cleanup ${hugoExportedPath}"
 mkdir -p "${hugoExportedPath}"
 if [[ ! -z "$hugoExportedPath" && -d "${hugoExportedPath}" ]]; then
-	rm -rf ${hugoExportedPath}
+	rmSafe "${hugoExportedPath}"
 else
 	echo "[ERROR] Hugo Export Path ${hugoExportedPath} is invalid"
 	exit 1
@@ -68,11 +68,11 @@ cd ${uploadsDir}
 
 echo "[INFO] Delete other unnecessary files"
 
-rm -rf ./ftp/choir-mp3/
+rmSafe "./ftp/choir-mp3/"
 
 echo "[INFO] Copy all contents into Hugo folder for publishing"
 
-rm -rf ${githubHugoPath}/content/*
+rmSafe "${githubHugoPath}/content/*"
 if [[ ! -z "${hugoExportedPath}" && -d "${hugoExportedPath}"  ]];then
 	#cp -nr ${hugoExportedPath}/* ${githubHugoPath}/content/
 	cd ${hugoExportedPath}

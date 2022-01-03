@@ -12,16 +12,7 @@ echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
 
 cd $BASE_PATH
 
-useSSHKey $publicGitUsername
-
-git submodule add $publicGitRepoName
-cd $BASE_PATH/$publicFolder
-git checkout -b main origin/main
-
-cd $BASE_PATH
-useSSHKey $deployGitUsername
-git add .
-git commit -m "Add submodule $publicFolder"
+addSubmodule $publicGitUsername $publicGitRepoName
 
 #echo "[INFO] Reset repo to remote origin to prevent big failure commit"
 ##git status
@@ -33,7 +24,7 @@ git commit -m "Add submodule $publicFolder"
 echo "[INFO] hugo minify for t5/content to t5/$publicFolder"
 /usr/local/bin/hugo --minify # if using a theme, replace with `hugo -t <YOURTHEME>`
 cd $BASE_PATH/$publicFolder
-rm -rf *
+rmSafe "*"
 
 cd $BASE_PATH
 mv -v -f ./public/* $publicFolder/

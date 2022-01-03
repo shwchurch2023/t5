@@ -22,6 +22,16 @@ gitSetUser(){
 
 export -f gitSetUser
 
+rmSafe() {
+	dir=$1
+	if [[ ! -z "$dir" && "$dir" =~ t5 ]]; then
+		rm -rf "$dir"
+	else
+		echo "[ERROR][rmSafe] $dir is a dangerous path that couldn't be rm -rf "
+	fi
+}
+export rmSafe
+
 
 useSSHKey(){
         username=$1
