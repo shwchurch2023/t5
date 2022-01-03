@@ -14,15 +14,12 @@ tmpPathPrefix=/mnt/hugo/tmp/
 hugoExportedPath=${tmpPathPrefix}/wp-hugo-delta-processing
 
 githubHugoPath=/mnt/hugo/github/t5/
-githubHugoThemeWrapperPath=/mnt/hugo/github/hugo-theme
-githubHugoThemePath=${githubHugoThemeWrapperPath}/themes/hugo-theme-shwchurch
+githubHugoThemePath=/mnt/hugo/github/t5/themes/hugo-theme-shwchurch
 wodrePressHugoExportPath=/mnt/data/shwchurch/web/wp-content/plugins/wordpress-to-hugo-exporter
-sudo chown -R ec2-user.hugo $wodrePressHugoExportPath
-sudo chmod g+rw $wodrePressHugoExportPath
 ls -la $wodrePressHugoExportPath
 
 log=/mnt/hugo/github/sync.log
-echo  "sudo -u hugo /mnt/hugo/github/t5/bin/sync.sh > ${log} 2>&1 &"
+echo  "(cd /mnt/hugo; sudo -u hugo /mnt/hugo/github/t5/bin/sync.sh > ${log} 2>&1 &); tail -f ${log}"
 
 detechIfSyncIsRunning(){
 	if pidof -x "`basename $0`" -o $$ >/dev/null; then
@@ -36,7 +33,6 @@ detechIfSyncIsRunning
 killLongRunningGit
 
 updateRepo $githubHugoThemePath
-updateRepo $githubHugoThemeWrapperPath
 updateRepo $githubHugoPath
 
 echo "[INFO] Cleanup ${hugoExportedPath}"

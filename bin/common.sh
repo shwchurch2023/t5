@@ -15,6 +15,13 @@ export BASE_PATH=$(pwd)
 export publicFolder=${publicGitUsername}.github.io
 export publicGitRepoName=git@github.com:$publicGitUsername/${publicGitUsername}.github.io
 
+gitSetUser(){
+	git config user.email "shwchurch3@gmail.com"
+	git config user.name "Shouwang Church"
+}
+
+export -f gitSetUser
+
 
 useSSHKey(){
         username=$1
@@ -27,7 +34,7 @@ useSSHKey(){
         ssh-add $key
         ssh-add -l
         #git config --global core.sshCommand "ssh -i $key -F /dev/null"
-        git config core.sshCommand "ssh -i $key -F /dev/null"
+        git config core.sshCommand "ssh -i $key -o StrictHostKeyChecking=no -F /dev/null"
         #export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes"
 
 }
@@ -43,12 +50,14 @@ updateRepo(){
 	dir=$1
 	echo "Update repo in $dir"
 	cd $dir
+	gitSetUser
 	git add .
 	git commit -m "Add current changes"
 	git pull --no-edit
 	git push
 	echo "Try to update parent repo if any"
 	cd ..
+	gitSetUser
 	git add .
 	git commit -m "Child repo changed"
 	git pull --no-edit
@@ -102,6 +111,9 @@ gitCommitByBulk(){
 	if [[ -z "$bulkSize" ]]; then
 		bulkSize=200
 	fi
+
+	gitSetUser
+
 	echo "[INFO][gitCommitByBulk] Process $dir"
 	pwd
 	countLines=$(git ls-files -dmo ${dir} | head -n ${bulkSize} | wc -l)
