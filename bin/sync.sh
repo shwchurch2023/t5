@@ -10,19 +10,19 @@ source $BASE_PATH/bin/common.sh
 #protectedMp3FromDeletedRequiredInMarkdownFileNamePattern=2019
 protectedMp3FromDeletedRequiredInMarkdownFileNamePattern="\.\/(2019|202|203|204).{0,1}-"
 
-tmpPathPrefix=/home/ec2-user/hugo/tmp/
+tmpPathPrefix=/mnt/hugo/tmp/
 hugoExportedPath=${tmpPathPrefix}/wp-hugo-delta-processing
 
-githubHugoPath=/home/ec2-user/hugo/github/t5/
-githubHugoThemeWrapperPath=/home/ec2-user/hugo/github/hugo-theme
+githubHugoPath=/mnt/hugo/github/t5/
+githubHugoThemeWrapperPath=/mnt/hugo/github/hugo-theme
 githubHugoThemePath=${githubHugoThemeWrapperPath}/themes/hugo-theme-shwchurch
-wodrePressHugoExportPath=/home/ec2-user/data/shwchurch/web/wp-content/plugins/wordpress-to-hugo-exporter
+wodrePressHugoExportPath=/mnt/data/shwchurch/web/wp-content/plugins/wordpress-to-hugo-exporter
 sudo chown -R ec2-user.hugo $wodrePressHugoExportPath
 sudo chmod g+rw $wodrePressHugoExportPath
 ls -la $wodrePressHugoExportPath
 
-log=/home/ec2-user/hugo/github/sync.log
-echo  "sudo -u hugo /home/ec2-user/hugo/github/t5/bin/sync.sh > ${log} 2>&1 &"
+log=/mnt/hugo/github/sync.log
+echo  "sudo -u hugo /mnt/hugo/github/t5/bin/sync.sh > ${log} 2>&1 &"
 
 detechIfSyncIsRunning(){
 	if pidof -x "`basename $0`" -o $$ >/dev/null; then

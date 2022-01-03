@@ -155,10 +155,10 @@ rangeGitAddPush(){
 export -f rangeGitAddPush
 
 
-export $(cat /home/ec2-user/.env | sed 's/#.*//g' | xargs)
+export $(cat /mnt/hugo/.env | sed 's/#.*//g' | xargs)
 
 export SHELL=/bin/bash
-export PATH=/home/ec2-user/.nvm/versions/node/v11.13.0/bin:/usr/local/openssl/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin:/home/ec2-user/bin:$PATH
+export PATH=/usr/local/openssl/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin:$PATH
 
 useSSHKey $deployGitUsername
 
