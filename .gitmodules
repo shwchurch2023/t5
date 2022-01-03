@@ -3,7 +3,7 @@
 	url = https://github.com/iCyris/hugo-theme-yuki
 [submodule "themes/hugo-theme-shwchurch"]
 	path = themes/hugo-theme-shwchurch
-	url = https://shwchurch3@github.com/shwchurch3/hugo-theme-shwchurch.git
+	url = git@github.com:shwchurch3/hugo-theme-shwchurch.git
 [submodule "public"]
 	path = public
 	url = https://github.com/shwchurch3/shwchurch3.github.io.git
