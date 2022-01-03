@@ -19,17 +19,23 @@ toGitRepoName=${toGitUsername}.github.io
 
 addSubmodule $toGitUsername $toGitRepoName
 
-cd $BASE_PATH/$publicFolder
-
 splitFiles(){
 	dir=$1
-	rmSafe "../${toGitRepoName}/$dir" "t5"
-	mkdir -p ../${toGitRepoName}/$dir
-	mv $dir/* ../${toGitRepoName}/$dir
+	sourcePath=$BASE_PATH/$publicFolder/$dir
+	targetFolder=$BASE_PATH/${toGitRepoName}
+	targetPath=$targetFolder/$dir
+	echo "[INFO] Split file at path  to  "
+	cd $BASE_PATH
+	pwd
+
+	rmSafe "$targetPath" "github.io"
+	mkdir -p $targetPath
+	mv $sourcePath/* $targetPath
 	find . -type f -name "*.html" -exec sed -i  "s#/$dir#https://${toGitRepoName}/$dir#g" {} \;
 	find . -type f -name "*.html" -exec sed -i  "s#https:https:#https:#g" {} \;
-	cd $BASE_PATH/${toGitRepoName}
-	gitCommitByBulk $dir $toGitUsername &
+	cd $targetFolder
+	pwd
+	gitCommitByBulk $dir $toGitUsername
 }
 
 # Commit changes.
@@ -38,7 +44,7 @@ splitFiles(){
 for i in $(seq $startYear $endYear)
 do
 	#git reset "$i/"
-	splitFiles wp-content/uploads/$i
+	splitFiles "wp-content/uploads/$i"
 done
 #waitGitComplete
 
