@@ -24,7 +24,7 @@ splitFiles(){
 	sourcePath=$BASE_PATH/$publicFolder/$dir
 	targetFolder=$BASE_PATH/${toGitRepoName}
 	targetPath=$targetFolder/$dir
-	echo "[INFO] Split file at path  to  "
+	echo "[INFO] Split file at path $sourcePath  to $targetPath "
 	cd $BASE_PATH
 	pwd
 

@@ -82,7 +82,11 @@ addSubmodule(){
 	useSSHKey $githubUserName
 	git submodule add -f $submoduleUrl
 	cd $repoName
+	git checkout -b new_tmp
+	git checkout new_tmp
+	git branch -D main
 	git checkout -b main origin/main
+	git branch -D new_tmp
 	cd $BASE_PATH
 	useSSHKey $deployGitUsername
 	git add .

@@ -47,22 +47,22 @@ fi
 echo "[INFO] Generating Markdown files from Wordpress "
 cd ${wodrePressHugoExportPath}
 
-php hugo-export-cli.php ${tmpPathPrefix} 
+php hugo-export-cli.php ${tmpPathPrefix} > /dev/null
 
 cd ${hugoExportedPath}
 
-echo "[INFO] Remove file more than ${fileSizeOfFilesToRemove} that is not required from ${protectedMp3FromDeletedRequiredInMarkdownFileNamePattern}"
+# echo "[INFO] Remove file more than ${fileSizeOfFilesToRemove} that is not required from ${protectedMp3FromDeletedRequiredInMarkdownFileNamePattern}"
 postDir=${hugoExportedPath}/posts
 uploadsDir=${hugoExportedPath}/wp-content/uploads/
 cd ${postDir}
-allMp3RequiredDescriptor=uploaded-files-required.txt 
-allMp3Descriptor=uploaded-files.txt
-allMp3ToDeleteDescriptor=uploaded-files-to-delete.txt 
+# allMp3RequiredDescriptor=uploaded-files-required.txt 
+# allMp3Descriptor=uploaded-files.txt
+# allMp3ToDeleteDescriptor=uploaded-files-to-delete.txt 
 
-grep -iRl "\.mp3" ./ | grep -E "${protectedMp3FromDeletedRequiredInMarkdownFileNamePattern}" | xargs cat | grep "/.*\.mp3>" | perl -pe "s|.*/(.*?\.mp3).*|\1|g"  > ${allMp3RequiredDescriptor}
-echo "" > ${uploadsDir}/${allMp3ToDeleteDescriptor}
+# grep -iRl "\.mp3" ./ | grep -E "${protectedMp3FromDeletedRequiredInMarkdownFileNamePattern}" | xargs cat | grep "/.*\.mp3>" | perl -pe "s|.*/(.*?\.mp3).*|\1|g"  > ${allMp3RequiredDescriptor}
+# echo "" > ${uploadsDir}/${allMp3ToDeleteDescriptor}
 
-fileSizeOfFilesToRemove=+1M
+# fileSizeOfFilesToRemove=+1M
 
 cd ${uploadsDir}
 
