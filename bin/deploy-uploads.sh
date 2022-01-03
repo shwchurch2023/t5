@@ -2,11 +2,11 @@
 
 # env > ~/.env
 #export $(cat /home/ec2-user/.env | sed 's/#.*//g' | xargs)
-
-cd "$(dirname "$0")"
-cd ..
-export BASE_PATH=$(pwd)
-source $BASE_PATH/bin/common.sh
+if [[ -z "$BASE_PATH" ]];then
+ export BASE_PATH=$(pwd)
+ source $BASE_PATH/bin/common.sh
+fi
+cd $BASE_PATH
 
 echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
 

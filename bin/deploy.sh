@@ -1,18 +1,18 @@
 #!/bin/bash
 
 # env > ~/.env
-set -o xtrace
+if [[ -z "$BASE_PATH" ]];then
+ export BASE_PATH=$(pwd)
+ source $BASE_PATH/bin/common.sh
+fi
 
-cd "$(dirname "$0")"
-cd ..
-export BASE_PATH=$(pwd)
-source $BASE_PATH/bin/common.sh
+cd $BASE_PATH
 
 echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
 
 cd $BASE_PATH
 
-addSubmodule $publicGitUsername $publicFolder
+
 
 #echo "[INFO] Reset repo to remote origin to prevent big failure commit"
 ##git status
@@ -22,7 +22,11 @@ addSubmodule $publicGitUsername $publicFolder
 
 # Build the project.
 echo "[INFO] hugo minify for t5/content to t5/$publicFolder"
+cd $BASE_PATH
 /usr/local/bin/hugo --minify # if using a theme, replace with `hugo -t <YOURTHEME>`
+
+cd $BASE_PATH
+addSubmodule $publicGitUsername $publicFolder
 cd $BASE_PATH/$publicFolder
 rmSafe "*" "t5"
 

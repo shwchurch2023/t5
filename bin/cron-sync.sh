@@ -2,8 +2,11 @@
 
 cd "$(dirname "$0")"
 cd ..
-export BASE_PATH=$(pwd)
-source $BASE_PATH/bin/common.sh
+if [[ -z "$BASE_PATH" ]];then
+ export BASE_PATH=$(pwd)
+ source $BASE_PATH/bin/common.sh
+fi
+cd $BASE_PATH
 
 cronScriptPath=/etc/cron.d/hugo-sync
 
