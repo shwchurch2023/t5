@@ -10,7 +10,8 @@ export uploadsGitUsername2=shwchurch2020
 
 cd "$(dirname "$0")"  
 cd ..  
-export BASE_PATH=$(pwd) 
+export BASE_PATH=$(pwd)
+echo "[INFO] Common.sh executed. Now BASE_PATH: $BASE_PATH"
 
 export publicFolder=${publicGitUsername}.github.io
 
@@ -82,6 +83,7 @@ addSubmodule(){
 	submoduleUrl=git@github.com:${githubUserName}/${repoName}.git
 
 	cd $BASE_PATH
+	pwd
 	useSSHKey $githubUserName
 	git submodule add $submoduleUrl
 	cd $repoName
