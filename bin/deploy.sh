@@ -26,15 +26,23 @@ echo "[INFO] hugo minify for t5/content to t5/$publicFolder"
 
 hugoBuild
 
+publicFolderIndexHtml="$BASE_PATH/$publicFolder/index.html"
+
 cd $BASE_PATH
 addSubmodule $publicGitUsername $publicFolder
 cd $BASE_PATH/$publicFolder
 rmSafe "*" "t5"
 
+if [[ -f "${publicFolderIndexHtml}" ]];then
+	echo "[ERROR] $publicFolderIndexHtml should be cleared"
+	exit 1
+fi
+
 cd $BASE_PATH
 mv -v -f $BASE_PATH/public/* $BASE_PATH/$publicFolder/
-if [[ "$?" != "0" ]];then
+if [[ "$?" != "0" || ! -f "${publicFolderIndexHtml}" ]];then
 	echo "[ERROR] Failed on moving files in $BASE_PATH/public/ to $BASE_PATH/$publicFolder/ "
+	ls $BASE_PATH/$publicFolder
 	exit 1
 fi
 

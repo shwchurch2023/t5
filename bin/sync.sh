@@ -2,10 +2,10 @@
 
 
 echo "[INFO] You could run deploy.sh if you just want to debug it. Normally, sync.sh doesn't have issue, but only deploy with hugo --minify"
-echo -ne "[INFO] You have 30 s to cancel me\n\n"
+echo -ne "[INFO] You have 15s to cancel me\n\n"
 ps aux | grep sync | grep -v grep | awk '{print $2}' | xargs echo "sudo kill -9 "
 echo -ne "\n\n"
-sleep 30
+sleep 15
 
 # env > ~/.env
 if [[ -z "$BASE_PATH" ]];then
