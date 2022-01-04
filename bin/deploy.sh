@@ -51,8 +51,7 @@ echo "Update domain to https://$publicFolder"
 find . -type f -name "*.html" -exec sed -i  "s/shwchurch[[:digit:]]\+/$publicGitUsername/g" {} \;
 
 cd $BASE_PATH
-#./bin/deploy-before-2015.sh $publicFolder
-#./bin/deploy-before-2020.sh $publicFolder
+
 ./bin/deploy-uploads.sh $publicFolder $uploadsGitUsername1 2008 2015 
 ./bin/deploy-uploads.sh $publicFolder $uploadsGitUsername2 2016 2021
 
