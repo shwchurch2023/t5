@@ -10,6 +10,8 @@ export uploadsGitUsername2=shwchurch2020
 
 export publicFolder=${publicGitUsername}.github.io
 
+git config --global core.quotePath false
+
 gitSetUser(){
 	git config user.email "shwchurch3@gmail.com"
 	git config user.name "Shouwang Church"
@@ -26,7 +28,7 @@ rmSafe() {
 		echo "[ERROR][rmSafe] $dir is a dangerous path that couldn't be rm -rf "
 	fi
 }
-export rmSafe
+export -f rmSafe
 
 
 useSSHKey(){
@@ -160,8 +162,6 @@ waitGitComplete(){
 }
 
 export -f waitGitComplete
-
-
 
 rangeGitAddPush(){
 	pathPrefix=$1
