@@ -33,8 +33,10 @@ export -f gitSetUser
 rmSafe() {
 	dir=$1
 	expectPathPart=$2
-	if [[ ! -z "$dir" && "$(realpath $dir)" =~ "$expectPathPart" ]]; then
-		rm -rf "$dir"
+	getRealPath=$(realpath $dir)
+	echo "[INFO] rmSafe $getRealPath"
+	if [[ ! -z "$dir" && "$getRealPath" =~ "$expectPathPart" ]]; then
+		rm -rf "$getRealPath"
 	else
 		echo "[ERROR][rmSafe] $dir is a dangerous path that couldn't be rm -rf "
 		exit 1
