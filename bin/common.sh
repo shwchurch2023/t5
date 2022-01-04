@@ -36,7 +36,7 @@ rmSafe() {
 	getRealPath=$(realpath $dir)
 	echo "[INFO] rmSafe $getRealPath"
 	if [[ ! -z "$dir" && "$getRealPath" =~ "$expectPathPart" ]]; then
-		rm -rf "$getRealPath"
+		realpath $dir | xargs rm -rf
 	else
 		echo "[ERROR][rmSafe] $dir is a dangerous path that couldn't be rm -rf "
 		exit 1
