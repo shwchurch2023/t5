@@ -2,10 +2,14 @@
 
 
 # env > ~/.env
-cd "$(dirname "$0")"
-cd ..
-export BASE_PATH=$(pwd)
-source $BASE_PATH/bin/common.sh
+if [[ -z "$BASE_PATH" ]];then
+    cd "$(dirname "$0")"
+    cd ..
+    export BASE_PATH=$(pwd)
+    source $BASE_PATH/bin/common.sh
+fi
+
+cd $BASE_PATH
 
 #protectedMp3FromDeletedRequiredInMarkdownFileNamePattern=2019
 protectedMp3FromDeletedRequiredInMarkdownFileNamePattern="\.\/(2019|202|203|204).{0,1}-"
