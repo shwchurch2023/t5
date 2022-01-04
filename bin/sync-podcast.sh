@@ -9,7 +9,7 @@ fi
 
 cd $BASE_PATH
 
-githubHugoPath=/home/ec2-user/hugo/github/t5/
+githubHugoPath=$BASE_PATH
 
 echo "[INFO] Add feeds for Apple Podcast"
 cleanFeed(){

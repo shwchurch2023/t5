@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # env > ~/.env
-#export $(cat /home/ec2-user/.env | sed 's/#.*//g' | xargs)
+
 if [[ -z "$BASE_PATH" ]];then
     cd "$(dirname "$0")"
     cd ..

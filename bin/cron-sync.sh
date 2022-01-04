@@ -12,8 +12,8 @@ cd $BASE_PATH
 
 cronScriptPath=/etc/cron.d/hugo-sync
 
-hugoGithubRoot=/home/ec2-user/hugo/github
-syncFile=${hugoGithubRoot}/t5/bin/sync.sh 
+hugoGithubRoot=/mnt/hugo/github
+syncFile=${BASE_PATH}/bin/sync.sh 
 logPath=${hugoGithubRoot}/sync.log
 
 scriptToRun="/bin/bash ${syncFile} > ${logPath} 2>&1"

@@ -1,10 +1,17 @@
 #!/bin/bash
 
+if [[ -z "$BASE_PATH" ]];then
+    cd "$(dirname "$0")"
+    cd ..
+    export BASE_PATH=$(pwd)
+    source $BASE_PATH/bin/common.sh
+fi
 
-# /home/ec2-user/hugo/github/hugo-theme/bin/strip-special-char.sh >> /home/ec2-user/hugo/github/sync.log 2>&1 &
+cd $BASE_PATH
+
 echo "[INFO] Stripping all links including special chars"
 
-cd /home/ec2-user/hugo/github/t5/content/posts
+cd $BASE_PATH/content/posts
 
 echo "" > special-chars.txt 
 echo "" > special-chars-shorted.txt 

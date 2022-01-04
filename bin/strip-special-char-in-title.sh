@@ -2,7 +2,7 @@
 
 echo "[INFO] Replace all special chars in Title"
 
-cd /home/ec2-user/hugo/github/t5/content/posts
+cd /mnt/hugo/github/t5/content/posts
 
 declare -a SpecialCharsInTitle=(
 	'@::＠'
