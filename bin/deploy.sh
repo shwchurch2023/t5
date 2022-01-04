@@ -120,8 +120,10 @@ cd $BASE_PATH/$publicFolder
 gitCommitByBulk "categories" $publicGitUsername
 gitCommitByBulk "wp-content" $publicGitUsername
 
-rangeGitAddPush page 1 10 $publicGitUsername 
-rangeGitAddPush "posts/page" 1 10 $publicGitUsername 
+gitCommitByBulk "page" $publicGitUsername
+gitCommitByBulk "posts/page" $publicGitUsername
+# rangeGitAddPush page 1 10 $publicGitUsername 
+# rangeGitAddPush "posts/page" 1 10 $publicGitUsername 
 
 waitGitComplete
 cd $BASE_PATH/$publicFolder
