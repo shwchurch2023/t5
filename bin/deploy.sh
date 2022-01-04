@@ -23,13 +23,8 @@ cd $BASE_PATH
 
 # Build the project.
 echo "[INFO] hugo minify for t5/content to t5/$publicFolder"
-cd $BASE_PATH
 
-/usr/local/bin/hugo --minify # if using a theme, replace with `hugo -t <YOURTHEME>`
-if [[ "$?" != "0" ]]; then
-	echo "[ERROR] /usr/local/bin/hugo failed"
-	exit 1
-fi
+hugoBuild
 
 cd $BASE_PATH
 addSubmodule $publicGitUsername $publicFolder

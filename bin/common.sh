@@ -12,6 +12,17 @@ export publicFolder=${publicGitUsername}.github.io
 
 git config --global core.quotePath false
 
+hugoBuild() {
+	cd $BASE_PATH
+
+	/mnt/hugo/hugo --minify # if using a theme, replace with `hugo -t <YOURTHEME>`
+	if [[ "$?" != "0" ]]; then
+		echo "[ERROR] /usr/local/bin/hugo failed"
+		exit 1
+	fi
+}
+export -f hugoBuild
+
 gitSetUser(){
 	git config user.email "shwchurch3@gmail.com"
 	git config user.name "Shouwang Church"
