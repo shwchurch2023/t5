@@ -40,11 +40,11 @@ fi
 
 cd $BASE_PATH
 mv -v -f $BASE_PATH/public/* $BASE_PATH/$publicFolder/
-if [[ "$?" != "0" || ! -f "${publicFolderIndexHtml}" ]];then
-	echo "[ERROR] Failed on moving files in $BASE_PATH/public/ to $BASE_PATH/$publicFolder/ "
-	ls $BASE_PATH/$publicFolder
-	exit 1
-fi
+##if [[ "$?" != "0" || ! -f "${publicFolderIndexHtml}" ]];then
+##	echo "[ERROR] Failed on moving files in $BASE_PATH/public/ to $BASE_PATH/$publicFolder/ "
+##	ls $BASE_PATH/$publicFolder
+##	exit 1
+##fi
 
 cd $BASE_PATH/$publicFolder
 echo "Update domain to https://$publicFolder"
