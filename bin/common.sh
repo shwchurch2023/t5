@@ -3,7 +3,7 @@
 set -o xtrace
 
 export deployGitUsername=shwchurch3
-export publicGitUsername=shwchurch5
+export publicGitUsername=shwchurch7
 
 export uploadsGitUsername1=shwchurch4
 export uploadsGitUsername2=shwchurch2020
