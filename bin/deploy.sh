@@ -31,7 +31,7 @@ publicFolderIndexHtml="$BASE_PATH/$publicFolder/index.html"
 cd $BASE_PATH
 addSubmodule $publicGitUsername $publicFolder
 cd $BASE_PATH/$publicFolder
-rmSafe "./*" "t5"
+rmSafe "./*" "github.io"
 
 if [[ -f "${publicFolderIndexHtml}" ]];then
 	echo "[ERROR] $publicFolderIndexHtml should be cleared"
