@@ -25,12 +25,15 @@ cd $BASE_PATH
 echo "[INFO] hugo minify for t5/content to t5/$publicFolder"
 
 hugoBuild
+ensureRequiredFolder $hugoPublicFolderAbs
 
-publicFolderIndexHtml="$BASE_PATH/$publicFolder/index.html"
+publicFolderIndexHtml="$publicFolderAbs/index.html"
 
 cd $BASE_PATH
 addSubmodule $publicGitUsername $publicFolder
-cd $BASE_PATH/$publicFolder
+ensureRequiredFolder $publicFolderAbs
+
+cd $publicFolderAbs
 rmSafe "./*" "github.io"
 
 if [[ -f "${publicFolderIndexHtml}" ]];then
@@ -39,14 +42,14 @@ if [[ -f "${publicFolderIndexHtml}" ]];then
 fi
 
 cd $BASE_PATH
-mv -v -f $BASE_PATH/public/* $BASE_PATH/$publicFolder/
-##if [[ "$?" != "0" || ! -f "${publicFolderIndexHtml}" ]];then
-##	echo "[ERROR] Failed on moving files in $BASE_PATH/public/ to $BASE_PATH/$publicFolder/ "
-##	ls $BASE_PATH/$publicFolder
-##	exit 1
-##fi
+mv -v -f $hugoPublicFolderAbs/* $publicFolderAbs/
+if [[ "$?" != "0" || ! -f "${publicFolderIndexHtml}" ]];then
+	echo "[ERROR] Failed on moving files in $hugoPublicFolderAbs to $publicFolderAbs/ "
+	ls $publicFolderAbs
+	exit 1
+fi
 
-cd $BASE_PATH/$publicFolder
+cd $publicFolderAbs
 echo "Update domain to https://$publicFolder"
 find . -type f -name "*.html" -exec sed -i  "s/shwchurch[[:digit:]]\+/$publicGitUsername/g" {} \;
 
@@ -56,7 +59,7 @@ cd $BASE_PATH
 ./bin/deploy-uploads.sh $publicFolder $uploadsGitUsername2 2016 2021
 
 echo "[INFO] Publish content to GithubPage https://$publicFolder"
-cd $BASE_PATH/$publicFolder
+cd $publicFolderAbs
 useSSHKey $publicGitUsername
 
 echo "[INFO] Reduce files that may alter every compilation"
@@ -92,7 +95,7 @@ export -f gitAddCommitPush
 START=2005
 END=$(date +'%Y')
 MONTH=$(date +"%m")
-cd $BASE_PATH/$publicFolder
+cd $publicFolderAbs
 gitCommitByBulk "${END}/${MONTH}" $publicGitUsername
 gitCommitByBulk "wp-content/uploads/${END}/${MONTH}" $publicGitUsername
 gitCommitByBulk "index.html" $publicGitUsername "true"
@@ -115,7 +118,7 @@ do
 done
 #gitAddCommitPush "." "Commit all the rest"
 #waitGitComplete
-cd $BASE_PATH/$publicFolder
+cd $publicFolderAbs
 gitCommitByBulk "categories" $publicGitUsername
 gitCommitByBulk "wp-content" $publicGitUsername
 
@@ -125,7 +128,7 @@ gitCommitByBulk "posts/page" $publicGitUsername
 # rangeGitAddPush "posts/page" 1 10 $publicGitUsername 
 
 waitGitComplete
-cd $BASE_PATH/$publicFolder
+cd $publicFolderAbs
 git add .
 git commit -m "Commit all the rest"
 git push --set-upstream origin main  --force

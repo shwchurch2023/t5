@@ -21,6 +21,8 @@ fi
 
 cd $BASE_PATH
 
+ensureRequiredFolders
+
 #protectedMp3FromDeletedRequiredInMarkdownFileNamePattern=2019
 protectedMp3FromDeletedRequiredInMarkdownFileNamePattern="\.\/(2019|202|203|204).{0,1}-"
 

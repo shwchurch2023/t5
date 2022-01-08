@@ -9,8 +9,38 @@ export uploadsGitUsername1=shwchurch4
 export uploadsGitUsername2=shwchurch2020
 
 export publicFolder=${publicGitUsername}.github.io
+export publicFolderAbs=$BASE_PATH/$publicFolder
+
+export hugoPublicFolderAbs=$BASE_PATH/public
+
+export uploadsGitUsername1FolderAbs=$BASE_PATH/$uploadsGitUsername1.github.io
+export uploadsGitUsername2FolderAbs=$BASE_PATH/$uploadsGitUsername2.github.io
+
+export themeFolder=$BASE_PATH/themes/hugo-theme-shwchurch
 
 git config --global core.quotePath false
+
+updateAllSubmodules(){
+	git submodule update --init --recursive
+}
+
+ensureRequiredFolder() {
+	if [[ ! -d "$1" ]];then
+		echo "[ERROR] path $1 must be present"
+		exit 2
+	fi
+}
+
+export -f ensureRequiredFolder
+
+ensureRequiredFolders() {
+	updateAllSubmodules
+	cd $themeFolder
+	git checkout -b main origin/main
+	ensureRequiredFolder $themeFolder
+	cd $BASH_PATH
+}
+export -f ensureRequiredFolders
 
 hugoBuild() {
 	cd $BASE_PATH

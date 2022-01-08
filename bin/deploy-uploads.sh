@@ -23,7 +23,7 @@ addSubmodule $toGitUsername $toGitRepoName
 
 splitFiles(){
 	dir=$1
-	sourcePath=$BASE_PATH/$publicFolder/$dir
+	sourcePath=$publicFolderAbs/$dir
 	targetFolder=$BASE_PATH/${toGitRepoName}
 	targetPath=$targetFolder/$dir
 	echo "[INFO] Split file at path $sourcePath  to $targetPath "
