@@ -33,11 +33,20 @@ splitFiles(){
 	rmSafe "$targetPath" "github.io"
 	mkdir -p $targetPath
 	mv $sourcePath/* $targetPath
-	find . -type f -name "*.html" -exec sed -i  "s#/https://$publicFolder/$dir#https://${toGitRepoName}/$dir#g" {} \;
-	# find . -type f -name "*.html" -exec sed -i  "s#/$dir#https://${toGitRepoName}/$dir#g" {} \;
-	find . -type f -name "*.html" -exec sed -i  "s#https://${toGitRepoName}/$dir#$dir#g" {} \;
-	find . -type f -name "*.html" -exec sed -i  "s#/$dir#https://${toGitRepoName}/$dir#g" {} \;
-	find . -type f -name "*.html" -exec sed -i  "s#https:https:#https:#g" {} \;
+	mapping=(
+		"s#/https://$publicFolder/$dir#https://${toGitRepoName}/$dir#g" "s#https://${toGitRepoName}/$dir#$dir#g" "s#/$dir#https://${toGitRepoName}/$dir#g" "s#https:https:#https:#g"
+	)
+	
+	for i in "${mapping[@]}"
+	do
+		echo "$i" >> $filePathUrlMappingFilePath
+		find . -type f -name "*.html" -exec sed -i  "$i" {} \; 
+	done
+	# find . -type f -name "*.html" -exec sed -i  "" {} \;
+	# # find . -type f -name "*.html" -exec sed -i  "s#/$dir#https://${toGitRepoName}/$dir#g" {} \;
+	# find . -type f -name "*.html" -exec sed -i   {} \;
+	# find . -type f -name "*.html" -exec sed -i   {} \;
+	# find . -type f -name "*.html" -exec sed -i   {} \;
 	
 	cd $targetFolder
 	pwd

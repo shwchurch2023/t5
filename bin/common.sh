@@ -18,6 +18,8 @@ export uploadsGitUsername2FolderAbs=$BASE_PATH/$uploadsGitUsername2.github.io
 
 export themeFolder=$BASE_PATH/themes/hugo-theme-shwchurch
 
+export filePathUrlMappingFilePath=$BASE_PATH/pathDistributionMapping.txt
+
 git config --global core.quotePath false
 
 updateAllSubmodules(){
@@ -63,16 +65,23 @@ export -f gitSetUser
 rmSafe() {
 	dir=$1
 	expectPathPart=$2
+	onlyWarning=$3
 	getRealPath=$(realpath $dir)
 	echo "[INFO] rmSafe $getRealPath"
 	if [[ ! -z "$dir" && "$getRealPath" =~ "$expectPathPart" ]]; then
 		realpath $dir | xargs rm -rf
 	else
 		echo "[ERROR][rmSafe] $dir is a dangerous path that couldn't be rm -rf "
-		exit 1
+		if [[ -z "$onlyWarning" ]]; then
+			exit 1
+		fi
 	fi
 }
 export -f rmSafe
+
+executeMapping(){
+
+}
 
 
 useSSHKey(){
@@ -226,6 +235,48 @@ rangeGitAddPush(){
 }
 export -f rangeGitAddPush
 
+applyDistributionMapping(){
+	cd $BASH_PATH
+	file="$filePathUrlMappingFilePath"
+	while IFS= read line
+	do
+		if [[ ! -z "$line" ]];then
+			echo "$line"
+			find . -type f -name "*.html" -exec sed -i  "$line" {} \; 
+		fi
+			# display $line or do something with $line
+	done <"$file"
+}
+export -f applyDistributionMapping
+
+commitEssential(){
+	END=$1
+	MONTH=$2
+	cd $publicFolderAbs
+	gitCommitByBulk "${END}/${MONTH}" $publicGitUsername
+	gitCommitByBulk "wp-content/uploads/${END}/${MONTH}" $publicGitUsername
+	gitCommitByBulk "index.html" $publicGitUsername "true"
+	gitCommitByBulk "404.html" $publicGitUsername "true"
+	gitCommitByBulk "feed.xml" $publicGitUsername
+	gitCommitByBulk "js" $publicGitUsername
+	gitCommitByBulk "images" $publicGitUsername
+	gitCommitByBulk "scss" $publicGitUsername
+}
+export -f commitEssential
+
+reduceCompilationSize(){
+	cd $publicFolderAbs
+	useSSHKey $publicGitUsername
+
+	echo "[INFO] Reduce files that may alter every compilation"
+	find . -type f -name "*.html" -exec sed -i  "s/id=gallery-[[:digit:]]\+/id=gallery-replaced/g" {} \;
+	find . -type f -name "*.html" -exec sed -i  "s/galleryid-[[:digit:]]\+/galleryid-replaced/g" {} \;
+	find . -type f -name "*.html" -exec sed -i  "s#https\?:/wp-content#/wp-content#g" {} \;
+	find . -type f -name "*.html" -exec sed -i  "s#title=[a-z0-9-]{1,}#title=____#g" {} \;
+	find . -type f -name "*.html" -exec sed -i  "s#alt=[a-z0-9-]{1,}#alt=____#g" {} \;
+
+}
+export -f reduceCompilationSize
 
 export $(cat /mnt/hugo/.env | sed 's/#.*//g' | xargs)
 

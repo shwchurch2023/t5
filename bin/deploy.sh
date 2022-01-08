@@ -14,7 +14,6 @@ echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
 
 cd $BASE_PATH
 
-
 #echo "[INFO] Reset repo to remote origin to prevent big failure commit"
 ##git status
 ##git fetch origin
@@ -54,58 +53,26 @@ echo "Update domain to https://$publicFolder"
 find . -type f -name "*.html" -exec sed -i  "s/shwchurch[[:digit:]]\+/$publicGitUsername/g" {} \;
 
 cd $BASE_PATH
+echo "[INFO] Apply path mapping from"
+applyDistributionMapping
+START=2005
+END=$(date +'%Y')
+MONTH=$(date +"%m")
+commitEssential "$END" "$MONTH" 
 
+echo "[INFO] Remove $filePathUrlMappingFilePath"
+rmSafe "$filePathUrlMappingFilePath" "t5" "true"
+touch "$filePathUrlMappingFilePath"
+echo "" > "$filePathUrlMappingFilePath"
 ./bin/deploy-uploads.sh $publicFolder $uploadsGitUsername1 2008 2015 
 ./bin/deploy-uploads.sh $publicFolder $uploadsGitUsername2 2016 2021
 
 echo "[INFO] Publish content to GithubPage https://$publicFolder"
-cd $publicFolderAbs
-useSSHKey $publicGitUsername
-
-echo "[INFO] Reduce files that may alter every compilation"
-find . -type f -name "*.html" -exec sed -i  "s/id=gallery-[[:digit:]]\+/id=gallery-replaced/g" {} \;
-find . -type f -name "*.html" -exec sed -i  "s/galleryid-[[:digit:]]\+/galleryid-replaced/g" {} \;
-find . -type f -name "*.html" -exec sed -i  "s#https\?:/wp-content#/wp-content#g" {} \;
-find . -type f -name "*.html" -exec sed -i  "s#title=[a-z0-9-]{1,}#title=____#g" {} \;
-find . -type f -name "*.html" -exec sed -i  "s#alt=[a-z0-9-]{1,}#alt=____#g" {} \;
-
-gitAddCommitPush(){
-	#waitGitComplete
-	path=$1
-	msg=$2
-	git add "${path}"
-	git add "${path}*"
-	git add "${path}\*"
-
-	if [[ -z ${msg} ]];then
-		msg="[Partial] Commit for ${path} `date`"
-	fi
-	
-	git commit -m "$msg"
-	
-	# Push source and build repos.
-	git push --set-upstream origin main  --force
-
-	
-}
-export -f gitAddCommitPush
 
 # Commit changes.
 # Add changes to git.
-START=2005
-END=$(date +'%Y')
-MONTH=$(date +"%m")
-cd $publicFolderAbs
-gitCommitByBulk "${END}/${MONTH}" $publicGitUsername
-gitCommitByBulk "wp-content/uploads/${END}/${MONTH}" $publicGitUsername
-gitCommitByBulk "index.html" $publicGitUsername "true"
-gitCommitByBulk "404.html" $publicGitUsername "true"
-gitCommitByBulk "feed.xml" $publicGitUsername
-gitCommitByBulk "js" $publicGitUsername
-gitCommitByBulk "images" $publicGitUsername
-gitCommitByBulk "scss" $publicGitUsername
-#gitAddCommitPush "${END}/${MONTH}"
-
+reduceCompilationSize
+commitEssential "$END" "$MONTH" 
 
 #waitGitComplete
 echo "[INFO] Wait for GH Pages building pipeline"
@@ -116,7 +83,7 @@ do
 	#git reset "$i/"
 	gitCommitByBulk "$i/" $publicGitUsername
 done
-#gitAddCommitPush "." "Commit all the rest"
+
 #waitGitComplete
 cd $publicFolderAbs
 gitCommitByBulk "categories" $publicGitUsername
