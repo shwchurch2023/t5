@@ -33,10 +33,12 @@ splitFiles(){
 	rmSafe "$targetPath" "github.io"
 	mkdir -p $targetPath
 	mv $sourcePath/* $targetPath
+	find . -type f -name "*.html" -exec sed -i  "s#/https://$publicFolder/$dir#https://${toGitRepoName}/$dir#g" {} \;
 	# find . -type f -name "*.html" -exec sed -i  "s#/$dir#https://${toGitRepoName}/$dir#g" {} \;
 	find . -type f -name "*.html" -exec sed -i  "s#https://${toGitRepoName}/$dir#$dir#g" {} \;
 	find . -type f -name "*.html" -exec sed -i  "s#/$dir#https://${toGitRepoName}/$dir#g" {} \;
 	find . -type f -name "*.html" -exec sed -i  "s#https:https:#https:#g" {} \;
+	
 	cd $targetFolder
 	pwd
 	gitCommitByBulk $dir $toGitUsername
