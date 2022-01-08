@@ -95,8 +95,8 @@ MONTH=$(date +"%m")
 cd $BASE_PATH/$publicFolder
 gitCommitByBulk "${END}/${MONTH}" $publicGitUsername
 gitCommitByBulk "wp-content/uploads/${END}/${MONTH}" $publicGitUsername
-gitCommitByBulk "index.html" $publicGitUsername
-gitCommitByBulk "404.html" $publicGitUsername
+gitCommitByBulk "index.html" $publicGitUsername "true"
+gitCommitByBulk "404.html" $publicGitUsername "true"
 gitCommitByBulk "feed.xml" $publicGitUsername
 gitCommitByBulk "js" $publicGitUsername
 gitCommitByBulk "images" $publicGitUsername

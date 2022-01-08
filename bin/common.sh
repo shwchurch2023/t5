@@ -125,10 +125,15 @@ export -f waitGitComplete
 
 gitCommitByBulk(){
 	#waitGitComplete
-        dir=$1
+    dir=$1
 	gitUsername=$2
-	msg=$3
-        bulkSize=$4
+	isExitOnUnpresentPath=$3
+
+	if [[ ! -z "$isExitOnUnpresentPath" && ! -f "$dir" && ! -d  "$dir" ]];then
+		echo "[ERROR][gitCommitByBulk] dir $dir must be present"
+		exit 1
+	fi
+
 
 	if [[ -z "$gitUsername" ]];then
 		"[ERROR]{gitCommitByBulk} Must offer gitUsername"
