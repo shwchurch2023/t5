@@ -23,6 +23,7 @@ addSubmodule $toGitUsername $toGitRepoName
 
 splitFiles(){
 	dir=$1
+
 	sourcePath=$publicFolderAbs/$dir
 	targetFolder=$BASE_PATH/${toGitRepoName}
 	targetPath=$targetFolder/$dir
@@ -33,11 +34,12 @@ splitFiles(){
 	mkdir -p $targetPath
 	mv $sourcePath/* $targetPath
 	mapping=(
-		"s#/https://$publicFolder/$dir#https://${toGitRepoName}/$dir#g" "s#https://${toGitRepoName}/$dir#/$dir#g" "s#/$dir#https://${toGitRepoName}/$dir#g" "s#https:https:#https:#g"
+		"s#https://$publicFolder/$dir#https://${toGitRepoName}/$dir#g" "s#https://${toGitRepoName}/$dir#/$dir#g" "s#/$dir#https://${toGitRepoName}/$dir#g" "s#https:https:#https:#g"
 	)
 	
 	for i in "${mapping[@]}"
 	do
+		i=$(echo "$i" | sed  "s#/mnt/hugo/github/t5/shwchurch[0-9]*.github.io##g")
 		echo "[INFO] Replace mapping: $i"
 		echo "$i" >> $filePathUrlMappingFilePath
 		find . -type f -name "*.html" -exec sed -i  "$i" {} \; 
