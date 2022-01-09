@@ -28,17 +28,17 @@ splitFiles(){
 	targetPath=$targetFolder/$dir
 	echo "[INFO] Split file at path $sourcePath  to $targetPath "
 	cd $BASE_PATH
-	pwd
 
 	rmSafe "$targetPath" "github.io"
 	mkdir -p $targetPath
 	mv $sourcePath/* $targetPath
 	mapping=(
-		"s#/https://$publicFolder/$dir#https://${toGitRepoName}/$dir#g" "s#https://${toGitRepoName}/$dir#$dir#g" "s#/$dir#https://${toGitRepoName}/$dir#g" "s#https:https:#https:#g"
+		"s#/https://$publicFolder/$dir#https://${toGitRepoName}/$dir#g" "s#https://${toGitRepoName}/$dir#/$dir#g" "s#/$dir#https://${toGitRepoName}/$dir#g" "s#https:https:#https:#g"
 	)
 	
 	for i in "${mapping[@]}"
 	do
+		echo "[INFO] Replace mapping: $i"
 		echo "$i" >> $filePathUrlMappingFilePath
 		find . -type f -name "*.html" -exec sed -i  "$i" {} \; 
 	done
@@ -49,7 +49,6 @@ splitFiles(){
 	# find . -type f -name "*.html" -exec sed -i   {} \;
 	
 	cd $targetFolder
-	pwd
 	gitCommitByBulk $dir $toGitUsername
 }
 
