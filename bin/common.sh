@@ -49,8 +49,7 @@ hugoBuild() {
 
 	/mnt/hugo/hugo --minify # if using a theme, replace with `hugo -t <YOURTHEME>`
 	if [[ "$?" != "0" ]]; then
-		echo "[ERROR] /mnt/hugo/hugo failed"
-		exit 1
+		echo "[WARN] /mnt/hugo/hugo failed"
 	fi
 }
 export -f hugoBuild
