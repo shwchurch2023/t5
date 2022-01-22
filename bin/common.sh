@@ -33,6 +33,14 @@ ensureRequiredFolder() {
 	fi
 }
 
+ensureNoErrorOnChildProcess() {
+	if [[ ! -z "$1" ]];then
+		echo "[ERROR] Child process returns error code $1"
+		exit 3
+	fi
+}
+export -f ensureNoErrorOnChildProcess
+
 export -f ensureRequiredFolder
 
 ensureRequiredFolders() {

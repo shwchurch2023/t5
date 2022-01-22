@@ -64,8 +64,10 @@ echo "[INFO] Remove $filePathUrlMappingFilePath"
 rmSafe "$filePathUrlMappingFilePath" "t5" "true"
 touch "$filePathUrlMappingFilePath"
 echo "" > "$filePathUrlMappingFilePath"
-./bin/deploy-uploads.sh $publicFolder $uploadsGitUsername1 2008 2015 
-./bin/deploy-uploads.sh $publicFolder $uploadsGitUsername2 2016 2021
+./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername1" 2008 2015 
+ensureNoErrorOnChildProcess "$?"
+./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername2" 2016 2021
+ensureNoErrorOnChildProcess "$?"
 
 echo "[INFO] Publish content to GithubPage https://$publicFolder"
 
