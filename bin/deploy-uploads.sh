@@ -35,6 +35,12 @@ splitFiles(){
 	dir=$1
 
 	sourcePath=$publicFolderAbs/$dir
+	if [[ ! -d "$sourcePath" ]]; then
+
+		echo "[INFO] $sourcePath is not found, skip. "
+		continue
+	fi
+
 	targetFolder=$BASE_PATH/${toGitRepoName}
 	targetPath=$targetFolder/$dir
 	echo "[INFO] Split file at path $sourcePath  to $targetPath "
@@ -42,8 +48,8 @@ splitFiles(){
 
 	rmSafe "$targetPath" "github.io"
 	mkdir -p $targetPath
+	
 	cd $sourcePath/
-	ensureNoErrorOnChildProcess "$?"
 	mv * $targetPath
 	cd -
 
