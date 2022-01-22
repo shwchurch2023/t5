@@ -1,5 +1,1 @@
 
-s#https://shwchurch7.github.io/wp-content/uploads/2008#https://shwchurch4.github.io/wp-content/uploads/2008#g
-s#https://shwchurch4.github.io/wp-content/uploads/2008#/wp-content/uploads/2008#g
-s#/wp-content/uploads/2008#https://shwchurch4.github.io/wp-content/uploads/2008#g
-s#https:https:#https:#g
