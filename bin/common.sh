@@ -34,7 +34,7 @@ ensureRequiredFolder() {
 }
 
 ensureNoErrorOnChildProcess() {
-	if [[ ! -z "$1" ]];then
+	if [[ "$1" != "0" ]];then
 		echo "[ERROR] Child process returns error code $1"
 		exit 3
 	fi
