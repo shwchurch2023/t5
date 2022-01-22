@@ -87,6 +87,7 @@ rmSafe() {
 export -f rmSafe
 
 useSSHKey(){
+		pkill ssh-agent
         username=$1
         key=/mnt/hugo/ssh/id_ed25519_$username
 	
