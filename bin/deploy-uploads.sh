@@ -18,9 +18,18 @@ toGitUsername=$2
 startYear=$3
 endYear=$4
 
+if [[ -z "$endYear" || "$endYear" =~ "^2" ]]; then
+	echo "[ERROR] Parameters are invalide. publicFolder:${publicFolder} toGitUsername=${toGitUsername} startYear=${startYear} endYear=${endYear}"
+	exit 1
+fi
+
 toGitRepoName=${toGitUsername}.github.io
 
+echo "[INFO] Start moving uploads from $startYear to $endYear from $publicFolder to $toGitRepoName"
+
 addSubmodule $toGitUsername $toGitRepoName
+
+isSplitExecute=''
 
 splitFiles(){
 	dir=$1
@@ -33,7 +42,10 @@ splitFiles(){
 
 	rmSafe "$targetPath" "github.io"
 	mkdir -p $targetPath
-	mv $sourcePath/* $targetPath
+	cd $sourcePath/
+	ensureNoErrorOnChildProcess "$?"
+	mv * $targetPath
+	cd -
 
 	dir=$(echo "$dir" | sed  "s#/mnt/hugo/github/t5/shwchurch[0-9]*.github.io/##g")
 	mapping=(
@@ -54,17 +66,22 @@ splitFiles(){
 	
 	cd $targetFolder
 	gitCommitByBulk $dir $toGitUsername
+	isSplitExecute='1'
 }
 
 # Commit changes.
 # Add changes to git.
 
-for i in $(seq $startYear $endYear)
+for i in $(seq "$startYear" "$endYear")
 do
 	#git reset "$i/"
 	splitFiles "wp-content/uploads/$i"
 done
 #waitGitComplete
+
+if [[ -z "$isSplitExecute" ]];then 
+	exit 3
+fi
 
 # Come Back up to the Project Root
 cd $BASE_PATH/
