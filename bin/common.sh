@@ -144,6 +144,10 @@ addSubmodule(){
 	git checkout -b new_tmp
 	git checkout new_tmp
 	git branch -D main
+	# git branch -m master main
+	git fetch origin
+	git branch -u origin/main main
+	git remote set-head origin -a
 	git checkout -b main origin/main
 	git branch -D new_tmp
 	cd $BASE_PATH
