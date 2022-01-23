@@ -22,3 +22,6 @@
 [submodule "shwchurch7.github.io"]
 	path = shwchurch7.github.io
 	url = git@github.com:shwchurch7/shwchurch7.github.io.git
+[submodule "shwchurch3.github.io"]
+	path = shwchurch3.github.io
+	url = git@github.com:shwchurch3/shwchurch3.github.io.git
