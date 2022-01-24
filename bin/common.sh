@@ -188,7 +188,7 @@ gitCommitByBulk(){
 	fi
 
 	if [[ -z "$bulkSize" ]]; then
-		bulkSize=200
+		bulkSize=400
 	fi
 
 	gitSetUser
