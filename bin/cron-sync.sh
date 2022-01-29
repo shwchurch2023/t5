@@ -7,8 +7,9 @@
 #     export BASE_PATH=$(pwd)
 #     source $BASE_PATH/bin/common.sh
 # fi
+currentUser=$(whoami)
 
-if [[ `whoami` != 'root' ]]; then
+if [[ "${currentUser}" != 'root' ]]; then
     echo "[ERROR] The cron generator should be executed with root/sudo"
     exit 2
 fi
@@ -28,7 +29,7 @@ logPath=${hugoGithubRoot}/sync.log
 
 scriptToRun="/bin/bash ${syncFile} > ${logPath} 2>&1"
 
-currentUser=$(whoami)
+
 
 # sudo useradd -U $hugoUserGroup
 sudo chown -R hugo.hugo .
@@ -36,7 +37,7 @@ sudo chown -R hugo.hugo .
 sudo chmod -R g+rw $hugoGithubRoot
 ls -la $hugoGithubRoot
 #echo "1 14 * * * $hugoUserGroup ${scriptToRun}" > ${cronScriptPath}
-sudo bash -c "echo \"1 19 * * 5,6 $hugoUserGroup ${scriptToRun}\" > \"${cronScriptPath}_1\""
+sudo bash -c "echo \"1 19 * * 5,6 hugo ${scriptToRun}\" > \"${cronScriptPath}_1\""
 
 #cat ${cronScriptPath}
 sudo cat ${cronScriptPath}_1
