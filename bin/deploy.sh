@@ -19,6 +19,8 @@ cd $BASE_PATH
 ##git fetch origin
 ##git reset --hard origin/main
 
+echo "[INFO] Sync podcast"
+syncPodcast
 
 # Build the project.
 echo "[INFO] hugo minify for t5/content to t5/$publicFolder"

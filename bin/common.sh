@@ -63,6 +63,12 @@ hugoBuild() {
 }
 export -f hugoBuild
 
+syncPodcast(){
+	cd $BASE_PATH
+	./bin/sync-podcast.sh 
+}
+export -f syncPodcast
+
 gitSetUser(){
 	git config user.email "shwchurch3@gmail.com"
 	git config user.name "Shouwang Church"
