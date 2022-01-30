@@ -112,9 +112,6 @@ for SpecialChar in "${SpecialCharsInTitle[@]}"; do
 done
 
 
-cd ${githubHugoPath}/bin/
-./sync-podcast.sh 
-
 echo "[INFO] Download signal"
 cd ${githubHugoPath}/content/wp-content/uploads/
 curl https://apkpure.com/signal-private-messenger/org.thoughtcrime.securesms/download?from=details  | sed -n 's/.*download_link.*href\=\"\(.*\)\".*/\1/p' | xargs curl -o signal.latest.apk -L 
