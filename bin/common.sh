@@ -112,7 +112,7 @@ addNewGithubAccountAsMirror(){
         token=$2
 
 		touch $mirrorPublicGithubTokenList
-		echo "${username} ${token}" >> $mirrorPublicGithubTokenList
+		echo "${username}:${token}" >> $mirrorPublicGithubTokenList
 
 		echo "Call [[ syncForkInMirrorGithubAccounts ]] since you may have forked this repo"
 
@@ -132,7 +132,7 @@ syncForkInMirrorGithubAccounts(){
 		if [[ ! -z "$line" ]];then
 			echo "$line"
 			
-			credentials=(${(s/ /)line})
+			credentials=(${(s/:/)line})
 			
 			username=${credentials[1]}
 			token=${credentials[2]}
