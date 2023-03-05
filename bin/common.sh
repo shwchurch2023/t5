@@ -148,7 +148,7 @@ syncForkInMirrorGithubAccounts(){
 				-H "Accept: application/vnd.github.v3+json" \
 				-H "Authorization: token ${token}" \
 				https://api.github.com/repos/${username}/${repo}/merge-upstream \
-				-d '{"branch":"${branch}"}'
+				-d '{"branch":"'${branch}'"}'
 
 		fi
 			# display $line or do something with $line
