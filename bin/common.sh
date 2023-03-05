@@ -32,10 +32,35 @@ export mirrorPublicGithubTokenList=$BASE_PATH/mirror-public-github-token__gitign
 
 separator=________
 
-export find_not_hidden_args=" -not -path '*/.*'"
-export find_main_public_site_args="${publicFolderAbs} ${find_not_hidden_args}"
+# export find_not_hidden_args=" -not -path '*/.*'"
+# export find_main_public_site_args="${publicFolderAbs} ${find_not_hidden_args}"
 
 git config --global core.quotePath false
+
+findAndReplace(){
+	sed_cmd=${1}
+
+	pathToFind=${2:-"${publicFolderAbs}"}
+	filePattern=${3:-'*.html'}
+
+	minArg=1
+	if [[ "$#" -lt "${minArg}" ]]; then
+		# TODO: print usage
+		echo "Need at least $minArg arguments"
+		exit 1
+	fi
+
+	(
+
+		cd $pathToFind
+		ls | xargs -I{--} find {--}  -type f -name ${filePattern} -exec sed -i ${sed_cmd} {} \;
+
+	)
+
+	# find "${find_main_public_site_args}"  -type f -name "*.html" -exec sed -i  "s/id=gallery-[[:digit:]]\+/id=gallery-replaced/g" {} \;
+
+}
+export findAndReplace
 
 updateAllSubmodules(){
 	git submodule update --init --recursive
@@ -356,7 +381,8 @@ applyPathMapping(){
 	do
 		if [[ ! -z "$line" ]];then
 			echo "$line"
-			find "${find_main_public_site_args}" -type f -name "*.html" -exec sed -i  "$line" {} \; 
+			findAndReplace "$line"
+			# find "${find_main_public_site_args}" -type f -name "*.html" -exec sed -i  "$line" {} \; 
 		fi
 			# display $line or do something with $line
 	done <"$file"
@@ -388,11 +414,17 @@ reduceCompilationSize(){
 	useSSHKey $publicGitUsername
 
 	echo "[INFO] Reduce files that may alter every compilation"
-	find "${find_main_public_site_args}"  -type f -name "*.html" -exec sed -i  "s/id=gallery-[[:digit:]]\+/id=gallery-replaced/g" {} \;
-	find "${find_main_public_site_args}"  -type f -name "*.html" -exec sed -i  "s/galleryid-[[:digit:]]\+/galleryid-replaced/g" {} \;
-	find "${find_main_public_site_args}"  -type f -name "*.html" -exec sed -i  "s#https\?:/wp-content#/wp-content#g" {} \;
-	find "${find_main_public_site_args}"  -type f -name "*.html" -exec sed -i  "s#title=[a-z0-9-]{1,}#title=____#g" {} \;
-	find "${find_main_public_site_args}"  -type f -name "*.html" -exec sed -i  "s#alt=[a-z0-9-]{1,}#alt=____#g" {} \;
+
+	findAndReplace "s/id=gallery-[[:digit:]]\+/id=gallery-replaced/g"
+	# find "${find_main_public_site_args}"  -type f -name "*.html" -exec sed -i  "s/id=gallery-[[:digit:]]\+/id=gallery-replaced/g" {} \;
+	findAndReplace "s/galleryid-[[:digit:]]\+/galleryid-replaced/g"
+	# find "${find_main_public_site_args}"  -type f -name "*.html" -exec sed -i  "s/galleryid-[[:digit:]]\+/galleryid-replaced/g" {} \;
+	findAndReplace "s#https\?:/wp-content#/wp-content#g"
+	# find "${find_main_public_site_args}"  -type f -name "*.html" -exec sed -i  "s#https\?:/wp-content#/wp-content#g" {} \;
+	findAndReplace "s#title=[a-z0-9-]{1,}#title=____#g"
+	# find "${find_main_public_site_args}"  -type f -name "*.html" -exec sed -i  "s#title=[a-z0-9-]{1,}#title=____#g" {} \;
+	findAndReplace "s#alt=[a-z0-9-]{1,}#alt=____#g"
+	# find "${find_main_public_site_args}"  -type f -name "*.html" -exec sed -i  "s#alt=[a-z0-9-]{1,}#alt=____#g" {} \;
 
 }
 export -f reduceCompilationSize

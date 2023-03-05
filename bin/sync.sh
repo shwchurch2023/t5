@@ -108,7 +108,8 @@ for SpecialChar in "${SpecialCharsInTitle[@]}"; do
         KEY="${SpecialChar%%::*}"
         VALUE="${SpecialChar##*::}"
         pattern="s#${KEY}#${VALUE}#g"
-        find . "${find_not_hidden_args}" -type f -name "*.md" -exec sed -i "${pattern}" {} \;
+		findAndReplace "${pattern}" "." '*.md'
+        # find . "${find_not_hidden_args}" -type f -name "*.md" -exec sed -i "${pattern}" {} \;
 done
 
 

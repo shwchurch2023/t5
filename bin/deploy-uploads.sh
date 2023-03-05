@@ -65,7 +65,8 @@ splitFiles(){
 	do
 		echo "[INFO] Replace mapping: $i"
 		echo "$i" >> $filePathUrlMappingFilePath
-		find "${find_main_public_site_args}" -type f -name "*.html" -exec sed -i  "$i" {} \; 
+		findAndReplace "$i"
+		# find "${find_main_public_site_args}" -type f -name "*.html" -exec sed -i  "$i" {} \; 
 	done
 	# find . -type f -name "*.html" -exec sed -i  "" {} \;
 	# # find . -type f -name "*.html" -exec sed -i  "s#/$dir#https://${toGitRepoName}/$dir#g" {} \;
