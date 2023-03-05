@@ -52,7 +52,7 @@ fi
 
 cd $publicFolderAbs
 echo "Update domain to https://$publicFolder"
-find "${find_main_public_site_args}" -type f -name "*.html" -exec sed -i  "s/shwchurch[[:digit:]]\+/$publicGitUsername/g" {} \;
+find ${find_main_public_site_args} -type f -name "*.html" -exec sed -i  "s/shwchurch[[:digit:]]\+/$publicGitUsername/g" {} \;
 
 cd $BASE_PATH
 echo "[INFO] Apply path mapping from"
