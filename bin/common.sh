@@ -32,7 +32,7 @@ export mirrorPublicGithubTokenList=$BASE_PATH/mirror-public-github-token__gitign
 
 separator=________
 
-export find_not_hidden_args=" -not -path '*/.*'"
+export find_not_hidden_args=" -not -path */.*"
 export find_main_public_site_args="${publicFolderAbs} ${find_not_hidden_args}"
 
 git config --global core.quotePath false
@@ -356,7 +356,7 @@ applyPathMapping(){
 	do
 		if [[ ! -z "$line" ]];then
 			echo "$line"
-			find ${find_main_public_site_args} -type f -name "*.html" -exec sed -i  "$line" {} \; 
+			find "${find_main_public_site_args}" -type f -name "*.html" -exec sed -i  "$line" {} \; 
 		fi
 			# display $line or do something with $line
 	done <"$file"
@@ -388,11 +388,11 @@ reduceCompilationSize(){
 	useSSHKey $publicGitUsername
 
 	echo "[INFO] Reduce files that may alter every compilation"
-	find ${find_main_public_site_args}  -type f -name "*.html" -exec sed -i  "s/id=gallery-[[:digit:]]\+/id=gallery-replaced/g" {} \;
-	find ${find_main_public_site_args}  -type f -name "*.html" -exec sed -i  "s/galleryid-[[:digit:]]\+/galleryid-replaced/g" {} \;
-	find ${find_main_public_site_args}  -type f -name "*.html" -exec sed -i  "s#https\?:/wp-content#/wp-content#g" {} \;
-	find ${find_main_public_site_args}  -type f -name "*.html" -exec sed -i  "s#title=[a-z0-9-]{1,}#title=____#g" {} \;
-	find ${find_main_public_site_args}  -type f -name "*.html" -exec sed -i  "s#alt=[a-z0-9-]{1,}#alt=____#g" {} \;
+	find "${find_main_public_site_args}"  -type f -name "*.html" -exec sed -i  "s/id=gallery-[[:digit:]]\+/id=gallery-replaced/g" {} \;
+	find "${find_main_public_site_args}"  -type f -name "*.html" -exec sed -i  "s/galleryid-[[:digit:]]\+/galleryid-replaced/g" {} \;
+	find "${find_main_public_site_args}"  -type f -name "*.html" -exec sed -i  "s#https\?:/wp-content#/wp-content#g" {} \;
+	find "${find_main_public_site_args}"  -type f -name "*.html" -exec sed -i  "s#title=[a-z0-9-]{1,}#title=____#g" {} \;
+	find "${find_main_public_site_args}"  -type f -name "*.html" -exec sed -i  "s#alt=[a-z0-9-]{1,}#alt=____#g" {} \;
 
 }
 export -f reduceCompilationSize
