@@ -71,7 +71,7 @@ cd $BASE_PATH
 ./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername1" 2008 2015 
 ensureNoErrorOnChildProcess "$?"
 cd $BASE_PATH
-./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername2" 2016 2021
+./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername2" 2016 2022
 ensureNoErrorOnChildProcess "$?"
 
 echo "[INFO] Publish content to GithubPage https://$publicFolder"
