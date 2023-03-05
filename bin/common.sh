@@ -128,7 +128,7 @@ syncForkInMirrorGithubAccounts(){
 	do
 		if [[ ! -z "$line" ]];then
 			echo "$line"
-			credentials=($line)
+			credentials=$(echo $line)
 			username=${credentials[1]}
 			token=${credentials[2]}
 
