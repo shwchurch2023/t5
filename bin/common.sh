@@ -2,6 +2,12 @@
 
 set -o xtrace
 
+if [[ -z "$BASE_PATH" ]];then
+    cd "$(dirname "$0")"
+    cd ..
+    export BASE_PATH=$(pwd)
+fi
+
 export deployGitUsername=shwchurch3
 export publicGitUsername=shwchurch7
 # export publicGitUsername=shwchurch3
