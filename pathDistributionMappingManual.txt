@@ -1,1 +1,2 @@
 s#https://shwchurch7.github.io/#/#g
+s#https://shwchurch3.github.io/#/#g
