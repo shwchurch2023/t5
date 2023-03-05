@@ -45,3 +45,5 @@ s#/wp-content/uploads/2015#https://shwchurch4.github.io/wp-content/uploads/2015#
 s#/wp-content/uploads/2015#https://shwchurch4.github.io/wp-content/uploads/2015#g
 s#https:https:#https:#g
 s#https:https:#https:#g
+s#https://shwchurch7.github.io/wp-content/uploads/2016#https://shwchurch2020.github.io/wp-content/uploads/2016#g
+s#https://shwchurch2020.github.io/wp-content/uploads/2016#/wp-content/uploads/2016#g
