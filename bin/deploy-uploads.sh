@@ -55,7 +55,10 @@ splitFiles(){
 
 	dir=$(echo "$dir" | sed  "s#/mnt/hugo/github/t5/shwchurch[0-9]*.github.io/##g")
 	mapping=(
-		"s#https://$publicFolder/$dir#https://${toGitRepoName}/$dir#g" "s#https://${toGitRepoName}/$dir#/$dir#g" "s#/$dir#https://${toGitRepoName}/$dir#g" "s#https:https:#https:#g"
+		"s#https://$publicFolder/$dir#https://${toGitRepoName}/$dir#g"
+		"s#https://${toGitRepoName}/$dir#/$dir#g"
+		"s#/$dir#https://${toGitRepoName}/$dir#g"
+		"s#https:https:#https:#g"
 	)
 	
 	for i in "${mapping[@]}"

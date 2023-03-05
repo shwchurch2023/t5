@@ -57,6 +57,7 @@ find . -type f -name "*.html" -exec sed -i  "s/shwchurch[[:digit:]]\+/$publicGit
 cd $BASE_PATH
 echo "[INFO] Apply path mapping from"
 applyDistributionMapping
+applyManualDistributionMapping
 START=2005
 END=$(date +'%Y')
 MONTH=$(date +"%m")

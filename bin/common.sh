@@ -20,6 +20,7 @@ export uploadsGitUsername2FolderAbs=$BASE_PATH/$uploadsGitUsername2.github.io
 export themeFolder=$BASE_PATH/themes/hugo-theme-shwchurch
 
 export filePathUrlMappingFilePath=$BASE_PATH/pathDistributionMapping.txt
+export filePathUrlMappingFilePathManual=$BASE_PATH/pathDistributionMappingManual.txt
 
 git config --global core.quotePath false
 
@@ -250,8 +251,14 @@ rangeGitAddPush(){
 export -f rangeGitAddPush
 
 applyDistributionMapping(){
+	applyPathMapping "$filePathUrlMappingFilePath"
+}
+export -f applyDistributionMapping
+
+applyPathMapping(){
+	file=${0}
+
 	cd $BASH_PATH
-	file="$filePathUrlMappingFilePath"
 	while IFS= read line
 	do
 		if [[ ! -z "$line" ]];then
@@ -261,7 +268,12 @@ applyDistributionMapping(){
 			# display $line or do something with $line
 	done <"$file"
 }
-export -f applyDistributionMapping
+
+
+applyManualDistributionMapping(){
+	applyPathMapping "$filePathUrlMappingFilePathManual"
+}
+export -f applyManualDistributionMapping
 
 commitEssential(){
 	END=$1
