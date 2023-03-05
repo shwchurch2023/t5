@@ -32,7 +32,7 @@ export mirrorPublicGithubTokenList=$BASE_PATH/mirror-public-github-token__gitign
 
 separator=________
 
-export find_not_hidden_args=" -not -path */.*"
+export find_not_hidden_args=" -not -path '*/.*'"
 export find_main_public_site_args="${publicFolderAbs} ${find_not_hidden_args}"
 
 git config --global core.quotePath false
