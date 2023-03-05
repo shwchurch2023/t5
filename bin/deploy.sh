@@ -107,6 +107,9 @@ git add .
 git commit -m "Commit all the rest"
 git push --set-upstream origin main  --force
 
+sleep 60
+syncForkInMirrorGithubAccounts
+
 # Remove last commit
 #git reset --hard
 #git clean -fd

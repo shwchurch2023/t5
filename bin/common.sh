@@ -22,6 +22,10 @@ export themeFolder=$BASE_PATH/themes/hugo-theme-shwchurch
 export filePathUrlMappingFilePath=$BASE_PATH/pathDistributionMapping.txt
 export filePathUrlMappingFilePathManual=$BASE_PATH/pathDistributionMappingManual.txt
 
+export mirrorPublicGithubTokenList=$BASE_PATH/mirror-public-github-token__gitignore.txt
+
+separator=________
+
 git config --global core.quotePath false
 
 updateAllSubmodules(){
@@ -93,6 +97,84 @@ rmSafe() {
 	fi
 }
 export -f rmSafe
+
+addNewGithubAccountAsMirror(){
+        username=$1
+        token=$2
+
+		touch $mirrorPublicGithubTokenList
+		echo "${username} ${token}" >> $mirrorPublicGithubTokenList
+
+		echo "Call [[ syncForkInMirrorGithubAccounts ]] since you may have forked this repo"
+
+		syncForkInMirrorGithubAccounts
+}
+
+export addNewGithubAccountAsMirror
+
+syncForkInMirrorGithubAccounts(){
+	echo "[$0] Syncking all forked github actions added via [[ addNewGithubAccountAsMirror GITHUB_USERNAME GITHUB_TOKEN ]]"
+
+	file=$mirrorPublicGithubTokenList
+
+	cd $BASH_PATH
+	while IFS= read line
+	do
+		if [[ ! -z "$line" ]];then
+			echo "$line"
+			credentials=($line)
+			username=${credentials[1]}
+			token=${credentials[2]}
+
+			if [[ -z "${username}" ||  -z "${token}" ]];then
+				echo "[Error] Either username ${username} or token ${token} is empty. Skipped"
+				continue
+			fi
+			repo=${username}.github.io
+			branch=main
+
+			echo "Synking forked repo [[$repo]]"
+
+			curl \
+				-X POST \
+				-H "Accept: application/vnd.github.v3+json" \
+				-H "Authorization: token ${token}" \
+				https://api.github.com/repos/${username}/${repo}/merge-upstream \
+				-d '{"branch":"${branch}"}'
+
+		fi
+			# display $line or do something with $line
+	done <"$file"
+}
+
+export syncForkInMirrorGithubAccounts
+
+
+addSSHKey(){
+
+    username=$1
+
+    key=id_ed25519_$username
+
+    cd /mnt/hugo/ssh/
+
+    if [[ -f "${key}" ]];then
+        echo "${key} already exists"
+        return 1
+    fi
+
+    ssh-keygen -t ed25519 -f "${key}" -C "shwchurch3@gmail.com"
+
+    pub_key=${key}.pub
+
+    echo "Add the generated SSH pub key to https://github.com/settings/ssh/new"
+    pwd
+    ls -la
+    echo ""
+    cat ${pub_key}
+}
+
+export addSSHKey
 
 useSSHKey(){
 		pkill ssh-agent
