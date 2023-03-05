@@ -349,7 +349,7 @@ applyDistributionMapping(){
 export -f applyDistributionMapping
 
 applyPathMapping(){
-	file=${0}
+	file=${1}
 
 	cd $BASH_PATH
 	while IFS= read line
