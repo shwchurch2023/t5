@@ -53,7 +53,7 @@ findAndReplace(){
 	(
 
 		cd $pathToFind
-		ls | xargs -I{--} find {--}  -type f -name ${filePattern} -exec sed -i ${sed_cmd} {} \;
+		find . -not -path '*/.*' -type f -name ${filePattern} -exec sed -i ${sed_cmd} {} \;
 
 	)
 
