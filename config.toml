@@ -1,4 +1,4 @@
-baseURL = "https://shwchurch3.github.io/"
+baseURL = "/"
 languageCode = "zh-cn"
 title = "北京守望教会"
 theme = "hugo-theme-shwchurch"
