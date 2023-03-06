@@ -157,10 +157,11 @@ syncForkInMirrorGithubAccounts(){
 		if [[ ! -z "$line" ]];then
 			echo "$line"
 			
-			credentials=(${(s/:/)line})
+			# credentials=(${(s/:/)line})
+			IFS=: read -r username token <<< "$line"
 			
-			username=${credentials[1]}
-			token=${credentials[2]}
+			# username=${credentials[1]}
+			# token=${credentials[2]}
 
 			if [[ -z "${username}" ||  -z "${token}" ]];then
 				echo "[Error] Either username ${username} or token ${token} is empty. Skipped"
