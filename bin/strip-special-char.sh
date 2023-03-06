@@ -62,7 +62,7 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
 		echo "${pattern}" >> ./special-chars-shorted.txt
 		echo "[INFO] ${pattern}"
 
-		findAndReplace "${pattern}" "." '*.md' >/dev/null 2>&1
+		findAndReplace "${pattern}" "." "*.md" >/dev/null 2>&1
 		# find . "${find_not_hidden_args}" -type f -name "*.md" -exec sed -i "${pattern}" {} \; >/dev/null 2>&1
 	fi
 	

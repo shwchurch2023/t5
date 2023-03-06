@@ -41,7 +41,7 @@ findAndReplace(){
 	sed_cmd=${1}
 
 	pathToFind=${2:-"${publicFolderAbs}"}
-	filePattern=${3:-'*.html'}
+	filePattern=${3:-"*.html"}
 
 	minArg=1
 	if [[ "$#" -lt "${minArg}" ]]; then
@@ -53,7 +53,7 @@ findAndReplace(){
 	(
 
 		cd $pathToFind
-		find . -not -path '*/.*' -type f -name ${filePattern} -exec sed -i ${sed_cmd} {} \;
+		find . -not -path '*/.*' -type f -name "${filePattern}" -exec sed -i "${sed_cmd}" {} \;
 
 	)
 
