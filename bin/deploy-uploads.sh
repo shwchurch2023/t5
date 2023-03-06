@@ -2,13 +2,11 @@
 
 # env > ~/.env
 
-if [[ -z "$BASE_PATH" ]];then
-    cd "$(dirname "$0")"
-    cd ..
-    export BASE_PATH=$(pwd)
-    source $BASE_PATH/bin/common.sh
-fi
-# source $BASE_PATH/bin/common.sh
+cd "$(dirname "$0")"
+cd ..
+export BASE_PATH=$(pwd)
+source $BASE_PATH/bin/common.sh
+
 cd $BASE_PATH
 
 echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
