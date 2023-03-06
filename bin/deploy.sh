@@ -108,6 +108,8 @@ git add .
 git commit -m "Commit all the rest"
 git push --set-upstream origin main  --force
 
+echo "The site is updated"
+echo "Wait for 60 seconds before notifying the forked sites to update"
 sleep 60
 syncForkInMirrorGithubAccounts
 
