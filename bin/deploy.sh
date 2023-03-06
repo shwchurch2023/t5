@@ -80,6 +80,7 @@ echo "[INFO] Publish content to GithubPage https://$publicFolder"
 # Commit changes.
 # Add changes to git.
 reduceCompilationSize
+applyManualDistributionMapping
 commitEssential "$END" "$MONTH" 
 
 #waitGitComplete
