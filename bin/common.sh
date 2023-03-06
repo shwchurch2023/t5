@@ -376,6 +376,8 @@ export -f applyDistributionMapping
 
 applyPathMapping(){
 	file=${1}
+	echo "Apply mappings from $file"
+	cat $file
 
 	cd $BASH_PATH
 	while IFS= read line
@@ -389,6 +391,7 @@ applyPathMapping(){
 	done <"$file"
 }
 
+export -f applyPathMapping
 
 applyManualDistributionMapping(){
 	applyPathMapping "$filePathUrlMappingFilePathManual"
