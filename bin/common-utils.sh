@@ -9,7 +9,7 @@ export publicGitUsername=shwchurch7
 # export publicGitUsername=shwchurch3
 
 export uploadsGitUsername1=shwchurch4
-export uploadsGitUsername2=shwchurch2020
+export uploadsGitUsername2=shwchurch2023media
 
 export publicFolder=${publicGitUsername}.github.io
 export publicFolderAbs=$BASE_PATH_COMMON/$publicFolder
@@ -205,6 +205,9 @@ addSSHKey(){
     ls -la
     echo ""
     cat ${pub_key}
+
+	echo ""
+	echo "Also, update [[ uploadsGitUsername2 ]] or add new [[ uploadsGitUsername* ]] and it's usage in [[ ./bin/deploy-uploads.sh \"\$publicFolder\" \"\$uploadsGitUsername2\" 2016 2022 ]]"
 }
 
 export addSSHKey
