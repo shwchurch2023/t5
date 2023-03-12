@@ -56,7 +56,7 @@ findAndReplace(){
 	# find "${find_main_public_site_args}"  -type f -name "*.html" -exec sed -i  "s/id=gallery-[[:digit:]]\+/id=gallery-replaced/g" {} \;
 
 }
-export findAndReplace
+export -f findAndReplace
 
 updateAllSubmodules(){
 	git submodule update --init --recursive
@@ -180,7 +180,7 @@ syncForkInMirrorGithubAccounts(){
 	done <"$file"
 }
 
-export syncForkInMirrorGithubAccounts
+export -f syncForkInMirrorGithubAccounts
 
 
 addSSHKey(){
