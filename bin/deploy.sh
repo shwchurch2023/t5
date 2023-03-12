@@ -80,6 +80,7 @@ echo "[INFO] Publish content to GithubPage https://$publicFolder"
 reduceCompilationSize
 applyManualDistributionMapping
 commitEssential "$END" "$MONTH" 
+syncForkInMirrorGithubAccounts
 
 #waitGitComplete
 echo "[INFO] Wait for GH Pages building pipeline"
