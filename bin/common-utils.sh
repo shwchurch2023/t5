@@ -196,9 +196,12 @@ addSSHKey(){
         return 1
     fi
 
-    ssh-keygen -t ed25519 -f "${key}" -C "shwchurch3@gmail.com"
+    ssh-keygen -t ed25519 -f "${key}" -C "${username}@outlook.com" -q -N '""'
 
     pub_key=${key}.pub
+
+	chmod 600 ${key}
+	chmod 600 ${pub_key}
 
     echo "Add the generated SSH pub key to https://github.com/settings/ssh/new"
     pwd
