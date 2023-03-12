@@ -210,10 +210,28 @@ addSSHKey(){
     cat ${pub_key}
 
 	echo ""
-	echo "Also, update [[ uploadsGitUsername2 ]] or add new [[ uploadsGitUsername* ]] and it's usage in [[ ./bin/deploy-uploads.sh \"\$publicFolder\" \"\$uploadsGitUsername2\" 2016 2022 ]]"
+	echo "Also, update [[ uploadsGitUsername2 ]] or add new [[ uploadsGitUsernameN ]] and its usage in [[ ./bin/deploy-uploads.sh \"\$publicFolder\" \"\$uploadsGitUsername2\" 2016 2022 ]]"
+	help_createGithubIo
+
+	echo "Then start a new ... bin/deploy.sh ... "
 }
 
-export addSSHKey
+export -f addSSHKey
+
+help_createGithubIo(){
+	username=${1}
+	gitRepoName=${username}.github.io
+	echo "----------"
+	echo "Also, create repo [[ ${gitRepoName} ]]"
+	echo "Generate a personal token from https://github.com/settings/tokens"
+	echo "And init it in your local macOS with the hint from github "
+	echo "Create index.html in the repo root"
+	echo "Make sure [[ git remote set-url origin https://${username}:____TOKEN____@github.com/${username}/${gitRepoName}.git ]]"
+
+	echo "Then protect main branch [[ https://github.com/${username}/${username}/.github.io/settings/branch_protection_rules/new ]]"
+	echo "And enable Github Pages [[ https://github.com/${username}//${username}/.github.io/settings/pages ]]"
+	echo "--------"
+}
 
 useSSHKey(){
 		pkill ssh-agent
