@@ -1,12 +1,10 @@
 #!/bin/bash
 
 # env > ~/.env
-if [[ -z "$BASE_PATH" ]];then
-    cd "$(dirname "$0")"
-    cd ..
-    export BASE_PATH=$(pwd)
-    source $BASE_PATH/bin/common.sh
-fi
+export BASE_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd .. && pwd )
+
+source $BASE_PATH/bin/common-utils.sh
+git config --global core.quotePath false
 
 cd $BASE_PATH
 
@@ -112,6 +110,7 @@ git push --set-upstream origin main  --force
 echo "The site is updated"
 echo "Wait for 60 seconds before notifying the forked sites to update"
 sleep 60
+
 syncForkInMirrorGithubAccounts
 
 # Remove last commit
