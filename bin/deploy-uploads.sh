@@ -74,7 +74,11 @@ splitFiles(){
 	# find . -type f -name "*.html" -exec sed -i   {} \;
 	
 	cd $targetFolder
-	cp -r $publicFolderAbs/index.html $publicFolderAbs/404.html $publicFolderAbs/config.yaml $publicFolderAbs/images $publicFolderAbs/js  $publicFolderAbs/scss ./ 
+	CURR_YEAR=$(date +'%Y')
+	MONTH=$(date +"%m")
+
+	cp -r ${publicFolderAbs}/index.html ${publicFolderAbs}/404.html ${publicFolderAbs}/config.yaml ${publicFolderAbs}/images ${publicFolderAbs}/js  ${publicFolderAbs}/scss ./ 
+	# cp -r ${publicFolderAbs}/${CURR_YEAR}/${MONTH}  ${publicFolderAbs}/wp-content/uploads/${CURR_YEAR}/${MONTH} ./
 	gitCommitByBulk $dir $toGitUsername
 	isSplitExecute='1'
 }
