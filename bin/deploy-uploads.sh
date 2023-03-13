@@ -43,7 +43,7 @@ splitFiles(){
 	echo "[INFO] Split file at path $sourcePath  to $targetPath "
 	cd $BASE_PATH
 
-	rmSafe "$targetPath" "github.io"
+	rmSafe "$targetPath" "github.io" "1"
 	mkdir -p $targetPath
 	
 	cd $sourcePath/
