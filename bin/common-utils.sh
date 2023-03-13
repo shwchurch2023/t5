@@ -10,6 +10,7 @@ export deployGitUsername=shwchurch3
 export publicGitUsername=shwchurch7
 # export publicGitUsername=shwchurch3
 
+# Those gitUsernames must match pattern `shwchurch.*` defined in bin/deploy-uploads.sh
 export uploadsGitUsername1=shwchurch4
 export uploadsGitUsername2=shwchurch2023media
 

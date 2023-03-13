@@ -52,7 +52,7 @@ splitFiles(){
 	mv * $targetPath
 	cd -
 
-	dir=$(echo "$dir" | sed  "s#/mnt/hugo/github/t5/shwchurch[0-9]*.github.io/##g")
+	dir=$(echo "$dir" | sed  "s#/mnt/hugo/github/t5/shwchurch.*.github.io/##g")
 	mapping=(
 		"s#https://$publicFolder/$dir#https://${toGitRepoName}/$dir#g"
 		"s#https://${toGitRepoName}/$dir#/$dir#g"
