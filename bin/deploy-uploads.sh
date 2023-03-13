@@ -28,6 +28,8 @@ addSubmodule $toGitUsername $toGitRepoName
 
 isSplitExecute=''
 
+targetFolder=$BASE_PATH/${toGitRepoName}
+
 splitFiles(){
 	dir=$1
 
@@ -72,6 +74,7 @@ splitFiles(){
 	# find . -type f -name "*.html" -exec sed -i   {} \;
 	
 	cd $targetFolder
+	cp -r $publicFolderAbs/index.html $publicFolderAbs/404.html $publicFolderAbs/config.yaml $publicFolderAbs/images $publicFolderAbs/js  $publicFolderAbs/scss ./ 
 	gitCommitByBulk $dir $toGitUsername
 	isSplitExecute='1'
 }
