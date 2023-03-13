@@ -2,6 +2,8 @@
 
 set -o xtrace
 
+export $(cat /mnt/hugo/.env | sed 's/#.*//g' | xargs)
+
 export BASE_PATH_COMMON=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd .. && pwd )
 
 export deployGitUsername=shwchurch3
@@ -453,7 +455,6 @@ reduceCompilationSize(){
 }
 export -f reduceCompilationSize
 
-export $(cat /mnt/hugo/.env | sed 's/#.*//g' | xargs)
 
 export SHELL=/bin/bash
 export PATH=/usr/local/openssl/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin:$PATH
