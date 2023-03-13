@@ -5,6 +5,7 @@ export BASE_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && 
 
 source $BASE_PATH/bin/common-utils.sh
 git config --global core.quotePath false
+initSubmoduleUsage
 
 cd $BASE_PATH
 
@@ -113,6 +114,8 @@ echo "Wait for 60 seconds before notifying the forked sites to update"
 sleep 60
 
 syncForkInMirrorGithubAccounts
+
+helpCleanSubmodules
 
 # Remove last commit
 #git reset --hard

@@ -30,6 +30,8 @@ export mirrorPublicGithubTokenList=$BASE_PATH_COMMON/mirror-public-github-token_
 
 separator=________
 
+export submodule_used_path=$BASE_PATH_COMMON/submodule_used.log
+
 # export find_not_hidden_args=" -not -path '*/.*'"
 # export find_main_public_site_args="${publicFolderAbs} ${find_not_hidden_args}"
 
@@ -278,6 +280,37 @@ updateRepo(){
 }
 export -f updateRepo
 
+initSubmoduleUsage(){
+	echo "themes/hugo-theme-yuki"  > $submodule_used_path
+	echo "themes/hugo-theme-shwchurch" >> $submodule_used_path
+	echo "public" >> $submodule_used_path
+
+	echo "$deployGitUsername" >> $submodule_used_path
+	echo "$publicGitUsername" >> $submodule_used_path
+
+}
+export -f initSubmoduleUsage
+
+helpCleanSubmodules(){
+	git config --file .gitmodules --get-regexp path | awk '{ print $2 }' | while read line 
+	do
+	# do something with $line here
+	if grep -q "$line" "$submodule_used_path"; then
+		echo "Sumodule [[ $line  ]] used"
+	else
+		echo "Sumodule [[ $line  ]] is NOT used. Consider remove it by:"
+		echo "[[ git submodule deinit -f ${line} ]]"
+		echo "[[ rm -rf .git/modules/${line} ]]"
+		echo "[[ git rm -f ${line} ]]"
+	fi
+	done
+	# cat $submodule_used_path | while read line 
+	# do
+	# # do something with $line here
+	# done
+}
+export -f helpCleanSubmodules
+
 addSubmodule(){
 	githubUserName=$1
 	repoName=$2
@@ -288,6 +321,7 @@ addSubmodule(){
 	pwd
 	useSSHKey $githubUserName
 	git submodule add -f $submoduleUrl
+	echo "${repoName}" >> $submodule_used_path
 	cd $repoName
 	git checkout -b new_tmp
 	git checkout new_tmp
