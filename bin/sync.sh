@@ -73,7 +73,7 @@ detectChange(){
 	fi
 	if [[ -f "${detectChange_file}" ]];then
 		detectChange_is_changed=$(diff ${detectChange_file} ${detectChange_file_tmp})
-		if [[ -z "${detectChange_is_changed}"  ]];
+		if [[ -z "${detectChange_is_changed}"  ]];then
 			echo "[$0] $source_website is not changed. Skip sync."
 			exit
 		fi	
