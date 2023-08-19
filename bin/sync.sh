@@ -1,5 +1,9 @@
 #!/bin/bash
 
+source_website=https://t5.shwchurch.org/
+
+detectChange_file=/tmp/hugo-sync-diff.log
+detectChange_file_tmp=${detectChange_file}.tmp
 
 echo "[INFO] You could run deploy.sh if you just want to debug it. Normally, sync.sh doesn't have issue, but only deploy with hugo --minify"
 echo -ne "[INFO] You have 15s to cancel me\n\n"
@@ -61,6 +65,22 @@ fi
 echo "[INFO] Generating Markdown files from Wordpress "
 cd ${wodrePressHugoExportPath}
 
+detectChange(){
+	curl ${source_website} > ${detectChange_file_tmp}
+	if [[ ! -f "${detectChange_file_tmp}" ]];then
+		${BASE_PATH}/bin/mail.sh "shwchurch3@gmail.com" "[ERROR][$0] Failed in getting content from ${source_website}"
+		exit 1023
+	fi
+	if [[ -f "${detectChange_file}" ]];then
+		detectChange_is_changed=$(diff ${detectChange_file} ${detectChange_file_tmp})
+		if [[ -z "${detectChange_is_changed}"  ]];
+			echo "[$0] $source_website is not changed. Skip sync."
+			exit
+		fi	
+	fi
+}
+detectChange
+
 php hugo-export-cli.php ${tmpPathPrefix} > /dev/null
 
 cd ${hugoExportedPath}
@@ -121,4 +141,4 @@ echo "[INFO] Deploy and publish to github pages"
 ./deploy.sh
 #./deploy-new.sh
 #echo "$(date)" >> ${log}
-
+mv $detectChange_file_tmp $detectChange_file
