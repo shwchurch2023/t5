@@ -142,3 +142,6 @@ echo "[INFO] Deploy and publish to github pages"
 #./deploy-new.sh
 #echo "$(date)" >> ${log}
 mv $detectChange_file_tmp $detectChange_file
+
+${BASE_PATH}/bin/mail.sh "shwchurch3@gmail.com" "[INFO][$0] Done Hugo Sync for ${source_website}"
+
