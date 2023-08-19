@@ -1,10 +1,15 @@
 #!/bin/bash
 
-set -o xtrace
+#set -o xtrace
+export BASE_PATH_COMMON=$(dirname "$0")
+cd $BASE_PATH_COMMON
+cd ../
+export BASE_PATH_COMMON=$(pwd)
+export $(cat ${BASE_PATH_COMMON}/.env | xargs)
 
+export $(cat /mnt/hugo/.env | sed 's/#.*//g' | echo)
 export $(cat /mnt/hugo/.env | sed 's/#.*//g' | xargs)
-
-export BASE_PATH_COMMON=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd .. && pwd )
+cd $BASE_PATH_COMMON
 
 export deployGitUsername=shwchurch3
 export publicGitUsername=shwchurch7
