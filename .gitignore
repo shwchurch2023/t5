@@ -5,3 +5,5 @@ shwchurch5.github.io
 .DS_Store
 
 *__gitignore*
+
+.env
