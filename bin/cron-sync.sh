@@ -37,7 +37,7 @@ sudo chown -R hugo.hugo .
 sudo chmod -R g+rw $hugoGithubRoot
 ls -la $hugoGithubRoot
 #echo "1 14 * * * $hugoUserGroup ${scriptToRun}" > ${cronScriptPath}
-sudo bash -c "echo \"1 19 * * 5,6 hugo ${scriptToRun}\" > \"${cronScriptPath}_1\""
+sudo bash -c "echo \"1 9,19 * * * hugo ${scriptToRun}\" > \"${cronScriptPath}_1\""
 
 #cat ${cronScriptPath}
 sudo cat ${cronScriptPath}_1
