@@ -76,8 +76,11 @@ detectChange(){
 		if [[ -z "${detectChange_is_changed}"  ]];then
 			echo "[$0] $source_website is not changed. Skip sync."
 			exit
+		else
+			echo "[$0] ${detectChange_is_changed}"
 		fi	
 	fi
+	exit 234
 }
 detectChange
 
