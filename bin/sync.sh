@@ -66,7 +66,7 @@ echo "[INFO] Generating Markdown files from Wordpress "
 cd ${wodrePressHugoExportPath}
 
 detectChange(){
-	curl ${source_website} > ${detectChange_file_tmp}
+	curl ${source_website} | sed 's/[a-zA-Z0-9<>"\\=\/_&%:\.#,\{\}\(\);\?!\[@|* -]//g' > ${detectChange_file_tmp}
 	if [[ ! -f "${detectChange_file_tmp}" ]];then
 		${BASE_PATH}/bin/mail.sh "shwchurch3@gmail.com" "[ERROR][$0] Failed in getting content from ${source_website}"
 		exit 1023
