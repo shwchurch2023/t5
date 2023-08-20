@@ -81,8 +81,6 @@ detectChange(){
 			echo "[$0] ${detectChange_is_changed}"
 		fi	
 	fi
-	mv $detectChange_file_tmp $detectChange_file
-	exit 234
 }
 detectChange
 
