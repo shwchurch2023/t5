@@ -68,10 +68,10 @@ rmSafe "$filePathUrlMappingFilePath" "t5" "true"
 touch "$filePathUrlMappingFilePath"
 echo "" > "$filePathUrlMappingFilePath"
 cd $BASE_PATH
-./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername1" 2008 2015 
+./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername1" "${githubSplitPart1From}" "$((githubSplitPart2From-1))"
 ensureNoErrorOnChildProcess "$?"
 cd $BASE_PATH
-./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername2" 2016 2022
+./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername2" "${githubSplitPart2From}" "$((currYear-1))"
 ensureNoErrorOnChildProcess "$?"
 
 echo "[INFO] Publish content to GithubPage https://$publicFolder"

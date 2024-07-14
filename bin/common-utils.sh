@@ -14,6 +14,11 @@ export publicGitUsername=shwchurch7
 export uploadsGitUsername1=shwchurch4
 export uploadsGitUsername2=shwchurch2023media
 
+export githubSplitPart1From=2008
+export githubSplitPart2From=2016
+
+export currYear=`date +%Y`
+
 export publicFolder=${publicGitUsername}.github.io
 export publicFolderAbs=$BASE_PATH_COMMON/$publicFolder
 
@@ -215,7 +220,7 @@ addSSHKey(){
     cat ${pub_key}
 
 	echo ""
-	echo "Also, update [[ uploadsGitUsername2 ]] or add new [[ uploadsGitUsernameN ]] and its usage in [[ ./bin/deploy-uploads.sh \"\$publicFolder\" \"\$uploadsGitUsername2\" 2016 2022 ]]"
+	echo "Also, update [[ uploadsGitUsername2 ]] or add new [[ uploadsGitUsernameN ]] and its usage in [[ ./bin/deploy-uploads.sh \"\$publicFolder\" \"\$uploadsGitUsername2\" \"\${githubSplitPart2From}\" \"\$((currYear-1))\" ]]"
 	help_createGithubIo
 
 	echo "Then start a new ... bin/deploy.sh ... "
