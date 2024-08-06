@@ -26,7 +26,7 @@ cleanFeed(){
 cd ${githubHugoPath}/content
 
 cleanFeed "/"
-cleanFeed "/category/讲道/"
+cleanFeed "/category/sermon/"
 cleanFeed "/category/主日敬拜程序/"
 
 
