@@ -74,8 +74,10 @@ detectChange(){
 	if [[ -f "${detectChange_file}" ]];then
 		detectChange_is_changed=$(diff ${detectChange_file} ${detectChange_file_tmp})
 		if [[ -z "${detectChange_is_changed}"  ]];then
-			echo "[$0] $source_website is not changed. Skip sync."
-			exit
+			if [[ -z "${HUGO_SYNC_FORCE}" ]];then
+				echo "[$0] $source_website is not changed. Skip sync."
+				exit
+			fi
 		else
 			echo "[$0] Change detected"
 			echo "[$0] ${detectChange_is_changed}"
