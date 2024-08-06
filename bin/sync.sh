@@ -77,6 +77,8 @@ detectChange(){
 			if [[ -z "${HUGO_SYNC_FORCE}" ]];then
 				echo "[$0] $source_website is not changed. Skip sync."
 				exit
+			else
+				echo "[$0] Force synced even no changes"
 			fi
 		else
 			echo "[$0] Change detected"
