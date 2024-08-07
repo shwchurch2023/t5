@@ -63,7 +63,7 @@ minify = true
 
 [[menu.social]]
     name = "讲道"
-    url = "/categories/讲道/"
+    url = "/categories/sermon/"
     weight = 2
 
 [[menu.social]]
