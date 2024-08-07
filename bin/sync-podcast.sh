@@ -9,7 +9,11 @@ githubHugoPath=$BASE_PATH
 echo "[INFO] Add feeds for Apple Podcast"
 cleanFeed(){
         feedpath=$1
-        feedpathLocal="${feedpath/category/categories}"
+        feedpathLocal=$2
+        if [[ -z "${feedpathLocal}" ]];then
+                feedpathLocal="${feedpath/category/categories}"
+        fi
+        
         absPath=${githubHugoPath}/content${feedpathLocal}
         mkdir -p "$absPath"
         cd "$absPath"
@@ -26,7 +30,7 @@ cleanFeed(){
 cd ${githubHugoPath}/content
 
 cleanFeed "/"
-cleanFeed "/category/sermon/"
+cleanFeed "/category/sermon/" "/categories/讲道/"
 cleanFeed "/category/主日敬拜程序/"
 
 
