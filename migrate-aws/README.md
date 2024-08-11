@@ -236,5 +236,28 @@ sudo vim /mnt/data/shwchurch/web/wp-config.php
 #define('WP_SITEURL', 'https://t5.shwchurch.org');  // no trailing slash
 
 ```
-## Detect W3 total cache 
+### Detect W3 total cache 
 - To go console and see if it works
+
+### Start crontab
+```zsh
+cd /mnt/data/crontab
+ls |  grep cron_ | grep -v grep | grep -v .bak | xargs -I{} sudo zsh {}
+```
+
+## Other tests and backup policy
+* Label all AWS volumes with easy name
+* Label AWS Volume backup policy (Data Lifecycle Manager)
+    * data volume tag: 
+        - backup:weekly
+        - bak-yearly:true
+    * hugo volume tag: 
+        - No-need (will be backed with the instance monthly backup)
+    * Instance tag: 
+        - backup2:monthly
+* Perform completion backup for all AWS volumes
+
+* Try hugo sync
+    - `(sudo -u hugo /mnt/hugo/github/t5/bin/sync.sh > /mnt/hugo/github/sync.log 2>&1 &); tail -f /mnt/hugo/github/sync.log`
+* Set reminder to see if Database was backup in a week
+* Set reminder to remove all volumes and the old instance in 2 week
