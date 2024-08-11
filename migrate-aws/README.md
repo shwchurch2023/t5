@@ -36,7 +36,7 @@ zsh
 
 sudo amazon-linux-extras install -y mariadb10.5
 sudo amazon-linux-extras install -y php7.4
-sudo yum install -y php-gd
+sudo yum install -y php-gd php-xml php-mbstring php-pecl-memcache php-opcache php-pecl-apcu
 
 sudo amazon-linux-extras list | grep nginx
 sudo amazon-linux-extras install -y nginx1
@@ -236,3 +236,5 @@ sudo vim /mnt/data/shwchurch/web/wp-config.php
 #define('WP_SITEURL', 'https://t5.shwchurch.org');  // no trailing slash
 
 ```
+## Detect W3 total cache 
+- To go console and see if it works
