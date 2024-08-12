@@ -36,7 +36,7 @@ zsh
 
 sudo amazon-linux-extras install -y mariadb10.5
 sudo amazon-linux-extras install -y php7.4
-sudo yum install -y php-gd php-xml php-mbstring php-pecl-memcache php-opcache php-pecl-apcu
+sudo yum install -y php-gd php-xml php-mbstring php-pecl-memcache php-opcache php-pecl-apcu php-cli php-common php-gd php-jsonc php-mbstring php-mysqlnd php-odbc php-pdo php-pecl-apcu php-process php-soap php-xml
 
 sudo amazon-linux-extras list | grep nginx
 sudo amazon-linux-extras install -y nginx1
@@ -245,7 +245,15 @@ cd /mnt/data/crontab
 ls |  grep cron_ | grep -v grep | grep -v .bak | xargs -I{} sudo zsh {}
 ```
 
-## Other tests and backup policy
+## Health checkup
+- Clean all W3 Total cache
+- Category permanent link: https://t5.shwchurch.org/category/%e7%bd%91%e7%bb%9c%e6%9c%9f%e5%88%8a/%e8%81%8c%e5%9c%ba%e5%91%bc%e5%8f%ac/
+- Feed https://t5.shwchurch.org/category/sermon/sermon_archived_0/feed/
+- Latest post
+- amp: https://t5.shwchurch.org/2024/08/10/beijingshouwangjiaohui2024nian8yue11rizhurijingbaichengxu/amp/
+
+## Backups
+### Other tests and backup policy
 * Label all AWS volumes with easy name
 * Label AWS Volume backup policy (Data Lifecycle Manager)
     * data volume tag: 
@@ -261,3 +269,6 @@ ls |  grep cron_ | grep -v grep | grep -v .bak | xargs -I{} sudo zsh {}
     - `(sudo -u hugo /mnt/hugo/github/t5/bin/sync.sh > /mnt/hugo/github/sync.log 2>&1 &); tail -f /mnt/hugo/github/sync.log`
 * Set reminder to see if Database was backup in a week
 * Set reminder to remove all volumes and the old instance in 2 week
+## Backup
+- Create a backup from the instance (all volumes)
+- https://ap-southeast-1.console.aws.amazon.com/ec2/home?region=ap-southeast-1#Snapshots:visibility=owned-by-me;v=3
