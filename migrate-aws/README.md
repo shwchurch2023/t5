@@ -94,6 +94,9 @@ sudo chown -R hugo:hugo /mnt/hugo
 
 ln -s /mnt/data .
 ln -s /mnt/hugo .
+ln -s /mnt/data/shwchurch/web/wp-content/themes/shwchurch . 
+
+
 
 ```
 
@@ -151,15 +154,18 @@ echo "Set as follows"
 
 ```
 
-## (optional) Update php.ini
+## Optimize php-fpm threads
 ```zsh
-vim /etc/php.ini
+sudo vim  /etc/php-fpm.d/www.conf 
 
 echo Edit accordingly
-# memory_limit = 1024M
-# max_execution_time = 120
-# post_max_size = 50M
-# upload_max_filesize = 50M
+
+# pm = dynamic
+# pm.max_children = 100
+# pm.start_servers = 32
+# pm.min_spare_servers = 16
+# pm.max_spare_servers = 32
+# pm.max_requests = 200
 
 sudo service php-fpm restart
 ```
@@ -263,12 +269,17 @@ ls |  grep cron_ | grep -v grep | grep -v .bak | xargs -I{} sudo zsh {}
         - No-need (will be backed with the instance monthly backup)
     * Instance tag: 
         - backup2:monthly
+* Remove all backup related tags for 
+    - The old instance
+    - And all of its volumes
 * Perform completion backup for all AWS volumes
 
 * Try hugo sync
-    - `(sudo -u hugo /mnt/hugo/github/t5/bin/sync.sh > /mnt/hugo/github/sync.log 2>&1 &); tail -f /mnt/hugo/github/sync.log`
+    - `(cd /mnt/hugo; sudo -u hugo zsh -c "/mnt/hugo/github/t5/bin/sync.sh > /mnt/hugo/github/sync.log  2>&1 &"); tail -f /mnt/hugo/github/sync.log`
 * Set reminder to see if Database was backup in a week
 * Set reminder to remove all volumes and the old instance in 2 week
+* Remove all of the old manual snapshots for the old instance/volumes
+
 ## Backup
 - Create a backup from the instance (all volumes)
 - https://ap-southeast-1.console.aws.amazon.com/ec2/home?region=ap-southeast-1#Snapshots:visibility=owned-by-me;v=3

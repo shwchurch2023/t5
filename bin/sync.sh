@@ -9,7 +9,7 @@ echo "[INFO] You could run deploy.sh if you just want to debug it. Normally, syn
 echo -ne "[INFO] You have 15s to cancel me\n\n"
 ps aux | grep sync | grep -v grep | awk '{print $2}' | xargs echo "sudo kill -9 "
 log=/mnt/hugo/github/sync.log
-echo  "(cd /mnt/hugo; sudo -u hugo /mnt/hugo/github/t5/bin/deploy.sh > ${log} 2>&1 &); tail -f ${log}"
+echo  "(cd /mnt/hugo; sudo -u hugo zsh -c '/mnt/hugo/github/t5/bin/deploy.sh > ${log} 2>&1' &); tail -f ${log}"
 echo  "(cd /mnt/hugo; /mnt/hugo/github/t5/bin/deploy.sh > ${log} 2>&1 &); tail -f ${log}"
 
 echo -ne "\n\n"
@@ -37,7 +37,7 @@ githubHugoThemePath=/mnt/hugo/github/t5/themes/hugo-theme-shwchurch
 wodrePressHugoExportPath=/mnt/data/shwchurch/web/wp-content/plugins/wordpress-to-hugo-exporter
 ls -la $wodrePressHugoExportPath
 
-echo  "(cd /mnt/hugo; sudo -u hugo /mnt/hugo/github/t5/bin/sync.sh > ${log} 2>&1 &); tail -f ${log}"
+echo  "(cd /mnt/hugo; sudo -u hugo zsh -c '/mnt/hugo/github/t5/bin/sync.sh > ${log} 2>&1 ' &); tail -f ${log}"
 
 detechIfSyncIsRunning(){
 	if pidof -x "`basename $0`" -o $$ >/dev/null; then

@@ -26,6 +26,7 @@ useSSHKey(){
         #export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes"
 
 }
+export useSSHKey
 
 pushRemote(){
 	dir=$1
@@ -42,6 +43,25 @@ pushRemote(){
 	cd -
 
 }
+export pushRemote
+
+testMigratedPush(){
+	testMigratedPush_path=${1:-""}
+	testMigratedPush_repo=${1:-"t5"}
+
+	cd $BASE_PATH
+
+	if [[ ! -z "${testMigratedPush_path}" ]];then
+		cd $testMigratedPush_path
+	fi
+
+	date >> aws-upgraded.log
+	git add aws-upgraded.log
+	git commit -m "AWS upgraded" 
+	pushRemote $BASE_PATH/${testMigratedPush_path} ${testMigratedPush_repo} $account
+
+}
+export testMigratedPush
 
 for account in ${githubAccounts[@]}; do
 	pushRemote $BASE_PATH t5 $account
