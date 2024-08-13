@@ -2,8 +2,9 @@
 
 # env > ~/.env
 
-export BASE_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd .. && pwd )
+export BASE_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
+echo $BASE_PATH
 source $BASE_PATH/bin/common-utils.sh
 cd $BASE_PATH
 
