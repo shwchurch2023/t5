@@ -30,6 +30,8 @@ useSSHKey(){
 export useSSHKey
 
 pushRemote(){
+	pushRemote_return_code=0
+	(
 	dir=$1
 	repo=$2
 	account=$3
@@ -42,7 +44,9 @@ pushRemote(){
 	git config pull.rebase false
 	git pull $account main --no-edit
 	git push $account main --force
-	cd -
+	pushRemote_return_code=$?
+	)
+	return $pushRemote_return_code
 
 }
 export pushRemote
@@ -62,15 +66,17 @@ testMigratedPush(){
 
 	for account in ${githubAccounts[@]}; do
 		pushRemote $BASE_PATH/${testMigratedPush_path} ${testMigratedPush_repo} $account
+		if [[ "$?" = 0 ]];then
+			break;
+		fi
 	done
 
 }
 export testMigratedPush
 
-for account in ${githubAccounts[@]}; do
-	pushRemote $BASE_PATH t5 $account
-	pushRemote $BASE_PATH/themes/hugo-theme-shwchurch hugo-theme-shwchurch $account
-done
+pushRemote $BASE_PATH t5 shwchurch3
+pushRemote $BASE_PATH/themes/hugo-theme-shwchurch hugo-theme-shwchurch shwchurch3hugo
+
 
 useSSHKey shwchurch3
 
