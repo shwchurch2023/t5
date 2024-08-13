@@ -48,10 +48,9 @@ pushRemote(){
 export pushRemote
 
 testMigratedPush(){
-	testMigratedPush_path=${1:-""}
+	testMigratedPush_path=${1:-"$BASE_PATH"}
 	testMigratedPush_repo=${2:-"t5"}
 
-	cd $BASE_PATH
 
 	if [[ ! -z "${testMigratedPush_path}" ]];then
 		cd $testMigratedPush_path
