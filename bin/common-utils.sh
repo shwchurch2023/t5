@@ -71,7 +71,7 @@ findAndReplace(){
 	# find "${find_main_public_site_args}"  -type f -name "*.html" -exec sed -i  "s/id=gallery-[[:digit:]]\+/id=gallery-replaced/g" {} \;
 
 }
-export -f findAndReplace
+export findAndReplace
 
 updateAllSubmodules(){
 	git submodule update --init --recursive
@@ -90,9 +90,9 @@ ensureNoErrorOnChildProcess() {
 		exit 3
 	fi
 }
-export -f ensureNoErrorOnChildProcess
+export ensureNoErrorOnChildProcess
 
-export -f ensureRequiredFolder
+export ensureRequiredFolder
 
 ensureRequiredFolders() {
 	updateAllSubmodules
@@ -101,7 +101,7 @@ ensureRequiredFolders() {
 	ensureRequiredFolder $themeFolder
 	cd $BASH_PATH
 }
-export -f ensureRequiredFolders
+export ensureRequiredFolders
 
 hugoBuild() {
 	cd $BASE_PATH_COMMON
@@ -111,20 +111,20 @@ hugoBuild() {
 		echo "[WARN] /mnt/hugo/hugo failed"
 	fi
 }
-export -f hugoBuild
+export hugoBuild
 
 syncPodcast(){
 	cd $BASE_PATH_COMMON
 	./bin/sync-podcast.sh 
 }
-export -f syncPodcast
+export syncPodcast
 
 gitSetUser(){
 	git config user.email "shwchurch3@gmail.com"
 	git config user.name "Shouwang Church"
 }
 
-export -f gitSetUser
+export gitSetUser
 
 rmSafe() {
 	dir=$1
@@ -141,7 +141,7 @@ rmSafe() {
 		fi
 	fi
 }
-export -f rmSafe
+export rmSafe
 
 addNewGithubAccountAsMirror(){
         username=$1
@@ -195,7 +195,7 @@ syncForkInMirrorGithubAccounts(){
 	done <"$file"
 }
 
-export -f syncForkInMirrorGithubAccounts
+export syncForkInMirrorGithubAccounts
 
 
 addSSHKey(){
@@ -231,7 +231,7 @@ addSSHKey(){
 	echo "Then start a new ... bin/deploy.sh ... "
 }
 
-export -f addSSHKey
+export addSSHKey
 
 help_createGithubIo(){
 	username=${1}
@@ -265,12 +265,12 @@ useSSHKey(){
 
 }
 
-export -f useSSHKey
+export useSSHKey
 
 killLongRunningGit(){
 	ps aux | egrep "\sgit\s" | awk '{print $2}' | xargs kill
 }
-export -f killLongRunningGit 
+export killLongRunningGit 
 
 updateRepo(){
 	dir=$1
@@ -289,7 +289,7 @@ updateRepo(){
 	git pull --no-edit
 	git push
 }
-export -f updateRepo
+export updateRepo
 
 initSubmoduleUsage(){
 	echo "themes/hugo-theme-yuki"  > $submodule_used_path
@@ -300,7 +300,7 @@ initSubmoduleUsage(){
 	echo "$publicGitUsername" >> $submodule_used_path
 
 }
-export -f initSubmoduleUsage
+export initSubmoduleUsage
 
 helpCleanSubmodules(){
 	git config --file .gitmodules --get-regexp path | awk '{ print $2 }' | while read line 
@@ -320,7 +320,7 @@ helpCleanSubmodules(){
 	# # do something with $line here
 	# done
 }
-export -f helpCleanSubmodules
+export helpCleanSubmodules
 
 addSubmodule(){
 	githubUserName=$1
@@ -352,7 +352,7 @@ addSubmodule(){
 	git push origin main 
 
 }
-export -f addSubmodule
+export addSubmodule
 
 waitGitComplete(){
 	while [[ !  -z "$(ps aux |  grep git | grep -v sync | grep -v grep | grep -v github)"  ]];do
@@ -360,7 +360,7 @@ waitGitComplete(){
 		sleep 10	
 	done
 }
-export -f waitGitComplete
+export waitGitComplete
 
 
 gitCommitByBulk(){
@@ -411,7 +411,7 @@ gitCommitByBulk(){
 	useSSHKey $gitUsername
 	git push --set-upstream origin main --force
 }
-export -f gitCommitByBulk
+export gitCommitByBulk
 
 waitGitComplete(){
 	while [[ !  -z "$(ps aux |  grep git | grep -v sync | grep -v grep | grep -v github)"  ]];do
@@ -420,7 +420,7 @@ waitGitComplete(){
 	done
 }
 
-export -f waitGitComplete
+export waitGitComplete
 
 rangeGitAddPush(){
 	pathPrefix=$1
@@ -434,12 +434,12 @@ rangeGitAddPush(){
 		gitCommitByBulk "$pathPrefix/${i}*" $gitUsername
 	done
 }
-export -f rangeGitAddPush
+export rangeGitAddPush
 
 applyDistributionMapping(){
 	applyPathMapping "$filePathUrlMappingFilePath"
 }
-export -f applyDistributionMapping
+export applyDistributionMapping
 
 applyPathMapping(){
 	file=${1}
@@ -458,12 +458,12 @@ applyPathMapping(){
 	done <"$file"
 }
 
-export -f applyPathMapping
+export applyPathMapping
 
 applyManualDistributionMapping(){
 	applyPathMapping "$filePathUrlMappingFilePathManual"
 }
-export -f applyManualDistributionMapping
+export applyManualDistributionMapping
 
 commitEssential(){
 	END=$1
@@ -478,7 +478,7 @@ commitEssential(){
 	gitCommitByBulk "images" $publicGitUsername
 	gitCommitByBulk "scss" $publicGitUsername
 }
-export -f commitEssential
+export commitEssential
 
 reduceCompilationSize(){
 	cd $publicFolderAbs
@@ -498,7 +498,7 @@ reduceCompilationSize(){
 	# find "${find_main_public_site_args}"  -type f -name "*.html" -exec sed -i  "s#alt=[a-z0-9-]{1,}#alt=____#g" {} \;
 
 }
-export -f reduceCompilationSize
+export reduceCompilationSize
 
 
 export SHELL=/bin/bash
