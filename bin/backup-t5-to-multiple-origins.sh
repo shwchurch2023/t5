@@ -62,6 +62,10 @@ testMigratedPush(){
 	git commit -m "AWS upgraded" 
 	pushRemote $BASE_PATH/${testMigratedPush_path} ${testMigratedPush_repo} $account
 
+	for account in ${githubAccounts[@]}; do
+		pushRemote $BASE_PATH/${testMigratedPush_path} ${testMigratedPush_repo} $account
+	done
+
 }
 export testMigratedPush
 
