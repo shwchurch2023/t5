@@ -30,11 +30,13 @@ useSSHKey(){
 export useSSHKey
 
 pushRemote(){
-	pushRemote_return_code=0
-	(
+
 	dir=$1
 	repo=$2
 	account=$3
+	
+	pushRemote_return_code=0
+	(
 	cd $dir
 	useSSHKey $account
 	git remote add $account git@github.com:$account/$repo.git
