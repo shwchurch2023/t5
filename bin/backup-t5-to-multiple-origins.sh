@@ -60,7 +60,6 @@ testMigratedPush(){
 	date >> aws-upgraded.log
 	git add aws-upgraded.log
 	git commit -m "AWS upgraded" 
-	pushRemote $BASE_PATH/${testMigratedPush_path} ${testMigratedPush_repo} $account
 
 	for account in ${githubAccounts[@]}; do
 		pushRemote $BASE_PATH/${testMigratedPush_path} ${testMigratedPush_repo} $account
