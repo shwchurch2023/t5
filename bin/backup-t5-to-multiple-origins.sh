@@ -39,6 +39,7 @@ pushRemote(){
 	git remote set-url $account git@github.com:$account/$repo.git
 	git add .
 	git commit -m "Backup"
+	git config pull.rebase true
 	git pull $account main
 	git push $account main --force
 	cd -
