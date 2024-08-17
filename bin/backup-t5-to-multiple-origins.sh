@@ -58,6 +58,7 @@ testMigratedPush(){
 	testMigratedPush_repo=${2:-"t5"}
 
 
+	(
 	if [[ ! -z "${testMigratedPush_path}" ]];then
 		cd $testMigratedPush_path
 	fi
@@ -72,6 +73,7 @@ testMigratedPush(){
 			break;
 		fi
 	done
+	)
 
 }
 export testMigratedPush

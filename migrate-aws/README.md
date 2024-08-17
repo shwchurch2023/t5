@@ -20,6 +20,7 @@
 
 ```zsh
 sudo yum update -y
+sudo yum groupinstall "Development Tools"
 sudo yum install -y zsh
 sudo yum install -y git
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -38,13 +39,28 @@ sudo chsh -s $(which zsh)
 
 zsh
 
-sudo amazon-linux-extras install -y mariadb10.5
-sudo amazon-linux-extras install -y php7.4
-sudo yum install -y php-gd php-xml php-mbstring php-pecl-memcache php-opcache php-pecl-apcu php-cli php-common php-gd php-jsonc php-mbstring php-mysqlnd php-odbc php-pdo php-pecl-apcu php-process php-soap php-xml
 
 sudo amazon-linux-extras list | grep nginx
-sudo amazon-linux-extras install -y nginx1
+sudo amazon-linux-extras install -y mariadb10.5 epel php7.4 nginx1
 
+sudo yum install -y php-gd php-xml php-mbstring php-pecl-memcache php-opcache php-pecl-apcu php-cli php-common php-gd php-jsonc php-mbstring php-mysqlnd php-odbc php-pdo php-pecl-apcu php-process php-soap php-xml php-devel php-xdebug php-pear 
+
+sudo pecl channel-update pecl.php.net
+sudo pecl install xdebug-3.1.6
+# After xdebug is installed, follow the prompt by adding 
+
+# zend_extension=/usr/lib64/php/modules/xdebug.so
+#xdebug.mode=profile
+#xdebug.output_dir=/mnt/data/shwchurch/log/xdebug_profiling
+# to /etc/php.ini
+
+# For xdebug SSH portforwarding
+# ssh -i ****.pem -R 9003:localhost:9003 ec2-user@t5.shwchurch.org
+# Then install VSCode PHP Debug
+
+sudo systemctl enable php-fpm
+sudo systemctl restart php-fpm
+php -r 'xdebug_info();'
 
 sudo systemctl enable nginx
 sudo systemctl start nginx
@@ -116,7 +132,6 @@ ping tmp202408.shwchurch.org
 
 ```zsh
 
-sudo amazon-linux-extras install -y epel
 sudo yum install -y certbot-nginx
 
 # replace
@@ -273,7 +288,8 @@ sudo vim /mnt/data/shwchurch/web/wp-config.php
 
 ```zsh
 cd /mnt/data/crontab
-ls |  grep cron_ | grep -v grep | grep -v .bak | xargs -I{} sudo zsh {}
+ls | grep cron | grep -v grep | xargs -I{} sudo zsh -c 'zsh ./{} &'
+ls /etc/cron.d/*
 ```
 
 ### Setup github SSH key auth
@@ -363,10 +379,25 @@ testMigratedPush /mnt/data/shwchurch/web/wp-content/themes/shwchurch wordpress_t
 - Perform completion backup for all AWS volumes
 
 - Try hugo sync
-  - `(cd /mnt/hugo; sudo -u hugo zsh -c "/mnt/hugo/github/t5/bin/sync.sh > /mnt/hugo/github/sync.log  2>&1 &"); tail -f /mnt/hugo/github/sync.log`
+    - Change php.ini `sudo vim /etc/php.ini`
+```ini
+memory_limit=1024M
+```
+
+```zsh
+sudo service php-fpm restart
+(cd /mnt/hugo; sudo -u hugo zsh -c '/mnt/hugo/github/t5/bin/sync.sh > /mnt/hugo/github/sync.log 2>&1' &); tail -f /mnt/hugo/github/sync.log
+```
 - Set reminder to see if Database was backup in a week
 - Set reminder to remove all volumes and the old instance in 2 week
 - Remove all of the old manual snapshots for the old instance/volumes
 
 * Create a backup from the instance (all volumes)
 * https://ap-southeast-1.console.aws.amazon.com/ec2/home?region=ap-southeast-1#Snapshots:visibility=owned-by-me;v=3
+
+- Add hints to `~/.zshrc`
+```zsh
+cp ~/.zshrc ~/.zshrc.bak.$(date +%s)
+echo "echo \"(cd /mnt/hugo; sudo -u hugo zsh -c '/mnt/hugo/github/t5/bin/sync.sh > /mnt/hugo/github/sync.log 2>&1' &); tail -f /mnt/hugo/github/sync.log\"" >> ~/.zshrc
+source ~/.zshrc
+```
