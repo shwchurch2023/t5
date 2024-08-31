@@ -1,5 +1,6 @@
-#!/bin/bash
+#!/bin/zsh
 
+export BASE_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd .. && pwd )
 
 # if [[ -z "$BASE_PATH" ]];then
 #     cd "$(dirname "$0")"
@@ -16,8 +17,6 @@ fi
 
 cd "$(dirname "$0")"
 cd ..
-
-BASE_PATH=$(pwd)
 
 cd $BASE_PATH
 
