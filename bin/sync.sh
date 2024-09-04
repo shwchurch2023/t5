@@ -53,13 +53,15 @@ killLongRunningGit
 updateRepo $githubHugoThemePath
 updateRepo $githubHugoPath
 
-echo "[INFO] Cleanup ${hugoExportedPath}"
-mkdir -p "${hugoExportedPath}"
-if [[ ! -z "$hugoExportedPath" && -d "${hugoExportedPath}" ]]; then
-	rmSafe "${hugoExportedPath}" "wp-hugo-delta-processing"
-else
-	echo "[ERROR] Hugo Export Path ${hugoExportedPath} is invalid"
-	exit 1
+if [[ -z "${HUGO_SKIP_PHP_WP_EXPORT}" ]];then
+	echo "[INFO] Cleanup ${hugoExportedPath}"
+	mkdir -p "${hugoExportedPath}"
+	if [[ ! -z "$hugoExportedPath" && -d "${hugoExportedPath}" ]]; then
+		rmSafe "${hugoExportedPath}" "wp-hugo-delta-processing"
+	else
+		echo "[ERROR] Hugo Export Path ${hugoExportedPath} is invalid"
+		exit 1
+	fi
 fi
 
 echo "[INFO] Generating Markdown files from Wordpress "
@@ -88,7 +90,7 @@ detectChange(){
 }
 detectChange
 
-php hugo-export-cli.php ${tmpPathPrefix} > /dev/null
+# php hugo-export-cli.php ${tmpPathPrefix} > /dev/null
 
 cd ${hugoExportedPath}
 
@@ -113,12 +115,14 @@ rmSafe "./ftp/choir-mp3/" "choir-mp3"
 
 echo "[INFO] Copy all contents into Hugo folder for publishing"
 
-rmSafe "${githubHugoPath}/content/*" "t5"
-if [[ ! -z "${hugoExportedPath}" && -d "${hugoExportedPath}"  ]];then
-	#cp -nr ${hugoExportedPath}/* ${githubHugoPath}/content/
-	cd ${hugoExportedPath}
-	cp -R ./ ${githubHugoPath}/content/
-	cd -
+if [[ -z "${HUGO_SKIP_PHP_WP_EXPORT}" ]];then
+	rmSafe "${githubHugoPath}/content/*" "t5"
+	if [[ ! -z "${hugoExportedPath}" && -d "${hugoExportedPath}"  ]];then
+		#cp -nr ${hugoExportedPath}/* ${githubHugoPath}/content/
+		cd ${hugoExportedPath}
+		cp -R ./ ${githubHugoPath}/content/
+		cd -
+	fi
 fi
 
 
@@ -139,9 +143,9 @@ for SpecialChar in "${SpecialCharsInTitle[@]}"; do
 done
 
 
-echo "[INFO] Download signal"
-cd ${githubHugoPath}/content/wp-content/uploads/
-curl https://apkpure.com/signal-private-messenger/org.thoughtcrime.securesms/download?from=details  | sed -n 's/.*download_link.*href\=\"\(.*\)\".*/\1/p' | xargs curl -o signal.latest.apk -L 
+# echo "[INFO] Download signal"
+# cd ${githubHugoPath}/content/wp-content/uploads/
+# curl https://apkpure.com/signal-private-messenger/org.thoughtcrime.securesms/download?from=details  | sed -n 's/.*download_link.*href\=\"\(.*\)\".*/\1/p' | xargs curl -o signal.latest.apk -L 
 
 cd ${githubHugoPath}/bin/
 echo "[INFO] Deploy and publish to github pages"
