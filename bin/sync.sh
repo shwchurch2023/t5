@@ -98,6 +98,8 @@ cd ${hugoExportedPath}
 postDir=${hugoExportedPath}/posts
 uploadsDir=${hugoExportedPath}/wp-content/uploads/
 cd ${postDir}
+pwd
+ls
 # allMp3RequiredDescriptor=uploaded-files-required.txt 
 # allMp3Descriptor=uploaded-files.txt
 # allMp3ToDeleteDescriptor=uploaded-files-to-delete.txt 
@@ -108,10 +110,12 @@ cd ${postDir}
 # fileSizeOfFilesToRemove=+1M
 
 cd ${uploadsDir}
+pwd
+ls
 
 echo "[INFO] Delete other unnecessary files"
 
-# rmSafe "./ftp/choir-mp3/" "choir-mp3"
+rmSafe "./ftp/choir-mp3/" "choir-mp3" true
 
 echo "[INFO] Copy all contents into Hugo folder for publishing"
 
@@ -129,6 +133,8 @@ fi
 echo "[INFO] Replace all special chars in Markdown Title"
 
 cd ${githubHugoPath}/content/posts
+pwd
+ls
 
 declare -a SpecialCharsInTitle=(
         '@::＠'
@@ -155,4 +161,3 @@ echo "[INFO] Deploy and publish to github pages"
 mv $detectChange_file_tmp $detectChange_file
 
 ${BASE_PATH}/bin/mail.sh "shwchurch3@gmail.com" "[INFO][$0] Done Hugo Sync for ${source_website}"
-
