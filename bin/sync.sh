@@ -129,6 +129,8 @@ if [[ -z "${HUGO_SKIP_PHP_WP_EXPORT}" ]];then
 	fi
 fi
 
+exit
+
 
 echo "[INFO] Replace all special chars in Markdown Title"
 
