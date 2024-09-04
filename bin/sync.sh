@@ -90,7 +90,7 @@ detectChange(){
 }
 detectChange
 
-# php hugo-export-cli.php ${tmpPathPrefix} > /dev/null
+php hugo-export-cli.php ${tmpPathPrefix} > /dev/null
 
 cd ${hugoExportedPath}
 
@@ -98,8 +98,7 @@ cd ${hugoExportedPath}
 postDir=${hugoExportedPath}/posts
 uploadsDir=${hugoExportedPath}/wp-content/uploads/
 cd ${postDir}
-pwd
-ls
+
 # allMp3RequiredDescriptor=uploaded-files-required.txt 
 # allMp3Descriptor=uploaded-files.txt
 # allMp3ToDeleteDescriptor=uploaded-files-to-delete.txt 
@@ -110,8 +109,6 @@ ls
 # fileSizeOfFilesToRemove=+1M
 
 cd ${uploadsDir}
-pwd
-ls
 
 echo "[INFO] Delete other unnecessary files"
 
@@ -128,8 +125,6 @@ if [[ -z "${HUGO_SKIP_PHP_WP_EXPORT}" ]];then
 		cd -
 	fi
 fi
-
-exit
 
 
 echo "[INFO] Replace all special chars in Markdown Title"
