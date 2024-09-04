@@ -111,7 +111,7 @@ cd ${uploadsDir}
 
 echo "[INFO] Delete other unnecessary files"
 
-rmSafe "./ftp/choir-mp3/" "choir-mp3"
+# rmSafe "./ftp/choir-mp3/" "choir-mp3"
 
 echo "[INFO] Copy all contents into Hugo folder for publishing"
 
