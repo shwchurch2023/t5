@@ -15,6 +15,8 @@ echo  "(cd /mnt/hugo; /mnt/hugo/github/t5/bin/deploy.sh > ${log} 2>&1 &); tail -
 echo -ne "\n\n"
 sleep 15
 
+date
+
 # env > ~/.env
 export BASE_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd .. && pwd )
 
@@ -92,12 +94,16 @@ detectChange
 
 php hugo-export-cli.php ${tmpPathPrefix} > /dev/null
 
+date
+
 cd ${hugoExportedPath}
 
 # echo "[INFO] Remove file more than ${fileSizeOfFilesToRemove} that is not required from ${protectedMp3FromDeletedRequiredInMarkdownFileNamePattern}"
 postDir=${hugoExportedPath}/posts
 uploadsDir=${hugoExportedPath}/wp-content/uploads/
 cd ${postDir}
+pwd
+ls
 
 # allMp3RequiredDescriptor=uploaded-files-required.txt 
 # allMp3Descriptor=uploaded-files.txt
@@ -109,10 +115,13 @@ cd ${postDir}
 # fileSizeOfFilesToRemove=+1M
 
 cd ${uploadsDir}
+pwd
+ls
 
 echo "[INFO] Delete other unnecessary files"
 
 rmSafe "./ftp/choir-mp3/" "choir-mp3" true
+date
 
 echo "[INFO] Copy all contents into Hugo folder for publishing"
 
@@ -121,11 +130,14 @@ if [[ -z "${HUGO_SKIP_PHP_WP_EXPORT}" ]];then
 	if [[ ! -z "${hugoExportedPath}" && -d "${hugoExportedPath}"  ]];then
 		#cp -nr ${hugoExportedPath}/* ${githubHugoPath}/content/
 		cd ${hugoExportedPath}
+		pwd
+		ls
 		cp -R ./ ${githubHugoPath}/content/
 		cd -
 	fi
 fi
 
+date
 
 echo "[INFO] Replace all special chars in Markdown Title"
 

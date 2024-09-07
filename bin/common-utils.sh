@@ -58,7 +58,7 @@ findAndReplace(){
 	if [[ "$#" -lt "${minArg}" ]]; then
 		# TODO: print usage
 		echo "Need at least $minArg arguments"
-		exit 1
+		return 2
 	fi
 
 	(
@@ -269,6 +269,7 @@ useSSHKey(){
 export useSSHKey
 
 killLongRunningGit(){
+	echo "[$0]"
 	ps aux | egrep "\sgit\s" | awk '{print $2}' | xargs kill
 }
 export killLongRunningGit 
