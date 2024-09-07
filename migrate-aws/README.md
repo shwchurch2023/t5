@@ -345,6 +345,15 @@ testMigratedPush /mnt/hugo/github/t5/themes/hugo-theme-shwchurch hugo-theme-shwc
 
 ```
 
+- init hugo env
+```zsh
+cd /mnt/hugo
+sudo -u hugo zsh
+whoami
+env > .env
+cat .env
+```
+
 - SW theme
 
 ```zsh

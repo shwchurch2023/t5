@@ -7,6 +7,11 @@ detectChange_file_tmp=${detectChange_file}.tmp
 
 echo "[INFO] You could run deploy.sh if you just want to debug it. Normally, sync.sh doesn't have issue, but only deploy with hugo --minify"
 echo -ne "[INFO] You have 15s to cancel me\n\n"
+detect_existing_process=$(ps aux | grep sync | grep -v grep | grep -v " $! ")
+if [[ ! -z "${detect_existing_process}" ]];then
+	echo "[WARN] Existing processes found ${detect_existing_process}"
+	exit 2
+fi
 ps aux | grep sync | grep -v grep | awk '{print $2}' | xargs echo "sudo kill -9 "
 log=/mnt/hugo/github/sync.log
 echo  "(cd /mnt/hugo; sudo -u hugo zsh -c '/mnt/hugo/github/t5/bin/deploy.sh > ${log} 2>&1' &); tail -f ${log}"
