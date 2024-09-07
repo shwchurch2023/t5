@@ -8,13 +8,13 @@ detectChange_file_tmp=${detectChange_file}.tmp
 current_process_id=$$
 
 echo "[INFO] Current ID $current_process_id"
-ps aux | grep sync | grep -v grep
-detect_existing_process=$(ps aux | grep sync | grep -v grep | grep -v "root " | grep -v "ec2-user " | grep -v " ${current_process_id} ")
+
+detect_existing_process=$(ps aux | grep sync | grep -v grep | grep -v "root " | grep -v "ec2-user " | grep -v " ${current_process_id} " | grep -v " $((current_process_id+1)) ")
 if [[ ! -z "${detect_existing_process}" ]];then
 	echo "[WARN] Existing processes found ${detect_existing_process}"
 	echo "[WARN] To kill them, try"
-	ps aux | grep sync | grep -v grep | awk '{print $2}' | xargs echo "sudo kill -9 "
-	exit 2
+	ps aux | grep sync | grep -v grep | grep -v "root " | grep -v "ec2-user " | grep -v " ${current_process_id} " | grep -v " $((current_process_id+1)) " | awk '{print $2}' | xargs echo "sudo kill -9 "
+	# exit 2
 fi
 
 exit 2
