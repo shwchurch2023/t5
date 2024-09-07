@@ -132,7 +132,7 @@ rmSafe() {
 	expectPathPart=$2
 	onlyWarning=$3
 	getRealPath=$(realpath $dir)
-	echo "[INFO] rmSafe $getRealPath"
+	echo "[INFO] rmSafe $getRealPath (arg: ${1})"
 	if [[ ! -z "$dir" && "$getRealPath" =~ "$expectPathPart" ]]; then
 		realpath $dir | xargs rm -rf
 	else
