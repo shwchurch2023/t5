@@ -73,6 +73,7 @@ step_file=/tmp/t5_shouldExecuteStep_step
 
 shouldExecuteStep(){
 	stepid=${1}
+	steplabel=${2}
 
 	# >&2 echo "[$0] step_id ${stepid}"
 
@@ -82,7 +83,7 @@ shouldExecuteStep(){
 
 	if [[ ! -f "${step_file}" ]];then
 		echo "true"
-		executeStepStart $stepid
+		executeStepStart $stepid $steplabel
 		return 0
 	fi
 
@@ -91,7 +92,7 @@ shouldExecuteStep(){
 	if [[ -z "${laststepid}" ]];then
 	
 		echo "true"
-		executeStepStart $stepid
+		executeStepStart $stepid $steplabel
 		return 0
 	fi
 
@@ -100,20 +101,22 @@ shouldExecuteStep(){
 	if (( "$((stepid-laststepid))" >= 0 ))
 	then
 		echo "true"
-		executeStepStart $stepid
+		executeStepStart $stepid $steplabel
 		return 0
 	fi
 
-	>&2 echo "[$0] Skip step ${stepid}"
+	>&2 echo "[$0] Skip step ${stepid} (label: $steplabel)"
 	
 }
 export shouldExecuteStep
 
 executeStepStart(){
 	step_id=${1}
+	steplabel=${2}
 	echo "${step_id}" > $step_file
-	>&2 echo "[$0] Executing step ${step_id}"
+	>&2 echo "[$0] Executing step ${step_id} with label [$steplabel]"
 }
+export executeStepStart
 
 executeStepAllDone(){
 	rm -f $step_file
@@ -137,7 +140,7 @@ findAndReplace(){
 	(
 
 		cd $pathToFind
-		echo "cd $$pathToFind; find . -not -path '*/.*' -type f -name \"${filePattern}\" -exec sed -i \"${sed_cmd}\" {} \;"
+		echo "cd $pathToFind; find . -not -path '*/.*' -type f -name \"${filePattern}\" -exec sed -i \"${sed_cmd}\" {} \;"
 		find . -not -path '*/.*' -type f -name "${filePattern}" -exec sed -i "${sed_cmd}" {} \;
 
 	)
@@ -299,7 +302,7 @@ addSSHKey(){
     cat ${pub_key}
 
 	echo ""
-	echo "Also, update [[ uploadsGitUsername2 ]] or add new [[ uploadsGitUsernameN ]] and its usage in [[ ./bin/deploy-uploads.sh \"\$publicFolder\" \"\$uploadsGitUsername2\" \"\${githubSplitPart2From}\" \"\$((currYear-1))\" ]]"
+	echo "Also, update [[ uploadsGitUsername2 ]] or add new [[ uploadsGitUsernameN ]] and its usage in [[ ./bin/deploy-uploads.sh \"\$publicFolder\" \"\$uploadsGitUsername2\" \"\${githubSplitPart2From}\" \"\$((currYear-1))\" int_step_id_base ]]"
 	help_createGithubIo
 
 	echo "Then start a new ... bin/deploy.sh ... "
@@ -512,13 +515,16 @@ rangeGitAddPush(){
 export rangeGitAddPush
 
 applyDistributionMapping(){
+	findAndReplace_base_step_local=${1}
 	echo "[$0]"
-	applyPathMapping "$filePathUrlMappingFilePath"
+	applyPathMapping "$filePathUrlMappingFilePath" $findAndReplace_base_step_local
 }
 export applyDistributionMapping
 
 applyPathMapping(){
 	file=${1}
+	applyPathMapping_findAndReplace_base_step_local=${2}
+
 	echo "Apply mappings from $file"
 	cat $file
 
@@ -526,8 +532,11 @@ applyPathMapping(){
 	while IFS= read line
 	do
 		if [[ ! -z "$line" ]];then
-			echo "$line"
-			findAndReplace "$line"
+			echo "[$0] $line"
+			applyPathMapping_findAndReplace_base_step_local=$((applyPathMapping_findAndReplace_base_step_local + 1))
+			if [[ "$(shouldExecuteStep ${applyPathMapping_findAndReplace_base_step_local} DeploySplitFiles_wp-content_uploads)" = "true" ]];then
+				findAndReplace "$line"
+			fi
 			# find "${find_main_public_site_args}" -type f -name "*.html" -exec sed -i  "$line" {} \; 
 		fi
 			# display $line or do something with $line
@@ -537,8 +546,9 @@ applyPathMapping(){
 export applyPathMapping
 
 applyManualDistributionMapping(){
+	findAndReplace_base_step_local=${2}
 	echo "[$0]"
-	applyPathMapping "$filePathUrlMappingFilePathManual"
+	applyPathMapping "$filePathUrlMappingFilePathManual" $findAndReplace_base_step_local
 }
 export applyManualDistributionMapping
 

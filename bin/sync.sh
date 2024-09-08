@@ -69,19 +69,19 @@ echo  "(cd /mnt/hugo; sudo -u hugo zsh -c '/mnt/hugo/github/t5/bin/sync.sh > ${l
 
 findAndReplace_base_step=40
 
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step} update_repos )" = "true" ]];then
 	killLongRunningGit
 	updateRepo $githubHugoThemePath
 	updateRepo $githubHugoPath
 fi
 
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step} detect_changes )" = "true" ]];then
 	detectChange
 fi
 
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path )" = "true" ]];then
 
 	echo "[INFO] Cleanup ${hugoExportedPath}"
 	mkdir -p "${hugoExportedPath}"
@@ -122,7 +122,7 @@ pwd
 ls
 
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step} copy_content)" = "true" ]];then
 
 	echo "[INFO] Delete other unnecessary files"
 
@@ -161,7 +161,7 @@ for SpecialChar in "${SpecialCharsInTitle[@]}"; do
 		VALUE="${SpecialChar##*::}"
 		pattern="s#${KEY}#${VALUE}#g"
 		findAndReplace_base_step=$((findAndReplace_base_step + 1))
-		if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+		if [[ "$(shouldExecuteStep ${findAndReplace_base_step} replace_chars )" = "true" ]];then
 			findAndReplace "${pattern}" "." "*.md"
 		fi
 		# find . "${find_not_hidden_args}" -type f -name "*.md" -exec sed -i "${pattern}" {} \;

@@ -19,7 +19,7 @@ findAndReplace_base_step=200
 ##git reset --hard origin/main
 
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step} sync_podcast)" = "true" ]];then
 	echo "[INFO] Sync podcast"
 	syncPodcast
 fi
@@ -28,7 +28,7 @@ fi
 echo "[INFO] hugo minify for t5/content to t5/$publicFolder"
 
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step} hugoBuild)" = "true" ]];then
 	hugoBuild
 fi
 
@@ -39,24 +39,24 @@ publicFolderIndexHtml="$publicFolderAbs/index.html"
 cd $BASE_PATH
 
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step} clean_public_folder)" = "true" ]];then
 	
 	addSubmodule $publicGitUsername $publicFolder
 	ensureRequiredFolder $publicFolderAbs
 
 	cd $publicFolderAbs
 	rmSafe "./*" "github.io"
+	if [[ -f "${publicFolderIndexHtml}" ]];then
+		echo "[ERROR] $publicFolderIndexHtml should be cleared"
+		exit 1
+	fi
 fi
 
-if [[ -f "${publicFolderIndexHtml}" ]];then
-	echo "[ERROR] $publicFolderIndexHtml should be cleared"
-	exit 1
-fi
 
 cd $BASE_PATH
 
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step} moving_hugo_to_public_folder)" = "true" ]];then
 	mv -v -f $hugoPublicFolderAbs/* $publicFolderAbs/
 	if [[ "$?" != "0" || ! -f "${publicFolderIndexHtml}" ]];then
 		echo "[ERROR] Failed on moving files in $hugoPublicFolderAbs to $publicFolderAbs/ "
@@ -68,7 +68,7 @@ fi
 
 cd $publicFolderAbs
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step} update_shwchurch_N_with_$publicGitUsername )" = "true" ]];then
 	echo "Update domain to https://$publicFolder"
 	findAndReplace "s/shwchurch[[:digit:]]+/$publicGitUsername/g"
 fi
@@ -80,17 +80,20 @@ START=2005
 END=$(date +'%Y')
 MONTH=$(date +"%m")
 
-findAndReplace_base_step=$((findAndReplace_base_step + 10))
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+findAndReplace_base_step=300
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step} first_commit_essential)" = "true" ]];then
 
 	echo "[INFO] Apply path mapping from"
-	applyDistributionMapping
-	applyManualDistributionMapping
+	applyDistributionMapping $findAndReplace_base_step
+	
+	findAndReplace_base_step=$((findAndReplace_base_step + 100))
+	applyManualDistributionMapping $findAndReplace_base_step
 	commitEssential "$END" "$MONTH" 
 fi
 
-findAndReplace_base_step=$((findAndReplace_base_step + 10))
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+
+findAndReplace_base_step=500
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step} clean_up_url_mapping_file)" = "true" ]];then
 	echo "[INFO] Remove $filePathUrlMappingFilePath"
 	rmSafe "$filePathUrlMappingFilePath" "t5" "true"
 	touch "$filePathUrlMappingFilePath"
@@ -98,28 +101,30 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
 fi
 
 cd $BASE_PATH
-
-./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername1" "${githubSplitPart1From}" "$((githubSplitPart2From-1))"
+findAndReplace_base_step=800
+./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername1" "${githubSplitPart1From}" "$((githubSplitPart2From-1))" $findAndReplace_base_step
 ensureNoErrorOnChildProcess "$?"
+
 cd $BASE_PATH
-./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername2" "${githubSplitPart2From}" "$((currYear-1))"
+findAndReplace_base_step=1200
+./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername2" "${githubSplitPart2From}" "$((currYear-1))" $findAndReplace_base_step
 ensureNoErrorOnChildProcess "$?"
 
-findAndReplace_base_step=600
+findAndReplace_base_step=1600
 
 echo "[INFO] Publish content to GithubPage https://$publicFolder"
 
 # Commit changes.
 # Add changes to git.
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step} update_essential_file_commit )" = "true" ]];then
 	reduceCompilationSize
-	applyManualDistributionMapping
+	applyManualDistributionMapping $findAndReplace_base_step
 	commitEssential "$END" "$MONTH" 
 fi
 
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step} sync_fork_mirrors_1 )" = "true" ]];then
 	syncForkInMirrorGithubAccounts
 fi
 
@@ -132,7 +137,7 @@ do
 	#git reset "$i/"
 
 	findAndReplace_base_step=$((findAndReplace_base_step + 2))
-	if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+	if [[ "$(shouldExecuteStep ${findAndReplace_base_step} commit_folder_$i )" = "true" ]];then
 		gitCommitByBulk "$i/" $publicGitUsername
 	fi
 done
@@ -140,13 +145,13 @@ done
 #waitGitComplete
 cd $publicFolderAbs
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step} commit_categories_wp_content )" = "true" ]];then
 	gitCommitByBulk "categories" $publicGitUsername
 	gitCommitByBulk "wp-content" $publicGitUsername
 fi
 
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step} commit_pages_posts)" = "true" ]];then
 	gitCommitByBulk "page" $publicGitUsername
 	gitCommitByBulk "posts/page" $publicGitUsername
 fi
@@ -156,7 +161,7 @@ fi
 waitGitComplete
 cd $publicFolderAbs
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step} commit_all_rest)" = "true" ]];then
 	git add .
 	git commit -m "Commit all the rest"
 	git push --set-upstream origin main  --force
@@ -167,7 +172,7 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
 fi
 
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step} sync_fork_mirrors_2)" = "true" ]];then
 	syncForkInMirrorGithubAccounts
 fi
 

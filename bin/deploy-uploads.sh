@@ -14,6 +14,7 @@ publicFolder=$1
 toGitUsername=$2
 startYear=$3
 endYear=$4
+findAndReplace_base_step=$5
 
 if [[ -z "$endYear" || "$endYear" =~ "^2" ]]; then
 	echo "[ERROR] Parameters are invalide. publicFolder:${publicFolder} toGitUsername=${toGitUsername} startYear=${startYear} endYear=${endYear}"
@@ -86,12 +87,12 @@ splitFiles(){
 # Commit changes.
 # Add changes to git.
 
-findAndReplace_base_step=400
+
 for i in $(seq "$startYear" "$endYear")
 do
 	#git reset "$i/"
 	findAndReplace_base_step=$((findAndReplace_base_step + 2))
-	if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+	if [[ "$(shouldExecuteStep ${findAndReplace_base_step} DeploySplitFiles_wp-content_uploads_$i)" = "true" ]];then
 		splitFiles "wp-content/uploads/$i"
 	fi
 done
