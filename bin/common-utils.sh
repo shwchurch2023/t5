@@ -74,7 +74,7 @@ step_file=/tmp/t5_shouldExecuteStep_step
 shouldExecuteStep(){
 	stepid=${1}
 
-	>&2 echo "[$0] step_id ${stepid}"
+	# >&2 echo "[$0] step_id ${stepid}"
 
 	if [[ -z "${stepid}" ]];then
 		exit 1
@@ -95,7 +95,7 @@ shouldExecuteStep(){
 		return 0
 	fi
 
-	>&2 echo "[$0] last_step_id ${laststepid}"
+	# >&2 echo "[$0] last_step_id ${laststepid}"
 
 	if (( "$((stepid-laststepid))" >= 0 ))
 	then
@@ -103,6 +103,8 @@ shouldExecuteStep(){
 		executeStepStart $stepid
 		return 0
 	fi
+
+	>&2 echo "[$0] Skip step ${stepid}"
 	
 }
 export shouldExecuteStep
