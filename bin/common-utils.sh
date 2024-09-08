@@ -72,35 +72,35 @@ export lock_file
 step_file=/tmp/t5_shouldExecuteStep_step
 
 shouldExecuteStep(){
-	step_id=${1}
+	stepid=${1}
 
-	>&2 echo "[$0] step_id ${step_id}"
+	>&2 echo "[$0] step_id ${stepid}"
 
-	if [[ -z "${step_id}" ]];then
+	if [[ -z "${stepid}" ]];then
 		exit 1
 	fi
 
 	if [[ ! -f "${step_file}" ]];then
 		echo "true"
-		executeStepStart $step_id
+		executeStepStart $stepid
 		return 0
 	fi
 
-	last_step_id=$(cat ${step_file})
+	laststepid=$(cat ${step_file} | tr -d '\n')
 
-	if [[ -z "${last_step_id}" ]];then
+	if [[ -z "${laststepid}" ]];then
 	
 		echo "true"
-		executeStepStart $step_id
+		executeStepStart $stepid
 		return 0
 	fi
 
-	>&2 echo "[$0] last_step_id ${last_step_id}"
+	>&2 echo "[$0] last_step_id ${laststepid}"
 
-	if ((1<=2))
+	if (( "$((stepid-laststepid))" >= 0 ))
 	then
 		echo "true"
-		executeStepStart $step_id
+		executeStepStart $stepid
 		return 0
 	fi
 	
@@ -109,7 +109,7 @@ export shouldExecuteStep
 
 executeStepStart(){
 	step_id=${1}
-	echo "${step_id}" >> $step_file
+	echo "${step_id}" > $step_file
 	>&2 echo "[$0] Executing step ${step_id}"
 }
 
