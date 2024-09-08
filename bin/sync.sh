@@ -7,10 +7,6 @@ source $BASE_PATH/bin/common-utils.sh
 
 cd $BASE_PATH
 
-log=/mnt/hugo/github/sync.log
-echo  "(cd /mnt/hugo; sudo -u hugo zsh -c '/mnt/hugo/github/t5/bin/deploy.sh > ${log} 2>&1' &); tail -f ${log}"
-echo  "(cd /mnt/hugo; /mnt/hugo/github/t5/bin/deploy.sh > ${log} 2>&1 &); tail -f ${log}"
-
 lock_file main_entry_sync
 
 git config --global core.quotePath false
@@ -22,6 +18,10 @@ detectChange_file_tmp=${detectChange_file}.tmp
 
 echo "[INFO] You could run deploy.sh if you just want to debug it. Normally, sync.sh doesn't have issue, but only deploy with hugo --minify"
 echo -ne "[INFO] You have 15s to cancel me\n\n"
+
+log=/mnt/hugo/github/sync.log
+echo  "(cd /mnt/hugo; sudo -u hugo zsh -c '/mnt/hugo/github/t5/bin/deploy.sh > ${log} 2>&1' &); tail -f ${log}"
+echo  "(cd /mnt/hugo; /mnt/hugo/github/t5/bin/deploy.sh > ${log} 2>&1 &); tail -f ${log}"
 
 echo -ne "\n\n"
 sleep 15
