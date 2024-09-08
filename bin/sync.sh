@@ -43,36 +43,6 @@ githubHugoThemePath=/mnt/hugo/github/t5/themes/hugo-theme-shwchurch
 wodrePressHugoExportPath=/mnt/data/shwchurch/web/wp-content/plugins/wordpress-to-hugo-exporter
 ls -la $wodrePressHugoExportPath
 
-echo  "(cd /mnt/hugo; sudo -u hugo zsh -c '/mnt/hugo/github/t5/bin/sync.sh > ${log} 2>&1 ' &); tail -f ${log}"
-
-detechIfSyncIsRunning(){
-	if pidof -x "`basename $0`" -o $$ >/dev/null; then
-		echo "Process already running"
-		exit
-	fi
-}
-
-detechIfSyncIsRunning
-
-killLongRunningGit
-
-updateRepo $githubHugoThemePath
-updateRepo $githubHugoPath
-
-if [[ -z "${HUGO_SKIP_PHP_WP_EXPORT}" ]];then
-	echo "[INFO] Cleanup ${hugoExportedPath}"
-	mkdir -p "${hugoExportedPath}"
-	if [[ ! -z "$hugoExportedPath" && -d "${hugoExportedPath}" ]]; then
-		rmSafe "${hugoExportedPath}" "wp-hugo-delta-processing"
-	else
-		echo "[ERROR] Hugo Export Path ${hugoExportedPath} is invalid"
-		exit 1
-	fi
-fi
-
-echo "[INFO] Generating Markdown files from Wordpress "
-cd ${wodrePressHugoExportPath}
-
 detectChange(){
 	curl ${source_website} | sed 's/[a-zA-Z0-9<>"\\=\/_&%:\.#,\{\}\(\);\?!\[@|* -]//g' > ${detectChange_file_tmp}
 	if [[ ! -f "${detectChange_file_tmp}" ]];then
@@ -94,11 +64,41 @@ detectChange(){
 		fi	
 	fi
 }
-detectChange
 
-php hugo-export-cli.php ${tmpPathPrefix} > /dev/null
+echo  "(cd /mnt/hugo; sudo -u hugo zsh -c '/mnt/hugo/github/t5/bin/sync.sh > ${log} 2>&1 ' &); tail -f ${log}"
 
-date
+findAndReplace_base_step=40
+
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+	killLongRunningGit
+	updateRepo $githubHugoThemePath
+	updateRepo $githubHugoPath
+fi
+
+findAndReplace_base_step=$((findAndReplace_base_step + 10))
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+	detectChange
+fi
+
+findAndReplace_base_step=$((findAndReplace_base_step + 10))
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+
+	echo "[INFO] Cleanup ${hugoExportedPath}"
+	mkdir -p "${hugoExportedPath}"
+	if [[ ! -z "$hugoExportedPath" && -d "${hugoExportedPath}" ]]; then
+		rmSafe "${hugoExportedPath}" "wp-hugo-delta-processing"
+	else
+		echo "[ERROR] Hugo Export Path ${hugoExportedPath} is invalid"
+		exit 1
+	fi
+
+	echo "[INFO] Generating Markdown files from Wordpress "
+	cd ${wodrePressHugoExportPath}
+
+	php hugo-export-cli.php ${tmpPathPrefix} > /dev/null
+	date
+
+fi
 
 cd ${hugoExportedPath}
 
@@ -117,19 +117,21 @@ ls
 # echo "" > ${uploadsDir}/${allMp3ToDeleteDescriptor}
 
 # fileSizeOfFilesToRemove=+1M
-
 cd ${uploadsDir}
 pwd
 ls
 
-echo "[INFO] Delete other unnecessary files"
+findAndReplace_base_step=$((findAndReplace_base_step + 10))
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
 
-rmSafe "./ftp/choir-mp3/" "choir-mp3" true
-date
+	echo "[INFO] Delete other unnecessary files"
 
-echo "[INFO] Copy all contents into Hugo folder for publishing"
+	rmSafe "./ftp/choir-mp3/" "choir-mp3" true
+	date
 
-if [[ -z "${HUGO_SKIP_PHP_WP_EXPORT}" ]];then
+	echo "[INFO] Copy all contents into Hugo folder for publishing"
+
+
 	rmSafe "${githubHugoPath}/content/*" "t5"
 	if [[ ! -z "${hugoExportedPath}" && -d "${hugoExportedPath}"  ]];then
 		#cp -nr ${hugoExportedPath}/* ${githubHugoPath}/content/
@@ -139,8 +141,8 @@ if [[ -z "${HUGO_SKIP_PHP_WP_EXPORT}" ]];then
 		cp -R ./ ${githubHugoPath}/content/
 		cd -
 	fi
-fi
 
+fi
 date
 
 echo "[INFO] Replace all special chars in Markdown Title"
@@ -153,12 +155,16 @@ declare -a SpecialCharsInTitle=(
         '@::＠'
 )
 
+
 for SpecialChar in "${SpecialCharsInTitle[@]}"; do
-        KEY="${SpecialChar%%::*}"
-        VALUE="${SpecialChar##*::}"
-        pattern="s#${KEY}#${VALUE}#g"
-		findAndReplace "${pattern}" "." "*.md"
-        # find . "${find_not_hidden_args}" -type f -name "*.md" -exec sed -i "${pattern}" {} \;
+		KEY="${SpecialChar%%::*}"
+		VALUE="${SpecialChar##*::}"
+		pattern="s#${KEY}#${VALUE}#g"
+		findAndReplace_base_step=$((findAndReplace_base_step + 1))
+		if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+			findAndReplace "${pattern}" "." "*.md"
+		fi
+		# find . "${find_not_hidden_args}" -type f -name "*.md" -exec sed -i "${pattern}" {} \;
 done
 
 

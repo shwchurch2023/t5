@@ -69,6 +69,38 @@ lock_file(){
 }
 export lock_file
 
+step_file=/tmp/t5_shouldExecuteStep_step
+
+shouldExecuteStep(){
+	step_id=${1}
+
+	if [[ ! -f "${step_file}" ]];then
+		echo "true"
+		executeStepStart $step_id
+		return 0
+	fi
+	last_step_id=$(cat "${step_file}" )
+	if [[ "${last_step_id}" -le  "${step_id}" ]];then
+		echo "true"
+		executeStepStart $step_id
+		return 0
+	fi
+	
+}
+export shouldExecuteStep
+
+executeStepStart(){
+	step_id=${1}
+	echo "${step_id}" >> $step_file
+	>2 echo "[$0] Executing step ${step_id}"
+}
+
+executeStepAllDone(){
+	rm -f $step_file
+}
+export executeStepAllDone
+
+
 findAndReplace(){
 	sed_cmd=${1}
 
@@ -460,6 +492,7 @@ rangeGitAddPush(){
 export rangeGitAddPush
 
 applyDistributionMapping(){
+	echo "[$0]"
 	applyPathMapping "$filePathUrlMappingFilePath"
 }
 export applyDistributionMapping
@@ -484,6 +517,7 @@ applyPathMapping(){
 export applyPathMapping
 
 applyManualDistributionMapping(){
+	echo "[$0]"
 	applyPathMapping "$filePathUrlMappingFilePathManual"
 }
 export applyManualDistributionMapping
@@ -491,6 +525,7 @@ export applyManualDistributionMapping
 commitEssential(){
 	END=$1
 	MONTH=$2
+	echo "[$0]"
 	cd $publicFolderAbs
 	gitCommitByBulk "${END}/${MONTH}" $publicGitUsername
 	gitCommitByBulk "wp-content/uploads/${END}/${MONTH}" $publicGitUsername

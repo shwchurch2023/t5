@@ -86,10 +86,14 @@ splitFiles(){
 # Commit changes.
 # Add changes to git.
 
+findAndReplace_base_step=400
 for i in $(seq "$startYear" "$endYear")
 do
 	#git reset "$i/"
-	splitFiles "wp-content/uploads/$i"
+	findAndReplace_base_step=$((findAndReplace_base_step + 2))
+	if [[ "$(shouldExecuteStep ${findAndReplace_base_step})" = "true" ]];then
+		splitFiles "wp-content/uploads/$i"
+	fi
 done
 #waitGitComplete
 
