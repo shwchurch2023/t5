@@ -1,42 +1,32 @@
 #!/bin/bash
 
-source_website=https://t5.shwchurch.org/
+# env > ~/.env (then remove line with % symbol)
+export BASE_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd .. && pwd )
 
-detectChange_file=/tmp/hugo-sync-diff.log
-detectChange_file_tmp=${detectChange_file}.tmp
+source $BASE_PATH/bin/common-utils.sh
 
-current_process_id=$$
-
-echo "[INFO] Current ID $current_process_id"
-
-detect_existing_process=$(ps aux | grep sync | grep -v grep | grep -v "root " | grep -v "ec2-user " | grep -v " ${current_process_id} " | grep -v " $((current_process_id+1)) ")
-if [[ ! -z "${detect_existing_process}" ]];then
-	echo "[WARN] Existing processes found ${detect_existing_process}"
-	echo "[WARN] To kill them, try"
-	ps aux | grep sync | grep -v grep | grep -v "root " | grep -v "ec2-user " | grep -v " ${current_process_id} " | grep -v " $((current_process_id+1)) " | awk '{print $2}' | xargs echo "sudo kill -9 "
-	# exit 2
-fi
-
-exit 2
-
-echo "[INFO] You could run deploy.sh if you just want to debug it. Normally, sync.sh doesn't have issue, but only deploy with hugo --minify"
-echo -ne "[INFO] You have 15s to cancel me\n\n"
+cd $BASE_PATH
 
 log=/mnt/hugo/github/sync.log
 echo  "(cd /mnt/hugo; sudo -u hugo zsh -c '/mnt/hugo/github/t5/bin/deploy.sh > ${log} 2>&1' &); tail -f ${log}"
 echo  "(cd /mnt/hugo; /mnt/hugo/github/t5/bin/deploy.sh > ${log} 2>&1 &); tail -f ${log}"
 
+lock_file main_entry_sync
+
+git config --global core.quotePath false
+
+source_website=https://t5.shwchurch.org/
+
+detectChange_file=/tmp/hugo-sync-diff.log
+detectChange_file_tmp=${detectChange_file}.tmp
+
+echo "[INFO] You could run deploy.sh if you just want to debug it. Normally, sync.sh doesn't have issue, but only deploy with hugo --minify"
+echo -ne "[INFO] You have 15s to cancel me\n\n"
+
 echo -ne "\n\n"
 sleep 15
 
 date
-
-# env > ~/.env
-export BASE_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd .. && pwd )
-
-source $BASE_PATH/bin/common-utils.sh
-
-git config --global core.quotePath false
 
 cd $BASE_PATH
 
