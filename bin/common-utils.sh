@@ -74,13 +74,31 @@ step_file=/tmp/t5_shouldExecuteStep_step
 shouldExecuteStep(){
 	step_id=${1}
 
+	>&2 echo "[$0] step_id ${step_id}"
+
+	if [[ -z "${step_id}" ]];then
+		exit 1
+	fi
+
 	if [[ ! -f "${step_file}" ]];then
 		echo "true"
 		executeStepStart $step_id
 		return 0
 	fi
-	last_step_id=$(cat "${step_file}" )
-	if [[ "${last_step_id}" -le  "${step_id}" ]];then
+
+	last_step_id=$(cat ${step_file})
+
+	if [[ -z "${last_step_id}" ]];then
+	
+		echo "true"
+		executeStepStart $step_id
+		return 0
+	fi
+
+	>&2 echo "[$0] last_step_id ${last_step_id}"
+
+	if ((1<=2))
+	then
 		echo "true"
 		executeStepStart $step_id
 		return 0
@@ -92,7 +110,7 @@ export shouldExecuteStep
 executeStepStart(){
 	step_id=${1}
 	echo "${step_id}" >> $step_file
-	>2 echo "[$0] Executing step ${step_id}"
+	>&2 echo "[$0] Executing step ${step_id}"
 }
 
 executeStepAllDone(){
