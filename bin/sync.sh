@@ -54,6 +54,7 @@ detectChange(){
 		if [[ -z "${detectChange_is_changed}"  ]];then
 			if [[ -z "${HUGO_SYNC_FORCE}" ]];then
 				echo "[$0] $source_website is not changed. Skip sync. Set env var 'export HUGO_SYNC_FORCE=1' for force syncing "
+				unlock_file main_entry_sync
 				exit
 			else
 				echo "[$0] Force synced even no changes"
