@@ -21,12 +21,16 @@ cd ..
 cd $BASE_PATH
 
 cronScriptPath=/etc/cron.d/hugo-sync
+cronScriptPath1=/etc/cron.d/hugo-sync-monitor
 
 hugoGithubRoot=/mnt/hugo/github
 syncFile=${BASE_PATH}/bin/sync.sh 
+syncMonitorFile=${BASE_PATH}/bin/sync-monitor.sh 
 logPath=${hugoGithubRoot}/sync.log
+logPath1=${hugoGithubRoot}/sync-monitor.log
 
 scriptToRun="/bin/bash ${syncFile} > ${logPath} 2>&1"
+scriptToRun1="/bin/bash ${syncMonitorFile} > ${logPath1} 2>&1"
 
 
 
@@ -37,9 +41,11 @@ sudo chmod -R g+rw $hugoGithubRoot
 ls -la $hugoGithubRoot
 #echo "1 14 * * * $hugoUserGroup ${scriptToRun}" > ${cronScriptPath}
 sudo bash -c "echo \"1 0,6,12,18 * * * hugo ${scriptToRun}\" > \"${cronScriptPath}_1\""
+sudo bash -c "echo \"*/5 * * * * hugo ${scriptToRun1}\" > \"${cronScriptPath1}_1\""
 
 #cat ${cronScriptPath}
 sudo cat ${cronScriptPath}_1
+sudo cat ${cronScriptPath1}_1
 
 sudo service crond restart
 echo "Crontab restart, new PID: $(pgrep cron)"

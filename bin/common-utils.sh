@@ -69,6 +69,34 @@ lock_file(){
 }
 export lock_file
 
+unlock_file(){
+	lock_name=${1}
+
+	lock_path=/tmp/t5_lock_${lock_name}
+	
+	rm ${lock_path}
+	
+	
+}
+export unlock_file
+
+is_lock_file_dead_unexpected(){
+	lock_name=${1}
+
+	lock_path=/tmp/t5_lock_${lock_name}
+	
+	if [[ -f "${lock_path}" ]];then
+		lock_process_id=$(cat ${lock_path})
+		is_process_exist=$(ps aux | grep -v grep | grep " ${lock_process_id} ")
+		if [[ ! -z "${lock_process_id}" && -z "${is_process_exist}" ]];then
+			echo "Yes"
+		fi
+	fi
+	
+	
+}
+export is_lock_file_dead_unexpected
+
 step_file=/tmp/t5_shouldExecuteStep_step
 
 shouldExecuteStep(){
