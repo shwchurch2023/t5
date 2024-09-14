@@ -88,6 +88,7 @@ is_lock_file_dead_unexpected(){
 	if [[ -f "${lock_path}" ]];then
 		lock_process_id=$(cat ${lock_path})
 		is_process_exist=$(ps aux | grep -v grep | grep " ${lock_process_id} ")
+		>&2 echo "[$0] locker process is dead before completion"
 		if [[ ! -z "${lock_process_id}" && -z "${is_process_exist}" ]];then
 			echo "Yes"
 		fi
