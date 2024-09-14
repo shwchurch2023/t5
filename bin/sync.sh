@@ -47,6 +47,7 @@ detectChange(){
 	curl ${source_website} | sed 's/[a-zA-Z0-9<>"\\=\/_&%:\.#,\{\}\(\);\?!\[@|* -]//g' > ${detectChange_file_tmp}
 	if [[ ! -f "${detectChange_file_tmp}" ]];then
 		${BASE_PATH}/bin/mail.sh "shwchurch3@gmail.com" "[ERROR][$0] Failed in getting content from ${source_website}"
+		unlock_file main_entry_sync
 		exit 1023
 	fi
 	if [[ -f "${detectChange_file}" ]];then
@@ -90,6 +91,7 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 		rmSafe "${hugoExportedPath}" "wp-hugo-delta-processing"
 	else
 		echo "[ERROR] Hugo Export Path ${hugoExportedPath} is invalid"
+		unlock_file main_entry_sync
 		exit 1
 	fi
 
