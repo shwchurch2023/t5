@@ -582,9 +582,10 @@ applyManualDistributionMapping(){
 export applyManualDistributionMapping
 
 commitEssential(){
-	END=$1
-	MONTH=$2
-	echo "[$0]"
+	END=${1:-"$(date +'%Y')"}
+	MONTH=${2:-"$(date +"%m")"}
+
+	echo "[$0] Start: ${END}/${MONTH}"
 	cd $publicFolderAbs
 	gitCommitByBulk "${END}/${MONTH}" $publicGitUsername
 	gitCommitByBulk "wp-content/uploads/${END}/${MONTH}" $publicGitUsername
@@ -594,6 +595,8 @@ commitEssential(){
 	gitCommitByBulk "js" $publicGitUsername
 	gitCommitByBulk "images" $publicGitUsername
 	gitCommitByBulk "scss" $publicGitUsername
+
+	echo "[$0] Done: ${END}/${MONTH}"
 }
 export commitEssential
 
