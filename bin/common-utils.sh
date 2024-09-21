@@ -179,6 +179,35 @@ findAndReplace(){
 }
 export findAndReplace
 
+findAndReplaceV2(){
+	sed_cmd=${1}
+	filePath=${3:-"${publicFolderAbs}/PLACE_HOLDER.html"}
+
+	minArg=1
+	if [[ "$#" -lt "${minArg}" ]]; then
+		# TODO: print usage
+		echo "Need at least $minArg arguments"
+		return 2
+	fi
+
+	if [[ -z "$filePath" ]];then
+		findAndReplace $sed_cmd
+	else
+		(
+
+			echo "sed -i \"${sed_cmd}\" ${filePath} "
+			sed -i "${sed_cmd}" ${filePath} 
+
+		)
+	fi
+
+
+
+	# find "${find_main_public_site_args}"  -type f -name "*.html" -exec sed -i  "s/id=gallery-[[:digit:]]\+/id=gallery-replaced/g" {} \;
+
+}
+export findAndReplaceV2
+
 updateAllSubmodules(){
 	git submodule update --init --recursive
 }
@@ -545,8 +574,9 @@ export rangeGitAddPush
 
 applyDistributionMapping(){
 	findAndReplace_base_step_local=${1}
-	echo "[$0]"
-	applyPathMapping "$filePathUrlMappingFilePath" $findAndReplace_base_step_local
+	targetFileToChange=${2}
+	echo "[$0] $filePathUrlMappingFilePath"
+	applyPathMapping "$filePathUrlMappingFilePath" "$findAndReplace_base_step_local" "$targetFileToChange"
 }
 export applyDistributionMapping
 
@@ -554,7 +584,9 @@ applyPathMapping(){
 	file=${1}
 	applyPathMapping_findAndReplace_base_step_local=${2}
 
-	echo "Apply mappings from $file"
+	targetFileToChange=${3}
+
+	echo "[$0] Apply mappings from $file"
 	cat $file
 
 	cd $BASH_PATH
@@ -562,10 +594,15 @@ applyPathMapping(){
 	do
 		if [[ ! -z "$line" ]];then
 			echo "[$0] $line"
-			applyPathMapping_findAndReplace_base_step_local=$((applyPathMapping_findAndReplace_base_step_local + 1))
-			if [[ "$(shouldExecuteStep ${applyPathMapping_findAndReplace_base_step_local} DeploySplitFiles_wp-content_uploads)" = "true" ]];then
-				findAndReplace "$line"
+			if [[ -z "${applyPathMapping_findAndReplace_base_step_local}" ]];then
+				findAndReplaceV2 "$line" "$targetFileToChange"
+			else
+				applyPathMapping_findAndReplace_base_step_local=$((applyPathMapping_findAndReplace_base_step_local + 1))
+				if [[ "$(shouldExecuteStep ${applyPathMapping_findAndReplace_base_step_local} DeploySplitFiles_wp-content_uploads)" = "true" ]];then
+					findAndReplaceV2 "$line" "$targetFileToChange"
+				fi
 			fi
+			
 			# find "${find_main_public_site_args}" -type f -name "*.html" -exec sed -i  "$line" {} \; 
 		fi
 			# display $line or do something with $line
@@ -575,9 +612,10 @@ applyPathMapping(){
 export applyPathMapping
 
 applyManualDistributionMapping(){
-	findAndReplace_base_step_local=${2}
-	echo "[$0]"
-	applyPathMapping "$filePathUrlMappingFilePathManual" $findAndReplace_base_step_local
+	findAndReplace_base_step_local=${1}
+	targetFileToChange=${2}
+	echo "[$0] $filePathUrlMappingFilePathManual"
+	applyPathMapping "$filePathUrlMappingFilePathManual" "$findAndReplace_base_step_local" "$targetFileToChange"
 }
 export applyManualDistributionMapping
 
@@ -599,6 +637,17 @@ commitEssential(){
 	echo "[$0] Done: ${END}/${MONTH}"
 }
 export commitEssential
+
+commitEssentialAndUpdateManualStart(){
+
+	applyDistributionMapping "" "index.html"
+	applyDistributionMapping "" "404.html"
+	applyManualDistributionMapping "" "index.html"
+	applyManualDistributionMapping "" "404.html"
+	commitEssential
+	syncForkInMirrorGithubAccounts
+}
+export commitEssentialAndUpdateManualStart
 
 reduceCompilationSize(){
 	cd $publicFolderAbs

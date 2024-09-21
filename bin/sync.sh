@@ -24,7 +24,7 @@ logDeployManual=/mnt/hugo/github/deploy-manual.log
 logDeployEssentialManual=/mnt/hugo/github/deploy-essential-manual.log
 echo  "(cd /mnt/hugo; sudo -u hugo zsh -c '/mnt/hugo/github/t5/bin/deploy.sh > ${log} 2>&1' &); tail -f ${log}"
 echo  "(cd /mnt/hugo; /mnt/hugo/github/t5/bin/deploy.sh > ${logDeployManual} 2>&1 &); tail -f ${logDeployManual}"
-echo  "(cd /mnt/hugo; (source /mnt/hugo/github/t5/bin/common-utils.sh; commitEssential) > ${logDeployEssentialManual} 2>&1 &); tail -f ${logDeployEssentialManual}"
+echo  "(cd /mnt/hugo; (source /mnt/hugo/github/t5/bin/common-utils.sh; commitEssentialAndUpdateManualStart) > ${logDeployEssentialManual} 2>&1 &); tail -f ${logDeployEssentialManual}"
 
 echo -ne "\n\n"
 sleep 15
