@@ -526,7 +526,7 @@ gitCommitByBulk(){
 	pwd
 	countLines=$(git ls-files -dmo ${dir} | head -n ${bulkSize} | wc -l)
 	echo "[INFO] Start git push at dir $dir at bulk $bulkSize"
-	git ls-files -dmo ${dir} | head -n ${bulkSize}
+	# git ls-files -dmo ${dir} | head -n ${bulkSize}
 	#rm -rf .git/index.lock
 	#rm -rf .git/index
 	while [[ "${countLines}" != "0"  ]]
@@ -574,9 +574,9 @@ export rangeGitAddPush
 
 applyDistributionMapping(){
 	findAndReplace_base_step_local=${1}
-	targetFileToChange=${2}
+	dirRelativePath=${2}
 	echo "[$0] $filePathUrlMappingFilePath"
-	applyPathMapping "$filePathUrlMappingFilePath" "$findAndReplace_base_step_local" "$targetFileToChange"
+	applyPathMapping "$filePathUrlMappingFilePath" "$findAndReplace_base_step_local" "$dirRelativePath"
 }
 export applyDistributionMapping
 
@@ -584,7 +584,7 @@ applyPathMapping(){
 	file=${1}
 	applyPathMapping_findAndReplace_base_step_local=${2}
 
-	targetFileToChange=${3}
+	dirRelativePath=${3}
 
 	echo "[$0] Apply mappings from $file"
 	cat $file
@@ -595,11 +595,11 @@ applyPathMapping(){
 		if [[ ! -z "$line" ]];then
 			echo "[$0] $line"
 			if [[ -z "${applyPathMapping_findAndReplace_base_step_local}" ]];then
-				findAndReplaceV2 "$line" "$targetFileToChange"
+				findAndReplace "$line" "${publicFolderAbs}/${dirRelativePath}" 
 			else
 				applyPathMapping_findAndReplace_base_step_local=$((applyPathMapping_findAndReplace_base_step_local + 1))
 				if [[ "$(shouldExecuteStep ${applyPathMapping_findAndReplace_base_step_local} DeploySplitFiles_wp-content_uploads)" = "true" ]];then
-					findAndReplaceV2 "$line" "$targetFileToChange"
+					findAndReplace "$line" "${publicFolderAbs}/${dirRelativePath}"
 				fi
 			fi
 			
@@ -613,9 +613,9 @@ export applyPathMapping
 
 applyManualDistributionMapping(){
 	findAndReplace_base_step_local=${1}
-	targetFileToChange=${2}
+	dirRelativePath=${2}
 	echo "[$0] $filePathUrlMappingFilePathManual"
-	applyPathMapping "$filePathUrlMappingFilePathManual" "$findAndReplace_base_step_local" "$targetFileToChange"
+	applyPathMapping "$filePathUrlMappingFilePathManual" "$findAndReplace_base_step_local" "$dirRelativePath"
 }
 export applyManualDistributionMapping
 
@@ -640,10 +640,11 @@ export commitEssential
 
 commitEssentialAndUpdateManualStart(){
 
-	applyDistributionMapping "" "index.html"
-	applyDistributionMapping "" "404.html"
-	applyManualDistributionMapping "" "index.html"
-	applyManualDistributionMapping "" "404.html"
+	END=${1:-"$(date +'%Y')"}
+	MONTH=${2:-"$(date +"%m")"}
+
+	applyDistributionMapping "" "${END}/${MONTH}"
+	applyManualDistributionMapping "" "${END}/${MONTH}"
 	commitEssential
 	syncForkInMirrorGithubAccounts
 }
