@@ -94,7 +94,10 @@ do
 	findAndReplace_base_step=$((findAndReplace_base_step + 2))
 	if [[ "$(shouldExecuteStep ${findAndReplace_base_step} DeploySplitFiles_wp-content_uploads_$i)" = "true" ]];then
 		splitFiles "wp-content/uploads/$i"
+	else
+		isSplitExecute=1
 	fi
+	
 done
 #waitGitComplete
 

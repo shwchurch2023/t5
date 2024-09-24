@@ -220,8 +220,10 @@ ensureRequiredFolder() {
 }
 
 ensureNoErrorOnChildProcess() {
-	if [[ "$1" != "0" ]];then
-		echo "[ERROR] Child process returns error code $1"
+	err_code=$1
+	child_label=$2
+	if [[ "${err_code}" != "0" ]];then
+		echo "[ERROR] Child process [${child_label}] returns error code ${err_code}"
 		exit 3
 	fi
 }

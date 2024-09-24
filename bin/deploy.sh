@@ -103,12 +103,12 @@ fi
 cd $BASE_PATH
 findAndReplace_base_step=800
 ./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername1" "${githubSplitPart1From}" "$((githubSplitPart2From-1))" $findAndReplace_base_step
-ensureNoErrorOnChildProcess "$?"
+ensureNoErrorOnChildProcess "$?" "Deploy for $uploadsGitUsername1 from year ${githubSplitPart1From}"
 
 cd $BASE_PATH
 findAndReplace_base_step=1200
 ./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername2" "${githubSplitPart2From}" "$((currYear-1))" $findAndReplace_base_step
-ensureNoErrorOnChildProcess "$?"
+ensureNoErrorOnChildProcess "$?" "Deploy for $uploadsGitUsername1 from year ${githubSplitPart2From}"
 
 findAndReplace_base_step=1600
 
