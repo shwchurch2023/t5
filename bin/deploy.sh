@@ -81,15 +81,21 @@ END=$(date +'%Y')
 MONTH=$(date +"%m")
 
 findAndReplace_base_step=300
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step} first_commit_essential)" = "true" ]];then
 
-	echo "[INFO] Apply path mapping from"
-	applyDistributionMapping $findAndReplace_base_step
+commitEssentialAndUpdateManualStart $findAndReplace_base_step
+
+findAndReplace_base_step=$((findAndReplace_base_step + 100))
+
+# if [[ "$(shouldExecuteStep ${findAndReplace_base_step} first_commit_essential)" = "true" ]];then
+
+# 	echo "[INFO] Apply path mapping from"
+# 	applyDistributionMapping $findAndReplace_base_step
 	
-	findAndReplace_base_step=$((findAndReplace_base_step + 100))
-	applyManualDistributionMapping $findAndReplace_base_step
-	commitEssential "$END" "$MONTH" 
-fi
+# 	findAndReplace_base_step=$((findAndReplace_base_step + 100))
+# 	applyManualDistributionMapping $findAndReplace_base_step
+# 	commitEssential "$END" "$MONTH" 
+	
+# fi
 
 
 findAndReplace_base_step=500

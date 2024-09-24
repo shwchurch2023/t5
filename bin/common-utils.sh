@@ -642,11 +642,12 @@ export commitEssential
 
 commitEssentialAndUpdateManualStart(){
 
-	END=${1:-"$(date +'%Y')"}
-	MONTH=${2:-"$(date +"%m")"}
+	commitEssentialAndUpdateManualStart_findAndReplace_base_step=${1}
+	END=${2:-"$(date +'%Y')"}
+	MONTH=${3:-"$(date +"%m")"}
 
-	applyDistributionMapping "" "${END}/${MONTH}"
-	applyManualDistributionMapping "" "${END}/${MONTH}"
+	applyDistributionMapping "${commitEssentialAndUpdateManualStart_findAndReplace_base_step}" "${END}/${MONTH}"
+	applyManualDistributionMapping "${commitEssentialAndUpdateManualStart_findAndReplace_base_step}" "${END}/${MONTH}"
 	commitEssential
 	syncForkInMirrorGithubAccounts
 }
