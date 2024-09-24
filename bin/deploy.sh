@@ -134,9 +134,9 @@ findAndReplace_base_step=$((findAndReplace_base_step + 2))
 commitEssentialAndUpdateManualStart 
 
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step} sync_fork_mirrors_1 )" = "true" ]];then
-	syncForkInMirrorGithubAccounts
-fi
+# if [[ "$(shouldExecuteStep ${findAndReplace_base_step} sync_fork_mirrors_1 )" = "true" ]];then
+# 	syncForkInMirrorGithubAccounts
+# fi
 
 #waitGitComplete
 echo "[INFO] Wait for GH Pages building pipeline"

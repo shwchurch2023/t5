@@ -149,6 +149,7 @@ export executeStepStart
 
 executeStepAllDone(){
 	rm -f $step_file
+	echo "[$0] Executing steps are all done and tracking file is removed at $(date)"
 }
 export executeStepAllDone
 
