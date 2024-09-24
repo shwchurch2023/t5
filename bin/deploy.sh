@@ -131,6 +131,7 @@ fi
 #waitGitComplete
 echo "[INFO] Wait for GH Pages building pipeline"
 sleep 120
+echo "[INFO] Done waiting for GH Pages building pipeline"
 for i in $(seq $START $END)
 do
 	#waitGitComplete

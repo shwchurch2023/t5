@@ -526,7 +526,7 @@ gitCommitByBulk(){
 
 	echo "[INFO][gitCommitByBulk] Process $dir"
 	pwd
-	countLines=$(git ls-files -dmo ${dir} | head -n ${bulkSize} | wc -l)
+	countLines=$(git ls-files -dmo ${dir} | grep -v '/sed' | head -n ${bulkSize} | wc -l)
 	echo "[INFO] Start git push at dir $dir at bulk $bulkSize"
 	# git ls-files -dmo ${dir} | head -n ${bulkSize}
 	#rm -rf .git/index.lock
