@@ -541,7 +541,7 @@ gitCommitByBulk(){
 		git commit -m "$finaMsg"
 		useSSHKey $gitUsername
 		git push --set-upstream origin main  --force
-		countLines=$(git ls-files -dmo "${dir}" | head -n ${bulkSize} | wc -l)
+		countLines=$(git ls-files -dmo "${dir}" | grep -v '/sed' | head -n ${bulkSize} | wc -l)
 	done
 	git add "${dir}"
 	useSSHKey $gitUsername
