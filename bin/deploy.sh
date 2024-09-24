@@ -82,7 +82,8 @@ MONTH=$(date +"%m")
 
 findAndReplace_base_step=300
 
-commitEssentialAndUpdateManualStart $findAndReplace_base_step
+# commitEssentialAndUpdateManualStart $findAndReplace_base_step
+commitEssentialAndUpdateManualStart
 
 findAndReplace_base_step=$((findAndReplace_base_step + 100))
 
@@ -123,11 +124,14 @@ echo "[INFO] Publish content to GithubPage https://$publicFolder"
 # Commit changes.
 # Add changes to git.
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step} update_essential_file_commit )" = "true" ]];then
+
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step} reduceCompilationSize )" = "true" ]];then
 	reduceCompilationSize
-	applyManualDistributionMapping $findAndReplace_base_step
-	commitEssential "$END" "$MONTH" 
 fi
+
+findAndReplace_base_step=$((findAndReplace_base_step + 2))
+# commitEssentialAndUpdateManualStart $findAndReplace_base_step
+commitEssentialAndUpdateManualStart 
 
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
 if [[ "$(shouldExecuteStep ${findAndReplace_base_step} sync_fork_mirrors_1 )" = "true" ]];then
