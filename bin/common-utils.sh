@@ -534,7 +534,7 @@ gitCommitByBulk(){
 	while [[ "${countLines}" != "0"  ]]
 	do
 		#waitGitComplete
-		git ls-files -dmo "${dir}" | head -n ${bulkSize} | xargs -t -I {} echo -e '{}' | xargs -I{} git add "{}"
+		git ls-files -dmo "${dir}" | grep -v '/sed' | head -n ${bulkSize} | xargs -t -I {} echo -e '{}' | xargs -I{} git add "{}"
 		finaMsg="[Bulk] ${msg} - Added ${dir}@${countLines} files"
 		echo "$finaMsg"
 		useSSHKey $gitUsername
