@@ -3,6 +3,9 @@
 # env > ~/.env (then remove line with % symbol)
 export BASE_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd .. && pwd )
 
+echo "[$0] Sync start: $(date)"
+start_seconds1=$(date +%s)
+
 source $BASE_PATH/bin/common-utils.sh
 
 cd $BASE_PATH
@@ -185,6 +188,13 @@ echo "[INFO] Deploy and publish to github pages"
 #echo "$(date)" >> ${log}
 mv $detectChange_file_tmp $detectChange_file
 
-${BASE_PATH}/bin/mail.sh "shwchurch3@gmail.com" "[INFO][$0] Done Hugo Sync for ${source_website}"
+end_seconds2=$(date +%s)
+
+# standard sh integer arithmetics
+time_delta=$((end_seconds2 - start_seconds1 ))
+
+echo "[$0] Sync End: $(date), took $time_delta seconds"
+
+${BASE_PATH}/bin/mail.sh "shwchurch3@gmail.com" "[INFO][$0] Done Hugo Sync for ${source_website} - Took $time_delta seconds"
 
 unlock_file main_entry_sync
