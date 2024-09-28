@@ -11,6 +11,11 @@ export $(cat /mnt/hugo/.env | sed 's/#.*//g' | echo)
 export $(cat /mnt/hugo/.env | sed 's/#.*//g' | xargs)
 cd $BASE_PATH_COMMON
 
+
+export TMP_PATH=$BASE_PATH_COMMON/tmp
+
+echo "TMP_PATH $TMP_PATH"
+
 export deployGitUsername=shwchurch3
 export publicGitUsername=shwchurch7
 # export publicGitUsername=shwchurch3

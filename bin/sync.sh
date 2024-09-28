@@ -16,7 +16,7 @@ git config --global core.quotePath false
 
 source_website=https://t5.shwchurch.org/
 
-detectChange_file=/tmp/hugo-sync-diff.log
+detectChange_file=${TMP_PATH}/hugo-sync-diff.log
 detectChange_file_tmp=${detectChange_file}.tmp
 
 echo "[INFO] You could run deploy.sh if you just want to debug it. Normally, sync.sh doesn't have issue, but only deploy with hugo --minify"
