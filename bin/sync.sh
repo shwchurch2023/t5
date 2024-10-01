@@ -50,28 +50,48 @@ wodrePressHugoExportPath=/mnt/data/shwchurch/web/wp-content/plugins/wordpress-to
 ls -la $wodrePressHugoExportPath
 
 detectChange(){
-	curl ${source_website} | sed 's/[a-zA-Z0-9<>"\\=\/_&%:\.#,\{\}\(\);\?!\[@|* -]//g' > ${detectChange_file_tmp}
-	tmp_content=$(cat $detectChange_file_tmp)
-	if [[ ! -f "${detectChange_file_tmp}" || -z "${tmp_content}" ]];then
-		${BASE_PATH}/bin/mail.sh "shwchurch3@gmail.com" "[ERROR][$0] Failed in getting content from ${source_website}"
-		unlock_file main_entry_sync
-		exit 1023
-	fi
-	if [[ -f "${detectChange_file}" ]];then
-		detectChange_is_changed=$(diff ${detectChange_file} ${detectChange_file_tmp})
-		if [[ -z "${detectChange_is_changed}"  ]];then
-			if [[ -z "${HUGO_SYNC_FORCE}" ]];then
-				echo "[$0] $source_website is not changed. Skip sync. Set env var 'export HUGO_SYNC_FORCE=1' for force syncing "
+
+	detectChangeMaxRetry=10
+	detectChangeSleepGap=300
+
+	echo "[$0] Pull content from ${source_website} to ${detectChange_file_tmp}"
+
+	while [[  "1" = "1" ]];do
+		detectChangeMaxRetry=$((detectChangeMaxRetry - 1))
+
+		curl ${source_website} | sed 's/[a-zA-Z0-9<>"\\=\/_&%:\.#,\{\}\(\);\?!\[@|* -]//g' > ${detectChange_file_tmp}
+		tmp_content=$(cat $detectChange_file_tmp)
+		if [[ ! -f "${detectChange_file_tmp}" || -z "${tmp_content}" ]];then
+			
+			if [[ "$detectChangeMaxRetry" -lt 0 ]];then
+				${BASE_PATH}/bin/mail.sh "shwchurch3@gmail.com" "[ERROR][$0] Failed in getting content from ${source_website}"
 				unlock_file main_entry_sync
-				exit
-			else
-				echo "[$0] Force synced even no changes"
+				exit 1023 
 			fi
+			echo "[$0] Retry left ${detectChangeMaxRetry}"
+			sleep $detectChangeSleepGap
+			continue
+		fi
+		if [[ -f "${detectChange_file}" ]];then
+			detectChange_is_changed=$(diff ${detectChange_file} ${detectChange_file_tmp})
+			if [[ -z "${detectChange_is_changed}"  ]];then
+				if [[ -z "${HUGO_SYNC_FORCE}" ]];then
+					echo "[$0] $source_website is not changed. Skip sync. Set env var 'export HUGO_SYNC_FORCE=1' for force syncing "
+					unlock_file main_entry_sync
+					exit
+				else
+					echo "[$0] Force synced even no changes"
+					break
+				fi
+			else
+				echo "[$0] Change detected"
+				echo "[$0] ${detectChange_is_changed}"
+				break
+			fi	
 		else
-			echo "[$0] Change detected"
-			echo "[$0] ${detectChange_is_changed}"
-		fi	
-	fi
+			break
+		fi
+	done
 }
 
 echo  "(cd /mnt/hugo; sudo -u hugo zsh -c '/mnt/hugo/github/t5/bin/sync.sh > ${log} 2>&1 ' &); tail -f ${log}"
