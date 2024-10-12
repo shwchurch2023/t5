@@ -41,7 +41,17 @@ zsh
 
 
 sudo amazon-linux-extras list | grep nginx
-sudo amazon-linux-extras install -y mariadb10.5 epel php7.4 nginx1
+# sudo amazon-linux-extras install -y mariadb10.5 epel php7.4 nginx1
+sudo yum remove -y mariadb-config mariadb
+sudo amazon-linux-extras install -y epel php7.4 nginx1
+
+sudo yum install -y https://dev.mysql.com/get/mysql80-community-release-el7-10.noarch.rpm
+sudo yum -y install mysql-community-server
+sudo systemctl enable --now mysqld
+sudo mkdir -p /var/lib/mysql
+sudo chown -R mysql /var/lib/mysql
+sudo chown -R mysql /var/log/mysqld.log
+
 
 sudo yum install -y php-gd php-xml php-mbstring php-pecl-memcache php-opcache php-pecl-apcu php-cli php-common php-gd php-jsonc php-mbstring php-mysqlnd php-odbc php-pdo php-pecl-apcu php-process php-soap php-xml php-devel php-xdebug php-pear 
 
@@ -198,11 +208,13 @@ sudo service php-fpm restart
 ### Database security update
 
 ```zsh
-sudo systemctl enable mariadb.service
-sudo systemctl start mariadb.service
+# sudo systemctl enable mariadb.service
+# sudo systemctl start mariadb.service
 
-# Set root password according to the password table
-sudo mysql_secure_installation
+sudo grep 'temporary password' /var/log/mysqld.log
+
+# Set root password according to the password spreadsheet
+sudo mysql_secure_installation -p
 ```
 
 ### Database create
@@ -226,8 +238,9 @@ sudo mv /mnt/data/shwchurch/web/pma_sw /mnt/data/shwchurch/tmp/
 
 ```zsh
 cd /home/ec2-user/data/shwchurch/backup
-tar zxf shwchurch_bak_2024-********.tar.gz
-mysql -u shwchurch -p shwchurch < shwchurch_bak_2024-08-09.sql
+tar zxf shwchurch_bak_********.tar.gz
+ls
+mysql -u shwchurch -p shwchurch --default-character-set=utf8mb4  < shwchurch_bak_*.sql
 ```
 
 ### wp-content sync
