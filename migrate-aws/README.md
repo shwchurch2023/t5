@@ -160,6 +160,7 @@ sudo certbot renew --dry-run
 
 - Try to use Chrome to open [https://tmp202408.shwchurch.org/](https://tmp202408.shwchurch.org/)
 
+
 ## Update nginx conf
 
 ```zsh
@@ -260,20 +261,21 @@ scp_sw  /mnt/data/shwchurch/web/wp-content/uploads/2024/08 $SW_USER_IP_OLD
 ping t5.shwchurch.org
 ```
 
-### Update certs with DNS option
+### Add certs 
 
 ```zsh
-# Get the DNS TXT token and update Moniker DNS
-sudo certbot certonly --manual --preferred-challenges dns -d shwchurch.org  -d '*.shwchurch.org'
+
+# DO NOT USE DNS wildcard because it will not get auto-renewed
+sudo certbot --nginx -d shwchurch.org  -d 'www.shwchurch.org' -d 't5.shwchurch.org'
 
 ```
 
-- Update Moniker with the TXT with TTL 300 seconds and then verify; then precess continue on the step above
+<!-- - Update Moniker with the TXT with TTL 300 seconds and then verify; then precess continue on the step above
 
 ```zsh
 # in remote linux server
 nslookup -type=TXT _acme-challenge.shwchurch.org
-```
+``` -->
 
 ### Update Nginx
 
