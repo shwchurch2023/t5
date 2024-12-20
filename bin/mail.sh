@@ -2,7 +2,7 @@
   
 toAddr=$1
 subject=$2
-body=$3
+body=${@:3}
 
 echo "[$0] toAddr [$toAddr] is omitted, as aws ses sandbox doesn't support sending to other receptants other than its own verifed email identities "
 
