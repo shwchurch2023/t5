@@ -132,10 +132,13 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 
 	git pull
 
+	date1=$(date +%s)
 	echo "php hugo-export-cli.php ${tmpPathPrefix} > ${hugo_generate_log} "
 
 	php hugo-export-cli.php ${tmpPathPrefix} > ${hugo_generate_log}
-	date
+	date2=$(date +%s)
+
+	echo "Time used $(time_diff_seconds $date1 $date2)"
 
 fi
 

@@ -105,6 +105,14 @@ export is_lock_file_dead_unexpected
 
 step_file=/tmp/t5_shouldExecuteStep_step
 
+export time_diff_seconds(){
+	# date1=$(date +%s)
+	local date1=$1
+	# date2=$(date +%s)
+	local date2=$2
+	echo $(( date2 - date1))
+}
+
 shouldExecuteStep(){
 	stepid=${1}
 	steplabel=${2}
