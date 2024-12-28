@@ -105,6 +105,14 @@ export is_lock_file_dead_unexpected
 
 step_file=/tmp/t5_shouldExecuteStep_step
 
+export time_diff_seconds(){
+	# date1=$(date +%s)
+	local date1=$1
+	# date2=$(date +%s)
+	local date2=$2
+	echo $(( date2 - date1))
+}
+
 shouldExecuteStep(){
 	stepid=${1}
 	steplabel=${2}
@@ -248,6 +256,12 @@ export ensureRequiredFolders
 
 hugoBuild() {
 	cd $BASE_PATH_COMMON
+
+	echo "To update hugo, download latest tar.gz from https://github.com/gohugoio/hugo/releases to /mnt/hugo/ and unzip"
+	echo "Current $( ls /mnt/hugo/ | grep hugo_ )"
+	# echo "New: $(curl https://github.com/gohugoio/hugo/releases 2>/dev/null | grep "_Linux-64bit.tar.gz" | head -1)"
+	echo "New: https://github.com/$(curl https://github.com/gohugoio/hugo/releases 2>/dev/null | grep -oP 'href=".+?_Linux-64bit.tar.gz"' | sed -r 's/.*href="(.+?_Linux-64bit.tar.gz).*/\1/'  | head -1)"
+	
 
 	/mnt/hugo/hugo --minify # if using a theme, replace with `hugo -t <YOURTHEME>`
 	if [[ "$?" != "0" ]]; then

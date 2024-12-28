@@ -23,6 +23,7 @@ echo "[INFO] You could run deploy.sh if you just want to debug it. Normally, syn
 echo -ne "[INFO] You have 15s to cancel me\n\n"
 
 log=/mnt/hugo/github/sync.log
+hugo_generate_log=/mnt/hugo/github/hugo_generate.log
 logDeployManual=/mnt/hugo/github/deploy-manual.log
 logDeployEssentialManual=/mnt/hugo/github/deploy-essential-manual.log
 echo  "(cd /mnt/hugo; sudo -u hugo zsh -c '/mnt/hugo/github/t5/bin/deploy.sh > ${log} 2>&1' &); tail -f ${log}"
@@ -131,10 +132,13 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 
 	git pull
 
-	echo "php hugo-export-cli.php ${tmpPathPrefix} > /dev/null"
+	date1=$(date +%s)
+	echo "php hugo-export-cli.php ${tmpPathPrefix} > ${hugo_generate_log} "
 
-	php hugo-export-cli.php ${tmpPathPrefix} > /dev/null
-	date
+	php hugo-export-cli.php ${tmpPathPrefix} > ${hugo_generate_log}
+	date2=$(date +%s)
+
+	echo "Time used $(time_diff_seconds $date1 $date2)"
 
 fi
 
