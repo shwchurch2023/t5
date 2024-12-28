@@ -139,7 +139,7 @@ shouldExecuteStep(){
 		return 0
 	fi
 
-	>&2 echo "[$0] Skip step ${stepid} (label: $steplabel)"
+	>&2 echo "[$0] Skip step ${stepid} (label: $steplabel) since last step executed is [${laststepid}] according to [${step_file}]"
 	
 }
 export shouldExecuteStep
