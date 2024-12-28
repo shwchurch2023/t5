@@ -52,3 +52,4 @@ s#https://shwchurch2023media.github.io/wp-content/uploads/2022#/wp-content/uploa
 s#https://shwchurch7.github.io/wp-content/uploads/2022#https://shwchurch2023media.github.io/wp-content/uploads/2022#g
 s#https://shwchurch2023media.github.io/wp-content/uploads/2022#/wp-content/uploads/2022#g
 s#/wp-content/uploads/2022#https://shwchurch2023media.github.io/wp-content/uploads/2022#g
+s#https://shwchurch7.github.io/wp-content/uploads/2022#https://shwchurch2023media.github.io/wp-content/uploads/2022#g
