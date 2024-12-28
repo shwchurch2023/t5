@@ -124,6 +124,14 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 
 	echo "[INFO] Generating Markdown files from Wordpress "
 	cd ${wodrePressHugoExportPath}
+	pwd
+	
+	echo "git pull"
+	git remote -v
+
+	git pull
+
+	echo "php hugo-export-cli.php ${tmpPathPrefix} > /dev/null"
 
 	php hugo-export-cli.php ${tmpPathPrefix} > /dev/null
 	date
