@@ -143,6 +143,7 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 
 	cd ${tmpPathPrefix}
 	unzip wp-hugo.zip
+	rmSafe "${hugoExportedPath}" "wp-hugo-delta-processing"
 	mv hugo-export ${hugoExportedPath}
 	rm -rf wp-hugo.zip
 	
