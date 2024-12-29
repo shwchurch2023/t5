@@ -128,16 +128,24 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 	pwd
 	
 	git config --global --add safe.directory ${wodrePressHugoExportPath}
-	
+
 	echo "git pull"
 	git remote -v
 
 	git pull
 
 	date1=$(date +%s)
-	echo "php hugo-export-cli.php ${tmpPathPrefix} > ${hugo_generate_log} "
+	echo "php hugo-export-cli.php ${tmpPathPrefix} "
 
-	php hugo-export-cli.php ${tmpPathPrefix} > ${hugo_generate_log}
+	rm -rf wp-hugo.zip
+
+	php hugo-export-cli.php ${tmpPathPrefix} 
+
+	cd ${tmpPathPrefix}
+	unzip wp-hugo.zip
+	mv hugo-export ${hugoExportedPath}
+	rm -rf wp-hugo.zip
+	
 	date2=$(date +%s)
 
 	echo "Time used $(time_diff_seconds $date1 $date2)"
