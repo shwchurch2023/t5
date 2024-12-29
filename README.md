@@ -1,7 +1,24 @@
 # Shouwang Church website kits
 
+## Development website in macOS with Hugo
 
-## Switch SSH key
+- Rename `./content.sample` to `./content`
+
+- Init
+```zsh
+brew install hugo
+```
+- Generate and watch file changes with a simple static web server static html
+
+```zsh
+hugo server  
+open http://localhost:1313
+```
+
+## Yearly tasks
+- Should update the forked https://github.com/shwchurch2023/hugo-theme-stack from source to fix any issues
+
+## Linux: Switch SSH key
 ```zsh
 source ./bin/common-utils.sh
 useSSHKey shwchurch2023

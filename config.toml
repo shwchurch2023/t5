@@ -1,12 +1,11 @@
 baseURL = "/"
 languageCode = "zh-cn"
 title = "北京守望教会"
-theme = "hugo-PaperMod"
 
+# theme = "hugo-PaperMod"
+theme = "hugo-theme-stack"
 
 # Copyright notice. This will display on the footer.
-copyright = ""
-paginate = 10
 
 disablePathToLower = true
 hasCJKLanguage = true
@@ -14,46 +13,62 @@ preserveTaxonomyNames = true
 timeout = 20000
 pluralizeListTitles = false
 minify = true
+defaultContentLanguage = "zh-cn"
+
+[pagination]
+pagerSize = 5
+
 
 # Theme config
 [params]
 
-  # The content you want to be listed on list pages.
-  mainSections = ["post"]
+#   # The content you want to be listed on list pages.
+#   mainSections = ["post"]
 
-  # The information will display on the post pages.
-  author = "守望"
-  description = "守望官网"
-  authorwebsite = "https://t5.shwchurch.org/"
+#   # The information will display on the post pages.
+#   author = "守望"
+#   description = "守望官网"
+#   authorwebsite = "https://t5.shwchurch.org/"
 
-  # The path to your images
-  favicon = "images/logo.png"
-  logo = "images/logo.png"
-  avatar = ""
-  displayImg = "images/header_banner.jpg"
+#   # The path to your images
+#   favicon = "images/logo.png"
+#   logo = "images/logo.png"
+#   avatar = ""
+#   displayImg = "images/header_banner.jpg"
+[params.homeInfoParams]
+    Title = "基督教北京守望教会"
 
+# [params.profileMode]
+# enabled = true
+# # title = "<Title>" # optional default will be site title
+# # subtitle = "This is subtitle"
+# imageUrl = "images/header_banner.jpg" # optional
+# # imageTitle = "<title of image as alt>" # optional
+# imageWidth = 120 # custom size
+# imageHeight = 120 # custom size
 
-# Navbar config
-[[menu.nav]]
+[[params.homeInfoParams.buttons]]
     name = "首页"
     url = "/"
-    weight = 1
 
-[[menu.nav]]
+[[params.homeInfoParams.buttons]]
     name = "关于守望"
     url = "/2012/08/03/关于我们/"
-    weight = 3
 
-[[menu.nav]]
+[[params.profileMode.buttons]]
     name = "联系我们"
     url = "/2012/08/03/守望教会-联系我们/"
-    weight = 3
 
-
-[[menu.nav]]
+[[params.profileMode.buttons]]
     name = "所有分类"
     url = "/categories/"
-    weight = 4
+
+[[params.socialIcons]]
+    name = "logo"
+    url = "images/logo.png"
+
+
+
 
 # Social accounts config (This will display on the index page)
 [[menu.social]]
