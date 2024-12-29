@@ -28,3 +28,6 @@
 [submodule "shwchurch2023media.github.io"]
 	path = shwchurch2023media.github.io
 	url = git@github.com:shwchurch2023media/shwchurch2023media.github.io.git
+[submodule "themes/hugo-PaperMod"]
+	path = themes/hugo-PaperMod
+	url = https://github.com/shwchurch2023/hugo-PaperMod

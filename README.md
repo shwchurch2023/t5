@@ -1,5 +1,12 @@
 # Shouwang Church website kits
 
+
+## Switch SSH key
+```zsh
+source ./bin/common-utils.sh
+useSSHKey shwchurch2023
+```
+
 ## Change the main site
 * Fork this repo to the new Github account
 * SSH to t5 (sw)

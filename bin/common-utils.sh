@@ -419,6 +419,8 @@ useSSHKey(){
         ssh-add $key
         ssh-add -l
         #git config --global core.sshCommand "ssh -i $key -F /dev/null"
+        #git config --global --unset core.sshCommand
+        #git config --unset core.sshCommand
         git config core.sshCommand "ssh -i $key -o StrictHostKeyChecking=no -F /dev/null"
         #export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes"
 
