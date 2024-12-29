@@ -139,6 +139,8 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 
 	rm -rf wp-hugo.zip
 
+	ls /mnt/hugo/tmp/
+
 	php hugo-export-cli.php ${tmpPathPrefix} 
 
 	cd ${tmpPathPrefix}
@@ -162,6 +164,10 @@ cd ${postDir}
 pwd
 ls
 
+if [[ ! -d "${postDir}" ]];then
+	echo "[$postDir] doesn't exist; exit 1"
+	sleep 10
+fi
 # allMp3RequiredDescriptor=uploaded-files-required.txt 
 # allMp3Descriptor=uploaded-files.txt
 # allMp3ToDeleteDescriptor=uploaded-files-to-delete.txt 
