@@ -1,9 +1,9 @@
 [submodule "themes/hugo-theme-yuki"]
 	path = themes/hugo-theme-yuki
 	url = https://github.com/iCyris/hugo-theme-yuki
-[submodule "themes/hugo-theme-shwchurch"]
-	path = themes/hugo-theme-shwchurch
-	url = git@github.com:shwchurch2023/hugo-theme-shwchurch.git
+# [submodule "themes/hugo-theme-shwchurch"]
+# 	path = themes/hugo-theme-shwchurch
+# 	url = git@github.com:shwchurch2023/hugo-theme-shwchurch.git
 [submodule "public"]
 	path = public
 	url = https://github.com/shwchurch2023/shwchurch2023.github.io.git
@@ -28,12 +28,12 @@
 [submodule "shwchurch2023media.github.io"]
 	path = shwchurch2023media.github.io
 	url = git@github.com:shwchurch2023media/shwchurch2023media.github.io.git
-[submodule "themes/hugo-PaperMod"]
-	path = themes/hugo-PaperMod
-	url = https://github.com/shwchurch2023/hugo-PaperMod
+# [submodule "themes/hugo-PaperMod"]
+# 	path = themes/hugo-PaperMod
+# 	url = https://github.com/shwchurch2023/hugo-PaperMod
 [submodule "themes/hugo-theme-stack"]
 	path = themes/hugo-theme-stack
 	url = git@github.com:shwchurch2023/hugo-theme-stack.git
-[submodule "hugo-theme-stack-starter"]
-	path = hugo-theme-stack-starter
-	url = git@github.com:shwchurch2023/hugo-theme-stack-starter.git
+# [submodule "hugo-theme-stack-starter"]
+# 	path = hugo-theme-stack-starter
+# 	url = git@github.com:shwchurch2023/hugo-theme-stack-starter.git

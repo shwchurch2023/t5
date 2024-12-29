@@ -22,6 +22,30 @@ pagerSize = 5
 # Theme config
 [params]
 
+[params.widgets]
+
+[[params.widgets.homepage]]
+type = "search"
+
+[[params.widgets.homepage]]
+type = "archives"
+[params.widgets.homepage.params]
+limit = 5
+
+[[params.widgets.homepage]]
+type = "categories"
+[params.widgets.homepage.params]
+limit = 10
+
+[[params.widgets.homepage]]
+type = "tag-cloud"
+
+[params.widgets.homepage.params]
+limit = 10
+
+[[params.widgets.page]]
+type = "toc"
+
 #   # The content you want to be listed on list pages.
 #   mainSections = ["post"]
 
@@ -71,19 +95,24 @@ pagerSize = 5
 
 
 # Social accounts config (This will display on the index page)
-[[menu.social]]
+[[menu.shwchurch]]
     name = "主日敬拜程序"
     url = "/categories/主日敬拜程序/"
     weight = 1
 
-[[menu.social]]
+[[menu.shwchurch]]
     name = "讲道"
     url = "/categories/讲道/"
     weight = 2
 
-[[menu.social]]
-    name = "户外敬拜"
-    url = "/tags/户外推荐资料/"
+# [[menu.shwchurch]]
+#     name = "户外敬拜"
+#     url = "/tags/户外推荐资料/"
+#     weight = 3
+
+[[menu.shwchurch]]
+    name = "所有分类"
+    url = "/categories/"
     weight = 3
 
 [Taxonomies]
