@@ -3,10 +3,10 @@
 	url = https://github.com/iCyris/hugo-theme-yuki
 [submodule "themes/hugo-theme-shwchurch"]
 	path = themes/hugo-theme-shwchurch
-	url = git@github.com:shwchurch3/hugo-theme-shwchurch.git
+	url = git@github.com:shwchurch2023/hugo-theme-shwchurch.git
 [submodule "public"]
 	path = public
-	url = https://github.com/shwchurch3/shwchurch3.github.io.git
+	url = https://github.com/shwchurch2023/shwchurch2023.github.io.git
 [submodule "sw-wechat"]
 	path = sw-wechat
 	url = https://github.com/sw-wechat/sw-wechat.github.io.git
@@ -22,9 +22,9 @@
 [submodule "shwchurch7.github.io"]
 	path = shwchurch7.github.io
 	url = git@github.com:shwchurch7/shwchurch7.github.io.git
-[submodule "shwchurch3.github.io"]
-	path = shwchurch3.github.io
-	url = git@github.com:shwchurch3/shwchurch3.github.io.git
+[submodule "shwchurch2023.github.io"]
+	path = shwchurch2023.github.io
+	url = git@github.com:shwchurch2023/shwchurch2023.github.io.git
 [submodule "shwchurch2023media.github.io"]
 	path = shwchurch2023media.github.io
 	url = git@github.com:shwchurch2023media/shwchurch2023media.github.io.git

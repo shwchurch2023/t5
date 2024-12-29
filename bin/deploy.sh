@@ -59,7 +59,7 @@ findAndReplace_base_step=$((findAndReplace_base_step + 10))
 if [[ "$(shouldExecuteStep ${findAndReplace_base_step} moving_hugo_to_public_folder)" = "true" ]];then
 	mv -v -f $hugoPublicFolderAbs/* $publicFolderAbs/
 	if [[ "$?" != "0" || ! -f "${publicFolderIndexHtml}" ]];then
-		echo "[ERROR] Failed on moving files in $hugoPublicFolderAbs to $publicFolderAbs/ "
+		echo "[ERROR] Failed on moving files in $hugoPublicFolderAbs to $publicFolderAbs/; Exit 1"
 		ls $publicFolderAbs
 		exit 1
 	fi

@@ -16,7 +16,8 @@ export TMP_PATH=$BASE_PATH_COMMON/tmp
 
 echo "TMP_PATH $TMP_PATH"
 
-export deployGitUsername=shwchurch3
+# export deployGitUsername=shwchurch3
+export deployGitUsername=shwchurch2023
 export publicGitUsername=shwchurch7
 # export publicGitUsername=shwchurch3
 
@@ -408,7 +409,7 @@ help_createGithubIo(){
 
 useSSHKey(){
 		pkill ssh-agent
-        username=$1
+        username=${1:-"shwchurch2023"}
         key=/mnt/hugo/ssh/id_ed25519_$username
 	
         chmod 600 $key

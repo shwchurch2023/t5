@@ -234,6 +234,7 @@ done
 cd ${githubHugoPath}/bin/
 echo "[INFO] Deploy and publish to github pages"
 ./deploy.sh
+exit_code_deploy=$?
 #./deploy-new.sh
 #echo "$(date)" >> ${log}
 mv $detectChange_file_tmp $detectChange_file
@@ -245,6 +246,11 @@ time_delta=$((end_seconds2 - start_seconds1 ))
 
 echo "[$0] Sync End: $(date), took $time_delta seconds"
 
-${BASE_PATH}/bin/mail.sh "shwchurch3@gmail.com" "[INFO][$0] Done Hugo Sync for ${source_website} - Took $time_delta seconds"
+ret=Done
+if [[ "$exit_code_deploy" != 0 ]];then
+	ret="Failed:"
+fi
+
+${BASE_PATH}/bin/mail.sh "shwchurch3@gmail.com" "[INFO][$0] ${ret} Hugo Sync for ${source_website} - Took $time_delta seconds"
 
 unlock_file main_entry_sync

@@ -1,7 +1,7 @@
 baseURL = "/"
 languageCode = "zh-cn"
 title = "北京守望教会"
-theme = "hugo-theme-shwchurch"
+theme = "PaperMod"
 
 
 # Copyright notice. This will display on the footer.
