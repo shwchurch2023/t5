@@ -144,7 +144,8 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 	php hugo-export-cli.php ${tmpPathPrefix} 
 
 	cd ${tmpPathPrefix}
-	unzip wp-hugo.zip
+	echo "Unzip ${tmpPathPrefix}/wp-hugo.zip"
+	unzip wp-hugo.zip > /dev/null
 	rmSafe "${hugoExportedPath}" "wp-hugo-delta-processing"
 	mv hugo-export ${hugoExportedPath}
 	rm -rf wp-hugo.zip
