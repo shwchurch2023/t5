@@ -38,7 +38,8 @@ export hugoPublicFolderAbs=$BASE_PATH_COMMON/public
 export uploadsGitUsername1FolderAbs=$BASE_PATH_COMMON/$uploadsGitUsername1.github.io
 export uploadsGitUsername2FolderAbs=$BASE_PATH_COMMON/$uploadsGitUsername2.github.io
 
-export themeFolder=$BASE_PATH_COMMON/themes/hugo-theme-shwchurch
+# export themeFolder=$BASE_PATH_COMMON/themes/hugo-theme-shwchurch
+export themeFolder=$BASE_PATH_COMMON/themes/hugo-theme-stack
 
 export filePathUrlMappingFilePath=$BASE_PATH_COMMON/pathDistributionMapping.txt
 export filePathUrlMappingFilePathManual=$BASE_PATH_COMMON/pathDistributionMappingManual.txt
