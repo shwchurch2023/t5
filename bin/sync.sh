@@ -127,6 +127,8 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 	cd ${wodrePressHugoExportPath}
 	pwd
 	
+	git config --global --add safe.directory ${wodrePressHugoExportPath}
+	
 	echo "git pull"
 	git remote -v
 
