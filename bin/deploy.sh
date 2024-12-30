@@ -31,8 +31,7 @@ findAndReplace_base_step=$((findAndReplace_base_step + 10))
 if [[ "$(shouldExecuteStep ${findAndReplace_base_step} hugoBuild)" = "true" ]];then
 	hugoBuild
 	if [[ "$?" != "0" ]];then
-		echo "[ERROR] Hugo Build failed; exiting"
-		exit 1
+		echo "[WARN] Hugo Build failed; Continue since the failure may be just for some posts"
 	fi
 fi
 
