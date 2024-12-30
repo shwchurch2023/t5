@@ -533,8 +533,8 @@ gitCommitByBulk(){
 	isExitOnUnpresentPath=$3
 
 	if [[ ! -z "$isExitOnUnpresentPath" && ! -f "$dir" && ! -d  "$dir" ]];then
-		echo "[ERROR][gitCommitByBulk] dir $dir must be present"
-		exit 1
+		echo "[WARN][gitCommitByBulk] dir $dir must be present; skipped"
+		return 1
 	fi
 
 
