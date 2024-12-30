@@ -9,6 +9,7 @@ export $(cat ${BASE_PATH_COMMON}/.env | xargs)
 
 export $(cat /mnt/hugo/.env | sed 's/#.*//g' | echo)
 export $(cat /mnt/hugo/.env | sed 's/#.*//g' | xargs)
+
 cd $BASE_PATH_COMMON
 
 
@@ -263,9 +264,29 @@ installGo(){
 	# wget https://go.dev/dl/${go_tar}
 	# sudo rm -rf /usr/local/go 
 	# sudo tar -C /usr/local -xzf ${go_tar}
-	sudo snap install go --classic
+	# sudo snap install node --channel=16/stable --classic
+	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 }
 export installGo
+
+installNodeJs(){
+	# cd /tmp
+	# local go_tar=go1.23.4.linux-amd64.tar.gz
+	# wget https://go.dev/dl/${go_tar}
+	# sudo rm -rf /usr/local/go 
+	# sudo tar -C /usr/local -xzf ${go_tar}
+	# sudo snap install node --classic
+	# sudo ln -s /var/lib/snapd/snap/bin/node /usr/bin/node 
+	# sudo ln -s /var/lib/snapd/snap/bin/npm /usr/bin/npm 
+	sudo yum -y remove libuv -y    
+	sudo yum -y install libuv --disableplugin=priorities
+	sudo yum -y install nodejs npm --enablerepo=epel
+	sudo npm install ts-node -g
+	cd $BASE_PATH_COMMON
+	npm install
+	# sudo npm i commander -g
+}
+export installNodeJs
 
 installSnap(){
 	cd /tmp
@@ -290,6 +311,7 @@ export installSnap
 installHugoDependencies(){
 	installSnap
 	installGo
+	installNodeJs
 	sudo snap install dart-sass
 }
 export installHugoDependencies
@@ -306,6 +328,7 @@ hugoBuild() {
 	
 	echo "You also need to install snap, golang and dart-scss by [installHugoDependencies] "
 
+	npx ts-node typescript/commander.ts replaceUrlWithRootPath --path $BASE_PATH_COMMON/content
 	
 	/mnt/hugo/hugo --minify # if using a theme, replace with `hugo -t <YOURTHEME>`
 	local exit_code_hugo_build=$?

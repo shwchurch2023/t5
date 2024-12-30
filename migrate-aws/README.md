@@ -129,10 +129,11 @@ ln -s /mnt/data/shwchurch/web/wp-content/themes/shwchurch .
 
 ```
 
-## Setup snap
+## Setup snap and nodejs
 ```zsh
 source ./bin/common-utils.sh
 installSnap
+installNodeJs
 ```
 
 ## Setup acme.sh

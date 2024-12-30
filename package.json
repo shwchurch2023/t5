@@ -1,0 +1,26 @@
+{
+  "name": "t5",
+  "version": "1.0.0",
+  "description": "## Development website in macOS with Hugo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shwchurch2023/t5.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shwchurch2023/t5/issues"
+  },
+  "homepage": "https://github.com/shwchurch2023/t5#readme",
+  "devDependencies": {
+    "@commander-js/extra-typings": "^12.1.0",
+    "@types/commander": "^2.12.5",
+    "@types/node": "^22.10.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}
