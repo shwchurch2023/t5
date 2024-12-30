@@ -33,7 +33,7 @@ async function replaceUrlCommander() {
 
                     pattList.forEach(
                         pattern => {
-                            console.log(`Replace pattern ${pattern} with / in ${filePath}`);
+                            // console.log(`Replace pattern ${pattern} with / in ${filePath}`);
                             content = content.replace(pattern, `/`);
                         }
                     );
