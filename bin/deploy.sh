@@ -67,6 +67,9 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} moving_hugo_to_public_fol
 fi
 
 cd $publicFolderAbs
+echo "Content of [$publicFolderAbs]"
+ls
+
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
 if [[ "$(shouldExecuteStep ${findAndReplace_base_step} update_shwchurch_N_with_$publicGitUsername )" = "true" ]];then
 	echo "Update domain to https://$publicFolder"

@@ -658,6 +658,8 @@ commitEssential(){
 	gitCommitByBulk "404.html" $publicGitUsername "true"
 	gitCommitByBulk "feed.xml" $publicGitUsername
 	gitCommitByBulk "js" $publicGitUsername
+	gitCommitByBulk "ts" $publicGitUsername
+	gitCommitByBulk "img" $publicGitUsername
 	gitCommitByBulk "images" $publicGitUsername
 	gitCommitByBulk "scss" $publicGitUsername
 
