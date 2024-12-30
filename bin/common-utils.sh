@@ -257,18 +257,61 @@ ensureRequiredFolders() {
 }
 export ensureRequiredFolders
 
+installGo(){
+	# cd /tmp
+	# local go_tar=go1.23.4.linux-amd64.tar.gz
+	# wget https://go.dev/dl/${go_tar}
+	# sudo rm -rf /usr/local/go 
+	# sudo tar -C /usr/local -xzf ${go_tar}
+	sudo snap install go --classic
+}
+export installGo
+
+installSnap(){
+	cd /tmp
+	mkdir snap
+	cd snap
+	# wget https://github.com/albuild/snap/releases/download/v0.1.0/snap-confine-2.36.3-0.amzn2.x86_64.rpm
+	# wget https://github.com/albuild/snap/releases/download/v0.1.0/snapd-2.36.3-0.amzn2.x86_64.rpm
+
+	sudo yum -y install squashfs-tools
+	# sudo rpm -i *.rpm
+	# sudo systemctl enable --now snapd.socket
+
+	sudo wget -O /etc/yum.repos.d/snapd.repo \
+		https://bboozzoo.github.io/snapd-amazon-linux/amzn2/snapd.repo
+	sudo yum install snapd -y
+	sudo systemctl disable --now snapd.socket
+	sudo systemctl enable --now snapd.socket
+
+}
+export installSnap
+
+installHugoDependencies(){
+	installSnap
+	installGo
+	sudo snap install dart-sass
+}
+export installHugoDependencies
+
 hugoBuild() {
 	cd $BASE_PATH_COMMON
 
 	echo "To update hugo, download latest tar.gz from https://github.com/gohugoio/hugo/releases to /mnt/hugo/ and unzip"
 	echo "Current $( ls /mnt/hugo/ | grep hugo_ )"
 	# echo "New: $(curl https://github.com/gohugoio/hugo/releases 2>/dev/null | grep "_Linux-64bit.tar.gz" | head -1)"
-	echo "New: https://github.com/$(curl https://github.com/gohugoio/hugo/releases 2>/dev/null | grep -oP 'href=".+?_Linux-64bit.tar.gz"' | sed -r 's/.*href="(.+?_Linux-64bit.tar.gz).*/\1/'  | head -1)"
+	# echo "New: https://github.com/$(curl https://github.com/gohugoio/hugo/releases 2>/dev/null | grep -oP 'href=".+?_Linux-64bit.tar.gz"' | sed -r 's/.*href="(.+?_Linux-64bit.tar.gz).*/\1/'  | head -1)"
 	
+	echo "New Hugo Extended version in https://github.com/gohugoio/hugo/releases. Must be extended."
+	
+	echo "You also need to install snap, golang and dart-scss by [installHugoDependencies] "
 
+	
 	/mnt/hugo/hugo --minify # if using a theme, replace with `hugo -t <YOURTHEME>`
-	if [[ "$?" != "0" ]]; then
+	local exit_code_hugo_build=$?
+	if [[ "$exit_code_hugo_build" != "0" ]]; then
 		echo "[WARN] /mnt/hugo/hugo failed"
+		return $exit_code_hugo_build
 	fi
 }
 export hugoBuild
@@ -702,7 +745,7 @@ export reduceCompilationSize
 
 
 export SHELL=/bin/bash
-export PATH=/usr/local/openssl/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin:$PATH
+export PATH=/usr/local/openssl/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin:$PATH:/snap/bin
 
 useSSHKey $deployGitUsername
 

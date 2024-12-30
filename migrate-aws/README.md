@@ -129,6 +129,12 @@ ln -s /mnt/data/shwchurch/web/wp-content/themes/shwchurch .
 
 ```
 
+## Setup snap
+```zsh
+source ./bin/common-utils.sh
+installSnap
+```
+
 ## Setup acme.sh
 
 - Check DNS record
