@@ -328,7 +328,7 @@ hugoBuild() {
 	
 	echo "You also need to install snap, golang and dart-scss by [installHugoDependencies] "
 
-	npx ts-node typescript/commander.ts replaceUrlWithRootPath --path $BASE_PATH_COMMON/content
+	npx ts-node typescript/commander.ts wpHugoExporterAfterAllProcessor --path $BASE_PATH_COMMON/content
 	
 	/mnt/hugo/hugo --minify # if using a theme, replace with `hugo -t <YOURTHEME>`
 	local exit_code_hugo_build=$?

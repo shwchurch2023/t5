@@ -6,10 +6,10 @@ const program = new Command();
 
 async function replaceUrlCommander() {
 
-    const cmd = `replaceUrlWithRootPath`;
+    const cmd = `wpHugoExporterAfterAllProcessor`;
     program
         .command(cmd)
-        .usage(`npx ts-node typescript/commander.ts replaceUrlWithRootPath --path $(pwd)/content`)
+        .usage(`npx ts-node typescript/commander.ts wpHugoExporterAfterAllProcessor --path $(pwd)/content`)
         .addOption(
             new Option(
                 '--path <path>', 
@@ -31,6 +31,10 @@ async function replaceUrlCommander() {
                         {
                             pattern: /http(s)?:\/\/.+?\.shwchurch.org\//gi,
                             replacement: `/`
+                        },
+                        {
+                            pattern: /<\/wp-content.+?>/gi,
+                            replacement: ``
                         },
                         {
                             pattern: /date: -00[0-9-]+T00:00:00\+00:00/,
