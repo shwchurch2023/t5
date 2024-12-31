@@ -20,6 +20,9 @@ ignoreLogs = ['warning-goldmark-raw-html']
 [pagination]
 pagerSize = 5
 
+[services]
+  [services.googleAnalytics]
+    id = 'G-5D37ZNGXW6'
 
 # Theme config
 [params]
@@ -182,3 +185,5 @@ type = "toc"
       hardWraps = true
       unsafe = true
       xhtml = false
+
+
