@@ -179,6 +179,6 @@ type = "toc"
       [markup.goldmark.renderHooks.link]
         enableDefault = true
     [markup.goldmark.renderer]
-      hardWraps = false
+      hardWraps = true
       unsafe = true
       xhtml = false
