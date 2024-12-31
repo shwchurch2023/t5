@@ -757,6 +757,9 @@ reduceCompilationSize(){
 	useSSHKey $publicGitUsername
 
 	echo "[INFO] Reduce files that may alter every compilation"
+	echo "[INFO] Skipped this step since we've updated hugo-theme-stack"
+
+	return 0
 
 	findAndReplace "s/id=gallery-[[:digit:]]\+/id=gallery-replaced/g"
 	# find "${find_main_public_site_args}"  -type f -name "*.html" -exec sed -i  "s/id=gallery-[[:digit:]]\+/id=gallery-replaced/g" {} \;
