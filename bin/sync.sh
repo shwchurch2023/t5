@@ -46,7 +46,9 @@ tmpPathPrefix=/mnt/hugo/tmp/
 hugoExportedPath=${tmpPathPrefix}/wp-hugo-delta-processing
 
 githubHugoPath=/mnt/hugo/github/t5/
-githubHugoThemePath=/mnt/hugo/github/t5/themes/hugo-theme-shwchurch
+# githubHugoThemePath=/mnt/hugo/github/t5/themes/hugo-theme-shwchurch
+githubHugoThemePath=${themeFolder}
+
 wodrePressHugoExportPath=/mnt/data/shwchurch/web/wp-content/plugins/wordpress-to-hugo-exporter
 ls -la $wodrePressHugoExportPath
 
@@ -128,6 +130,7 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 	pwd
 	
 	git config --global --add safe.directory ${wodrePressHugoExportPath}
+	
 
 	echo "git pull"
 	git remote -v

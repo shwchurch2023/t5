@@ -505,6 +505,9 @@ updateRepo(){
 	dir=$1
 	echo "Update repo in $dir"
 	cd $dir
+
+	git config --global --add safe.directory $dir
+	
 	gitSetUser
 	git add .
 	git commit -m "Add current changes"
