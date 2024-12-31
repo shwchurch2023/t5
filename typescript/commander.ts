@@ -9,7 +9,7 @@ async function replaceUrlCommander() {
     const cmd = `replaceUrlWithRootPath`;
     program
         .command(cmd)
-        .usage(`npx ts-node typescript/commander.ts replaceUrlWithRootPath --path $BASE_PATH_COMMON/content`)
+        .usage(`npx ts-node typescript/commander.ts replaceUrlWithRootPath --path $(pwd)/content`)
         .addOption(
             new Option(
                 '--path <path>', 
@@ -28,13 +28,20 @@ async function replaceUrlCommander() {
                     let content = readFileSync(filePath).toString();
 
                     const pattList = [
-                        /http(s)?:\/\/.+?\.shwchurch.org\//gi
+                        {
+                            pattern: /http(s)?:\/\/.+?\.shwchurch.org\//gi,
+                            replacement: `/`
+                        },
+                        {
+                            pattern: /date: -00[0-9-]+T00:00:00\+00:00/,
+                            replacement: `date: "2020-12-28T03:17:00+00:00"`
+                        },
                     ];
 
                     pattList.forEach(
-                        pattern => {
+                        ({ pattern, replacement}) => {
                             // console.log(`Replace pattern ${pattern} with / in ${filePath}`);
-                            content = content.replace(pattern, `/`);
+                            content = content.replace(pattern, replacement);
                         }
                     );
 
