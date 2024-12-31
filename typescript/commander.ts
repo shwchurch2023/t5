@@ -24,7 +24,7 @@ async function replaceUrlCommander() {
             await walk({
                 dir: p,
                 callback: async(filePath) => {
-                    console.log(filePath);
+                    // console.log(filePath);
                     let content = readFileSync(filePath).toString();
 
                     const pattList = [
