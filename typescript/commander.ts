@@ -1,5 +1,5 @@
 import { Command, Option } from '@commander-js/extra-typings';
-import { readFileSync, writeFileSync } from "fs";
+import { readFileSync, unlinkSync, writeFileSync } from "fs";
 import { walk } from './utils';
 const program = new Command();
 
@@ -34,21 +34,30 @@ async function replaceUrlCommander() {
                         },
                         {
                             pattern: /date: -00[0-9-]+T00:00:00\+00:00/,
-                            replacement: `date: "2020-12-28T03:17:00+00:00"`
+                            replacement: `date: 2020-12-28T03:17:00+00:00`,
+                            replaceFunc: (content: string) => {
+                                return '';
+                            },
                         },
                     ];
 
                     pattList.forEach(
-                        ({ pattern, replacement}) => {
+                        ({ pattern, replacement, replaceFunc }) => {
                             // console.log(`Replace pattern ${pattern} with / in ${filePath}`);
-                            content = content.replace(pattern, replacement);
+                            content = replaceFunc ? (pattern.test(content) ? replaceFunc(content) : content ) : content.replace(pattern, replacement);
                         }
                     );
 
-                    writeFileSync(
-                        `${filePath}`,
-                        content
-                    )
+                    if (!content) {
+                        unlinkSync(filePath);
+                    } else {
+
+                        writeFileSync(
+                            `${filePath}`,
+                            content
+                        )
+                    }
+
 
                 },
                 filter: (filePath) => {
