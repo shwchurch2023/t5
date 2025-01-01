@@ -52,7 +52,7 @@ limit = 10
 type = "toc"
 
 #   # The content you want to be listed on list pages.
-#   mainSections = ["post"]
+mainSections = ["post"]
 
 #   # The information will display on the post pages.
 #   author = "守望"
