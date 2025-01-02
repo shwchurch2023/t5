@@ -115,15 +115,21 @@ fi
 
 cd $BASE_PATH
 findAndReplace_base_step=800
-./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername1" "${githubSplitPart1From}" "$((githubSplitPart2From-1))" $findAndReplace_base_step
-ensureNoErrorOnChildProcess "$?" "Deploy for $uploadsGitUsername1 from year ${githubSplitPart1From}"
+./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername1" "${githubSplitPart_uploadsGitUsername1From}" "$((githubSplitPart_uploadsGitUsername2From-1))" $findAndReplace_base_step
+ensureNoErrorOnChildProcess "$?" "Deploy for $uploadsGitUsername1 from year ${githubSplitPart_uploadsGitUsername1From}"
 
 cd $BASE_PATH
 findAndReplace_base_step=1200
-./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername2" "${githubSplitPart2From}" "$((currYear-1))" $findAndReplace_base_step
-ensureNoErrorOnChildProcess "$?" "Deploy for $uploadsGitUsername1 from year ${githubSplitPart2From}"
+./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername2" "${githubSplitPart_uploadsGitUsername2From}" "$((githubSplitPart_uploadsGitUsername3From-1))" $findAndReplace_base_step
+ensureNoErrorOnChildProcess "$?" "Deploy for $uploadsGitUsername2 from year ${githubSplitPart_uploadsGitUsername2From}"
 
+cd $BASE_PATH
 findAndReplace_base_step=1600
+./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername3" "${githubSplitPart_uploadsGitUsername3From}" "$((currYear-1))" $findAndReplace_base_step
+ensureNoErrorOnChildProcess "$?" "Deploy for $uploadsGitUsername3 from year ${githubSplitPart_uploadsGitUsername3From}"
+
+
+findAndReplace_base_step=8000
 
 echo "[INFO] Publish content to GithubPage https://$publicFolder"
 

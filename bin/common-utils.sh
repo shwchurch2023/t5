@@ -25,9 +25,11 @@ export publicGitUsername=shwchurch7
 # Those gitUsernames must match pattern `shwchurch.*` defined in bin/deploy-uploads.sh
 export uploadsGitUsername1=shwchurch4
 export uploadsGitUsername2=shwchurch2023media
+export uploadsGitUsername3=shwchurch2024media
 
-export githubSplitPart1From=2008
-export githubSplitPart2From=2016
+export githubSplitPart_uploadsGitUsername1From=2008
+export githubSplitPart_uploadsGitUsername2From=2016
+export githubSplitPart_uploadsGitUsername3From=2023
 
 export currYear=`date +%Y`
 
@@ -38,6 +40,7 @@ export hugoPublicFolderAbs=$BASE_PATH_COMMON/public
 
 export uploadsGitUsername1FolderAbs=$BASE_PATH_COMMON/$uploadsGitUsername1.github.io
 export uploadsGitUsername2FolderAbs=$BASE_PATH_COMMON/$uploadsGitUsername2.github.io
+export uploadsGitUsername3FolderAbs=$BASE_PATH_COMMON/$uploadsGitUsername3.github.io
 
 # export themeFolder=$BASE_PATH_COMMON/themes/hugo-theme-shwchurch
 export themeFolder=$BASE_PATH_COMMON/themes/hugo-theme-stack
@@ -451,7 +454,7 @@ addSSHKey(){
     cat ${pub_key}
 
 	echo ""
-	echo "Also, update [[ uploadsGitUsername2 ]] or add new [[ uploadsGitUsernameN ]] and its usage in [[ ./bin/deploy-uploads.sh \"\$publicFolder\" \"\$uploadsGitUsername2\" \"\${githubSplitPart2From}\" \"\$((currYear-1))\" int_step_id_base ]]"
+	echo "Also, update [[ uploadsGitUsername2 ]] or add new [[ uploadsGitUsernameN ]] and its usage in [[ ./bin/deploy-uploads.sh \"\$publicFolder\" \"\$uploadsGitUsername2\" \"\${githubSplitPart_uploadsGitUsername2From}\" \"\$((currYear-1))\" int_step_id_base ]]"
 	help_createGithubIo
 
 	echo "Then start a new ... bin/deploy.sh ... "
