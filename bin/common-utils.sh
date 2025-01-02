@@ -572,6 +572,12 @@ addSubmodule(){
 	git submodule add -f $submoduleUrl
 	echo "${repoName}" >> $submodule_used_path
 	cd $repoName
+	# try to init new main
+	git fetch origin
+	git checkout -b main origin/main
+	git branch -M main
+	git push -u origin main
+
 	git checkout -b new_tmp
 	git checkout new_tmp
 	git branch -D main
