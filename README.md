@@ -34,3 +34,8 @@ useSSHKey shwchurch2023
 
 ## For migration AWS EC2 to new version
 [./migrate-aws](./migrate-aws/README.md)
+
+
+## Other SOPs
+
+[./README-SOP](./README-SOP.md)
