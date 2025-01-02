@@ -581,6 +581,7 @@ addSubmodule(){
 		git fetch origin
 		git checkout -b main origin/main
 		echo "# ${githubUserName}.github.io" >> README.md
+		git reset .
 		git add README.md
 		git commit -m "first commit"
 		git branch -M main
