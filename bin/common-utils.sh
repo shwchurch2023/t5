@@ -566,6 +566,8 @@ addSubmodule(){
 	
 	submoduleUrl=git@github.com:${githubUserName}/${repoName}.git
 
+	echo "[$0] Usage: addSubmodule shwchurch2024media shwchurch2024media.github.io"
+
 	cd $BASE_PATH_COMMON
 	pwd
 	useSSHKey $githubUserName
@@ -573,10 +575,17 @@ addSubmodule(){
 	echo "${repoName}" >> $submodule_used_path
 	cd $repoName
 	# try to init new main
-	git fetch origin
-	git checkout -b main origin/main
-	git branch -M main
-	git push -u origin main
+
+	if [[ ! -f "README.md" ]];then
+		echo "Init repo ${githubUserName}.github.io with README.md and main branch"
+		git fetch origin
+		git checkout -b main origin/main
+		echo "# ${githubUserName}.github.io" >> README.md
+		git add README.md
+		git commit -m "first commit"
+		git branch -M main
+		git push -u origin main
+	fi
 
 	git checkout -b new_tmp
 	git checkout new_tmp
