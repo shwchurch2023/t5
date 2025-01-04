@@ -37,3 +37,6 @@
 # [submodule "hugo-theme-stack-starter"]
 # 	path = hugo-theme-stack-starter
 # 	url = git@github.com:shwchurch2023/hugo-theme-stack-starter.git
+[submodule "shwchurch2024media.github.io"]
+	path = shwchurch2024media.github.io
+	url = git@github.com:shwchurch2024media/shwchurch2024media.github.io.git
