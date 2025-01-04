@@ -695,18 +695,19 @@ rangeGitAddPush(){
 export rangeGitAddPush
 
 applyDistributionMapping(){
-	findAndReplace_base_step_local=${1}
-	dirRelativePath=${2}
+	local findAndReplace_base_step_local=${1}
+	local dirRelativePath=${2}
 	echo "[$0] $filePathUrlMappingFilePath"
+	cat $filePathUrlMappingFilePath
 	applyPathMapping "$filePathUrlMappingFilePath" "$findAndReplace_base_step_local" "$dirRelativePath"
 }
 export applyDistributionMapping
 
 applyPathMapping(){
-	file=${1}
-	applyPathMapping_findAndReplace_base_step_local=${2}
+	local file=${1}
+	local applyPathMapping_findAndReplace_base_step_local=${2}
 
-	dirRelativePath=${3}
+	local dirRelativePath=${3}
 
 	echo "[$0] Apply mappings from $file"
 	cat $file
@@ -742,8 +743,8 @@ applyManualDistributionMapping(){
 export applyManualDistributionMapping
 
 commitEssential(){
-	END=${1:-"$(date +'%Y')"}
-	MONTH=${2:-"$(date +"%m")"}
+	local END=${1:-"$(date +'%Y')"}
+	local MONTH=${2:-"$(date +"%m")"}
 
 	echo "[$0] Start: ${END}/${MONTH}"
 	cd $publicFolderAbs
@@ -764,9 +765,11 @@ export commitEssential
 
 commitEssentialAndUpdateManualStart(){
 
-	commitEssentialAndUpdateManualStart_findAndReplace_base_step=${1}
-	END=${2:-"$(date +'%Y')"}
-	MONTH=${3:-"$(date +"%m")"}
+	local commitEssentialAndUpdateManualStart_findAndReplace_base_step=${1}
+	local END=${2:-"$(date +'%Y')"}
+	local MONTH=${3:-"$(date +"%m")"}
+
+	echo "[$0] $commitEssentialAndUpdateManualStart_findAndReplace_base_step $END $MONTH"
 
 	applyDistributionMapping "${commitEssentialAndUpdateManualStart_findAndReplace_base_step}" "${END}/${MONTH}"
 	applyManualDistributionMapping "${commitEssentialAndUpdateManualStart_findAndReplace_base_step}" "${END}/${MONTH}"

@@ -32,17 +32,17 @@ isSplitExecute=''
 targetFolder=$BASE_PATH/${toGitRepoName}
 
 splitFiles(){
-	dir=$1
+	local dir=$1
 
-	sourcePath=$publicFolderAbs/$dir
+	local sourcePath=$publicFolderAbs/$dir
 	if [[ ! -d "$sourcePath" ]]; then
 
 		echo "[INFO] $sourcePath is not found, skip. "
 		continue
 	fi
 
-	targetFolder=$BASE_PATH/${toGitRepoName}
-	targetPath=$targetFolder/$dir
+	local targetFolder=$BASE_PATH/${toGitRepoName}
+	local targetPath=$targetFolder/$dir
 	echo "[INFO] Split file at path $sourcePath  to $targetPath "
 	cd $BASE_PATH
 
@@ -54,7 +54,7 @@ splitFiles(){
 	cd -
 
 	dir=$(echo "$dir" | sed  "s#/mnt/hugo/github/t5/shwchurch.*.github.io/##g")
-	mapping=(
+	local mapping=(
 		"s#https://$publicFolder/$dir#https://${toGitRepoName}/$dir#g"
 		"s#https://${toGitRepoName}/$dir#/$dir#g"
 		"s#/$dir#https://${toGitRepoName}/$dir#g"
@@ -75,8 +75,8 @@ splitFiles(){
 	# find . -type f -name "*.html" -exec sed -i   {} \;
 	
 	cd $targetFolder
-	CURR_YEAR=$(date +'%Y')
-	MONTH=$(date +"%m")
+	local CURR_YEAR=$(date +'%Y')
+	# MONTH=$(date +"%m")
 
 	cp -r ${publicFolderAbs}/index.html ${publicFolderAbs}/404.html ${publicFolderAbs}/config.yaml ${publicFolderAbs}/images ${publicFolderAbs}/js  ${publicFolderAbs}/scss ./ 
 	# cp -r ${publicFolderAbs}/${CURR_YEAR}/${MONTH}  ${publicFolderAbs}/wp-content/uploads/${CURR_YEAR}/${MONTH} ./
