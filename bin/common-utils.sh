@@ -512,7 +512,7 @@ updateRepo(){
 	git config --global --add safe.directory $dir
 
 	# move all git rebase/merge leftover
-	rm -rf .git_*
+	# rm -rf .git_*
 
 	gitSetUser
 	git add .
