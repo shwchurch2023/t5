@@ -500,7 +500,7 @@ export useSSHKey
 
 killLongRunningGit(){
 	echo "[$0]"
-	ps aux | egrep "\sgit\s" | awk '{print $2}' | xargs kill
+	ps aux | egrep "\sgit\s" | awk '{print $2}' | xargs -I{} kill -9 {}
 }
 export killLongRunningGit 
 
