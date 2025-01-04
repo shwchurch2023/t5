@@ -519,13 +519,15 @@ updateRepo(){
 	git commit -m "Add current changes"
 	git pull --no-edit
 	git push
-	echo "Try to update parent repo if any"
-	cd ..
-	gitSetUser
-	git add .
-	git commit -m "Child repo changed"
-	git pull --no-edit
-	git push
+
+	echo "[DEBUG] Skipped [Try to update parent repo if any]"
+	# echo "Try to update parent repo if any"
+	# cd ..
+	# gitSetUser
+	# git add .
+	# git commit -m "Child repo changed"
+	# git pull --no-edit
+	# git push
 }
 export updateRepo
 
