@@ -138,11 +138,18 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 	git pull
 
 	date1=$(date +%s)
+
+	ls ${tmpPathPrefix}
+
+	rm -rf ${tmpPathPrefix}/wp-hugo.zip
+	rm -rf ${tmpPathPrefix}/wp-hugo*
+
+	ls ${tmpPathPrefix}
+
 	echo "php hugo-export-cli.php ${tmpPathPrefix} "
 
-	rm -rf wp-hugo.zip
 
-	ls /mnt/hugo/tmp/
+
 
 	php hugo-export-cli.php ${tmpPathPrefix} 
 
