@@ -115,18 +115,33 @@ fi
 
 cd $BASE_PATH
 findAndReplace_base_step=800
+
+error_on_deploy_uploads=""
+
 ./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername1" "${githubSplitPart_uploadsGitUsername1From}" "$((githubSplitPart_uploadsGitUsername2From-1))" $findAndReplace_base_step
-ensureNoErrorOnChildProcess "$?" "Deploy for $uploadsGitUsername1 from year ${githubSplitPart_uploadsGitUsername1From}"
+
+if [[ "$?" != "0" ]];then
+	error_on_deploy_uploads="[ Error $uploadsGitUsername1  ${githubSplitPart_uploadsGitUsername1From} $((githubSplitPart_uploadsGitUsername2From-1)) ] "
+fi
+
+# ensureNoErrorOnChildProcess "$?" "Deploy for $uploadsGitUsername1 from year ${githubSplitPart_uploadsGitUsername1From}"
 
 cd $BASE_PATH
 findAndReplace_base_step=1200
 ./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername2" "${githubSplitPart_uploadsGitUsername2From}" "$((githubSplitPart_uploadsGitUsername3From-1))" $findAndReplace_base_step
-ensureNoErrorOnChildProcess "$?" "Deploy for $uploadsGitUsername2 from year ${githubSplitPart_uploadsGitUsername2From}"
+# ensureNoErrorOnChildProcess "$?" "Deploy for $uploadsGitUsername2 from year ${githubSplitPart_uploadsGitUsername2From}"
+if [[ "$?" != "0" ]];then
+	error_on_deploy_uploads="${error_on_deploy_uploads} | [ Error $uploadsGitUsername2  ${githubSplitPart_uploadsGitUsername2From} $((githubSplitPart_uploadsGitUsername3From-1)) ] "
+fi
+
 
 cd $BASE_PATH
 findAndReplace_base_step=1600
 ./bin/deploy-uploads.sh "$publicFolder" "$uploadsGitUsername3" "${githubSplitPart_uploadsGitUsername3From}" "$((currYear-1))" $findAndReplace_base_step
-ensureNoErrorOnChildProcess "$?" "Deploy for $uploadsGitUsername3 from year ${githubSplitPart_uploadsGitUsername3From}"
+# ensureNoErrorOnChildProcess "$?" "Deploy for $uploadsGitUsername3 from year ${githubSplitPart_uploadsGitUsername3From}"
+if [[ "$?" != "0" ]];then
+	error_on_deploy_uploads="${error_on_deploy_uploads} | [ Error $uploadsGitUsername3  ${githubSplitPart_uploadsGitUsername3From} $((currYear-1)) ] "
+fi
 
 
 findAndReplace_base_step=8000
@@ -170,7 +185,12 @@ cd $publicFolderAbs
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
 if [[ "$(shouldExecuteStep ${findAndReplace_base_step} commit_categories_wp_content )" = "true" ]];then
 	gitCommitByBulk "categories" $publicGitUsername
-	gitCommitByBulk "wp-content" $publicGitUsername
+	if [[ -z "${error_on_deploy_uploads}" ]];then
+		gitCommitByBulk "wp-content" $publicGitUsername
+	else
+		echo "Skipped on committing [wp-content] to $publicGitUsername as previous error found [${error_on_deploy_uploads}]"
+		
+	fi
 fi
 
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
@@ -184,14 +204,16 @@ fi
 waitGitComplete
 cd $publicFolderAbs
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step} commit_all_rest)" = "true" ]];then
-	git add .
-	git commit -m "Commit all the rest"
-	git push --set-upstream origin main  --force
+if [[ -z "${error_on_deploy_uploads}" ]];then
+	if [[ "$(shouldExecuteStep ${findAndReplace_base_step} commit_all_rest)" = "true" ]];then
+		git add .
+		git commit -m "Commit all the rest"
+		git push --set-upstream origin main  --force
 
-	echo "The site is updated"
-	echo "Wait for 60 seconds before notifying the forked sites to update"
-	sleep 60
+		echo "The site is updated"
+		echo "Wait for 60 seconds before notifying the forked sites to update"
+		sleep 60
+	fi
 fi
 
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
@@ -202,6 +224,11 @@ fi
 helpCleanSubmodules
 
 executeStepAllDone
+
+if [[ ! -z "${error_on_deploy_uploads}" ]]; then
+	echo "[$0] Deploy Error: ${error_on_deploy_uploads}"
+	exit 1
+fi
 
 # Remove last commit
 #git reset --hard
