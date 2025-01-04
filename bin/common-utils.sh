@@ -509,6 +509,8 @@ updateRepo(){
 	echo "Update repo in $dir"
 	cd $dir
 
+	rm -rf .git/index.lock
+
 	git config --global --add safe.directory $dir
 
 	# move all git rebase/merge leftover
