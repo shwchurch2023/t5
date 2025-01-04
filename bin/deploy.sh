@@ -214,6 +214,10 @@ if [[ -z "${error_on_deploy_uploads}" ]];then
 		echo "Wait for 60 seconds before notifying the forked sites to update"
 		sleep 60
 	fi
+else
+
+	echo "Skipped on committing [all the rest] to $publicGitUsername as previous error found [${error_on_deploy_uploads}]"
+		
 fi
 
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
