@@ -82,9 +82,9 @@ fi
 # find "${find_main_public_site_args}" -type f -name "*.html" -exec sed -i  "s/shwchurch[[:digit:]]\+/$publicGitUsername/g" {} \;
 
 cd $BASE_PATH
-START=2005
-END=$(date +'%Y')
-MONTH=$(date +"%m")
+export START=2005
+export END=$(date +'%Y')
+export MONTH=$(date +"%m")
 
 findAndReplace_base_step=300
 
