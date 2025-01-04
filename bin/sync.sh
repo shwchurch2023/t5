@@ -103,11 +103,11 @@ findAndReplace_base_step=40
 
 if [[ "$(shouldExecuteStep ${findAndReplace_base_step} update_repos )" = "true" ]];then
 	killLongRunningGit
-	# echo "[DEBUG] Skipped updateRepo $githubHugoThemePath"
-	updateRepo $githubHugoThemePath
+	echo "[DEBUG] Skipped updateRepo $githubHugoThemePath"
+	# updateRepo $githubHugoThemePath
 
-	# echo "[DEBUG] Skipped updateRepo $githubHugoPath"
-	updateRepo $githubHugoPath
+	echo "[DEBUG] Skipped updateRepo $githubHugoPath"
+	# updateRepo $githubHugoPath
 fi
 
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
