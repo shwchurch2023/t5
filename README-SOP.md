@@ -19,7 +19,7 @@
 
 
 ### Update Youtube
-- Execute the Javascript in `./bin/download-sw-choir.sh` according to its hints
+- Execute the Javascript in `./bin/download-sw-choir.sh` according to its hints;
 
 - Download mp3
 ```zsh
