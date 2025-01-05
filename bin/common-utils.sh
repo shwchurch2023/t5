@@ -634,7 +634,7 @@ gitCommitByBulk(){
 
 
 	if [[ -z "$gitUsername" ]];then
-		"[ERROR]{gitCommitByBulk} Must offer gitUsername"
+		echo "[ERROR]{gitCommitByBulk} Must offer gitUsername"
 		return
 	fi
 
