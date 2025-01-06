@@ -208,10 +208,13 @@
         playBtn.addEventListener("click", () => {
             if (audio.paused) {
                 audio.play();
-                playBtn.textContent = "Pause";
+                const song = playlist[currentSongIndex];
+                // const songArtist = wp_hugo_playlist.querySelectorAll(".song-artist")[index];
+
+                playBtn.textContent = `暂停(${song.name})`;
             } else {
                 audio.pause();
-                playBtn.textContent = "Play";
+                playBtn.textContent = `播放(${song.name})`;
             }
         });
 
@@ -234,5 +237,5 @@
 
     window.addEventListener(`load`, () => {
         initWordpressHugoPlaylist();
-    })
+    });
 </script>
