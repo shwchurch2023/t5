@@ -103,22 +103,22 @@ mainSections = ["post"]
 [[menu.shwchurch]]
     name = "主日敬拜程序"
     url = "/categories/主日敬拜程序/"
-    weight = 1
+    # weight = 1
 
 [[menu.shwchurch]]
     name = "讲道"
     url = "/categories/讲道/"
-    weight = 2
+    # weight = 2
 
-# [[menu.shwchurch]]
-#     name = "户外敬拜"
-#     url = "/tags/户外推荐资料/"
-#     weight = 3
+[[menu.shwchurch]]
+    name = "诗班合辑"
+    url = "/2025/01/05/ji-du-jiao-bei-jing-shou-wang-jiao-hui-chang-shi-ban-shi-ge/"
+    # weight = 3
 
 [[menu.shwchurch]]
     name = "所有分类"
     url = "/categories/"
-    weight = 3
+    # weight = 3
 
 [Taxonomies]
   category = "categories"
