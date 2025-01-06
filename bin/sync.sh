@@ -69,6 +69,7 @@ detectChange(){
 			if [[ "$detectChangeMaxRetry" -lt 0 ]];then
 				${BASE_PATH}/bin/mail.sh "shwchurch3@gmail.com" "[ERROR][$0] Failed in getting content from ${source_website}"
 				unlock_file main_entry_sync
+				executeStepAllDone
 				exit 1023 
 			fi
 			echo "[$0] Retry left ${detectChangeMaxRetry}"
