@@ -82,6 +82,8 @@ detectChange(){
 				if [[ -z "${HUGO_SYNC_FORCE}" ]];then
 					echo "[$0] $source_website is not changed. Skip sync. Set env var 'export HUGO_SYNC_FORCE=1' for force syncing "
 					unlock_file main_entry_sync
+					executeStepAllDone
+
 					exit
 				else
 					echo "[$0] Force synced even no changes"
@@ -126,6 +128,7 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 	else
 		echo "[ERROR] Hugo Export Path ${hugoExportedPath} is invalid"
 		unlock_file main_entry_sync
+		executeStepAllDone
 		exit 1
 	fi
 
@@ -269,3 +272,4 @@ fi
 ${BASE_PATH}/bin/mail.sh "shwchurch3@gmail.com" "[INFO][$0] ${ret} Hugo Sync for ${source_website} - Took $time_delta seconds"
 
 unlock_file main_entry_sync
+executeStepAllDone
