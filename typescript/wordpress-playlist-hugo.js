@@ -128,10 +128,14 @@ cursor: pointer;
 
     let currentSongIndex = +(new URL(location.href).searchParams.get(songIdParamKey) || localStorage.getItem(currentPlayingClass) || 0);
 
-    console.log(`Start to play sone ${playlist[currentSongIndex].name} with index ${currentSongIndex}`)
+    console.log(`Start to play sone ${playlist[currentSongIndex].name} with index ${currentSongIndex}`);
+
+    let readyToRestart = false;
 
     audio.addEventListener("ended", (event) => {
-        loadSong(currentSongIndex + 1)
+        loadSong(readyToRestart ? currentSongIndex : currentSongIndex + 1);
+
+        readyToRestart = false;
     });
 
     // Function to load and play a song
@@ -201,6 +205,7 @@ cursor: pointer;
 
         if (currentSongIndex === playlist.length - 1) {
             currentSongIndex = 0;
+            readyToRestart = true;
         }
 
         localStorage.setItem(currentPlayingClass, currentSongIndex);
