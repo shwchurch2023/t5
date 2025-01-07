@@ -16,6 +16,7 @@ const initWordpressHugoPlaylist = () => {
 
 
     const currentPlayingClass = `wp-hugo-song-current-playing`;
+    const songIdParamKey = `song-id`;
 
     const getPlaylist = (containerSel = `.wp-audio-playlist`) => {
         const sel = `${containerSel} noscript`;
@@ -125,10 +126,16 @@ cursor: pointer;
     const prevBtn = wordpressHugoAudioPlaylistPlayerElement.querySelector("#prev");
     const nextBtn = wordpressHugoAudioPlaylistPlayerElement.querySelector("#next");
 
-    let currentSongIndex = +(localStorage.getItem(currentPlayingClass) || 0);
+    let currentSongIndex = +(new URL(location.href).searchParams.get(songIdParamKey) || localStorage.getItem(currentPlayingClass) || 0);
+
+    console.log(`Start to play sone ${playlist[currentSongIndex].name} with index ${currentSongIndex}`);
+
+    let readyToRestart = false;
 
     audio.addEventListener("ended", (event) => {
-        loadSong(currentSongIndex + 1)
+        loadSong(readyToRestart ? currentSongIndex : currentSongIndex + 1);
+
+        readyToRestart = false;
     });
 
     // Function to load and play a song
@@ -198,14 +205,24 @@ cursor: pointer;
 
         if (currentSongIndex === playlist.length - 1) {
             currentSongIndex = 0;
+            readyToRestart = true;
         }
 
         localStorage.setItem(currentPlayingClass, currentSongIndex);
 
         document.title = `${song.name} - ${document.querySelector(`h2.article-title`)?.innerText}`;
 
+        updateUrl(currentSongIndex);
 
         // songArtist.textContent = song.artist;
+    }
+
+
+    function updateUrl(index) {
+        const url = new URL(location.href);
+        url.searchParams.set(songIdParamKey, index);
+
+        history.pushState(null, '', url);
     }
 
     // Play button event listener
