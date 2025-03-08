@@ -15,3 +15,15 @@ s#https://shwchurch7.github.io/wp-content/uploads/2013#https://shwchurch4.github
 s#https://shwchurch4.github.io/wp-content/uploads/2013#/wp-content/uploads/2013#g
 s#/wp-content/uploads/2013#https://shwchurch4.github.io/wp-content/uploads/2013#g
 s#https:https:#https:#g
+s#https://shwchurch7.github.io/wp-content/uploads/2013#https://shwchurch4.github.io/wp-content/uploads/2013#g
+s#https://shwchurch4.github.io/wp-content/uploads/2013#/wp-content/uploads/2013#g
+s#/wp-content/uploads/2013#https://shwchurch4.github.io/wp-content/uploads/2013#g
+s#https:https:#https:#g
+s#https://shwchurch7.github.io/wp-content/uploads/2014#https://shwchurch4.github.io/wp-content/uploads/2014#g
+s#https://shwchurch4.github.io/wp-content/uploads/2014#/wp-content/uploads/2014#g
+s#/wp-content/uploads/2014#https://shwchurch4.github.io/wp-content/uploads/2014#g
+s#https:https:#https:#g
+s#https://shwchurch7.github.io/wp-content/uploads/2015#https://shwchurch4.github.io/wp-content/uploads/2015#g
+s#https://shwchurch4.github.io/wp-content/uploads/2015#/wp-content/uploads/2015#g
+s#/wp-content/uploads/2015#https://shwchurch4.github.io/wp-content/uploads/2015#g
+s#https:https:#https:#g
