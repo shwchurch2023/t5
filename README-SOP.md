@@ -13,7 +13,14 @@
 ## Update Shouwang Choir playlist
 ### Update source
 
-1. Get all new hymns： https://t5.shwchurch.org/wp-admin/upload.php?page=mla-menu&s=%E5%9F%BA%E7%9D%A3%E6%95%99%E5%8C%97%E4%BA%AC%E5%AE%88%E6%9C%9B%E6%95%99%E4%BC%9A%E5%94%B1%E8%AF%97%E7%8F%AD&mla_search_connector=AND&mla_search_fields%5B0%5D=excerpt&mla_search_fields%5B1%5D=content&mla_filter_term=-1&order=desc&orderby=post_date&paged=3
+1. Get all new hymns： 
+- Open: https://t5.shwchurch.org/wp-admin/upload.php?page=mla-menu&post_mime_type=audio&s=%E5%94%B1%E8%AF%97%E7%8F%AD&mla_search_connector=AND&mla_search_fields%5B0%5D=title&mla_search_fields%5B1%5D=excerpt&mla_search_fields%5B2%5D=content&mla_search_fields%5B3%5D=file&orderby=post_date&order=desc
+- Execute JS `download-mp3-from-wp-admin-search.js`
+    - If the page got old songs
+        - Change the stopAt song name from last downloaded point, like `《241_奇异恩典》，来自 基督教北京守望教会唱诗班 的 新诗歌本。 发行于：2024。 音轨 241`
+        - `downloadMp3s({ stopAt: "241_奇异恩典" });`
+    - If the page is all new songs
+        - `downloadMp3s()`
 
 2. recreate playlist： https://t5.shwchurch.org/wp-admin/upload.php?page=mla-menu&s=%E5%9F%BA%E7%9D%A3%E6%95%99%E5%8C%97%E4%BA%AC%E5%AE%88%E6%9C%9B%E6%95%99%E4%BC%9A%E5%94%B1%E8%AF%97%E7%8F%AD&mla_search_connector=AND&mla_search_fields%5B0%5D=excerpt&mla_search_fields%5B1%5D=content&mla_filter_term=-1&order=desc&orderby=post_date&paged=3
 
