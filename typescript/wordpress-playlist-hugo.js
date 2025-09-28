@@ -222,7 +222,7 @@ cursor: pointer;
 
         localStorage.setItem(currentPlayingClass, currentSongIndex);
 
-        document.title = `${song.name} - ${document.querySelector(`h2.article-title`)?.innerText}`;
+        document.title = `[${index + 1}/${playlist?.length}] ${song.name} - ${document.querySelector(`h2.article-title`)?.innerText}`;
 
         updateUrl(currentSongIndex);
 
