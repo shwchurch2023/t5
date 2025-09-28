@@ -59,7 +59,3 @@ s#https://shwchurch7.github.io/wp-content/uploads/2024#https://shwchurch2024medi
 s#https://shwchurch2024media.github.io/wp-content/uploads/2024#/wp-content/uploads/2024#g
 s#/wp-content/uploads/2024#https://shwchurch2024media.github.io/wp-content/uploads/2024#g
 s#https:https:#https:#g
-s#https://shwchurch7.github.io/wp-content/uploads/2024#https://shwchurch2024media.github.io/wp-content/uploads/2024#g
-s#https://shwchurch2024media.github.io/wp-content/uploads/2024#/wp-content/uploads/2024#g
-s#/wp-content/uploads/2024#https://shwchurch2024media.github.io/wp-content/uploads/2024#g
-s#https:https:#https:#g
