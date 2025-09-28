@@ -38,6 +38,17 @@ const initWordpressHugoPlaylist = () => {
                 name: `${a.innerText}-(${month || '老歌'})`,
                 artist: `基督教北京守望教会唱诗班`,
                 src: a.href,
+                publish_month: month
+            }
+        }).sort((a, b) => {
+            if (a === b) {
+                return 0;
+            }
+            
+            try {
+                return new Date(a) > new Date(b) ? -1 : 1
+            } catch (error) {
+                return 0
             }
         })
 
