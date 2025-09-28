@@ -33,8 +33,9 @@ const initWordpressHugoPlaylist = () => {
         console.log(`getPlaylist`, `ol`, ol);
 
         return Array.from(ol.querySelectorAll(`li a`)).map(a => {
+            const month = a.href?.match(/\d{4}\/\d{2}/)?.[0]
             return {
-                name: a.innerText,
+                name: `${a.innerText}-(${month || '老歌'})`,
                 artist: `基督教北京守望教会唱诗班`,
                 src: a.href,
             }
