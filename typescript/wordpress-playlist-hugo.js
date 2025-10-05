@@ -41,12 +41,14 @@ const initWordpressHugoPlaylist = () => {
                 publish_month: month
             }
         }).sort((a, b) => {
-            if (a === b) {
+            const monthA = a?.publish_month;
+            const monthB = b?.publish_month;
+            if (monthA === monthB || !monthA || !monthB) {
                 return 0;
             }
-            
+
             try {
-                return new Date(a) > new Date(b) ? -1 : 1
+                return new Date(monthA) > new Date(monthB) ? -1 : 1
             } catch (error) {
                 return 0
             }
