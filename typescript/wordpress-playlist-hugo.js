@@ -38,7 +38,7 @@ const initWordpressHugoPlaylist = () => {
                 name: `${a.innerText}-(${month || '老歌'})`,
                 artist: `基督教北京守望教会唱诗班`,
                 src: a.href,
-                publish_month: month
+                publish_month: month + `/01`
             }
         }).sort((a, b) => {
             const monthA = a?.publish_month;
@@ -46,12 +46,7 @@ const initWordpressHugoPlaylist = () => {
             if (monthA === monthB || !monthA || !monthB) {
                 return 0;
             }
-
-            try {
-                return new Date(monthA) > new Date(monthB) ? -1 : 1
-            } catch (error) {
-                return 0
-            }
+            return new Date(monthB) - new Date(monthA) 
         })
 
 

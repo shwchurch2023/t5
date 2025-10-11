@@ -30,12 +30,13 @@
 2. 更新 playlist： 
 - https://t5.shwchurch.org/wp-admin/post.php?post=24180&action=edit
 - 编辑播放列表
+    - 清除现有的音频，使得添加的新音频按上传时间排列
+```javascript
+Array.from(document.querySelectorAll(`.attachment-close`)).forEach(ele => ele.click())
+```
 - “添加进音频播放列表”
 - 搜索标签： 基督教北京守望教会唱诗班诗歌合辑
 - 加载更多（前N个-只显示还没有在列表里的，可能是0）
-```javascript
-Array.from(document.querySelectorAll(`.attachment.save-ready`)).forEach(li => li.click())
-```
 - 点击“添加进音频播放列表”
 - 点击 “更新播放列表”
 - 点击“保存”
