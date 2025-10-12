@@ -46,7 +46,7 @@ const initWordpressHugoPlaylist = () => {
             if (monthA === monthB || !monthA || !monthB) {
                 return 0;
             }
-            return new Date(monthB) - new Date(monthA) 
+            return new Date(monthB) - new Date(monthA)
         })
 
 
@@ -184,7 +184,7 @@ cursor: pointer;
                 return;
             }
             loadSong(
-                songId
+                +songId
             );
 
         })
