@@ -40,7 +40,6 @@ s#https://shwchurch2023media.github.io/wp-content/uploads/2019#/wp-content/uploa
 s#/wp-content/uploads/2019#https://shwchurch2023media.github.io/wp-content/uploads/2019#g
 s#https:https:#https:#g
 s#https://shwchurch7.github.io/wp-content/uploads/2020#https://shwchurch2023media.github.io/wp-content/uploads/2020#g
-s#https://shwchurch7.github.io/wp-content/uploads/2020#https://shwchurch2023media.github.io/wp-content/uploads/2020#g
 s#https://shwchurch2023media.github.io/wp-content/uploads/2020#/wp-content/uploads/2020#g
 s#/wp-content/uploads/2020#https://shwchurch2023media.github.io/wp-content/uploads/2020#g
 s#https:https:#https:#g
