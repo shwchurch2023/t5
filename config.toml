@@ -18,7 +18,7 @@ defaultContentLanguage = "zh-cn"
 ignoreLogs = ['warning-goldmark-raw-html']
 
 [pagination]
-pagerSize = 5
+pagerSize = 50
 
 [services]
   [services.googleAnalytics]
