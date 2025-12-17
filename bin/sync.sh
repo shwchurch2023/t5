@@ -113,7 +113,6 @@ stopSyncIfRequested(){
 echo  "(cd /mnt/hugo; sudo -u hugo zsh -c '/mnt/hugo/github/t5/bin/sync.sh > ${log} 2>&1 ' &); tail -f ${log}"
 
 findAndReplace_base_step=40
-skip_detect_change="${HUGO_SYNC_SKIP_DETECT_CHANGE}"
 stopSyncIfRequested "update_repos"
 
 if [[ "$(shouldExecuteStep ${findAndReplace_base_step} update_repos )" = "true" ]];then
@@ -127,9 +126,7 @@ fi
 
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
 stopSyncIfRequested "detect_changes"
-if [[ -n "${skip_detect_change}" ]]; then
-	echo "[INFO] Skip detectChange since HUGO_SYNC_SKIP_DETECT_CHANGE is set"
-elif [[ "$(shouldExecuteStep ${findAndReplace_base_step} detect_changes )" = "true" ]];then
+if [[ "$(shouldExecuteStep ${findAndReplace_base_step} detect_changes )" = "true" ]];then
 	detectChange
 fi
 
@@ -280,7 +277,11 @@ exit_code_deploy=$?
 if [[ -f "${detectChange_file_tmp}" ]]; then
 	mv $detectChange_file_tmp $detectChange_file
 else
-	echo "[INFO] detectChange output not updated (likely skipped)"
+	if [[ -n "${HUGO_SYNC_FORCE}" ]]; then
+		echo "[INFO] detectChange output not updated since HUGO_SYNC_FORCE skipped detection"
+	else
+		echo "[INFO] detectChange output not updated (step skipped)"
+	fi
 fi
 
 end_seconds2=$(date +%s)
