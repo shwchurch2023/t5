@@ -1,6 +1,7 @@
 #!/bin/zsh
 
-export BASE_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd .. && pwd )
+script_dir=$( cd -- "$( dirname -- "$0" )" &> /dev/null && pwd )
+export BASE_PATH=$( cd -- "${script_dir}/.." &> /dev/null && pwd )
 
 # if [[ -z "$BASE_PATH" ]];then
 #     cd "$(dirname "$0")"
