@@ -477,10 +477,12 @@ help_createGithubIo(){
 	echo "--------"
 }
 
+# for mac:  useSSHKey shwchurch2023 /Volumes/KEYS/shwchurch_github/id_ed25519_
 useSSHKey(){
 		pkill ssh-agent
-        username=${1:-"shwchurch2023"}
-        key=/mnt/hugo/ssh/id_ed25519_$username
+        local username=${1:-"shwchurch2023"}
+        local key_path_prefix=${2:-"/mnt/hugo/ssh/id_ed25519_"}
+        local key=${key_path_prefix}${username}
 	
         chmod 600 $key
         chmod 644 $key.pub
