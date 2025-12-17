@@ -173,6 +173,37 @@ executeStepAllDone(){
 }
 export executeStepAllDone
 
+shouldStopAfterStep(){
+	local current_step=$1
+	local step_label=$2
+	local end_step=${HUGO_SYNC_DEPLOY_END_STEP}
+
+	if [[ -z "${end_step}" ]]; then
+		return 1
+	fi
+
+	if ! [[ "${end_step}" =~ ^[0-9]+$ ]]; then
+		>&2 echo "[$0] HUGO_SYNC_DEPLOY_END_STEP [${end_step}] is not a positive integer; ignoring"
+		return 1
+	fi
+
+	if [[ -z "${current_step}" ]]; then
+		return 1
+	fi
+
+	if (( current_step >= end_step )); then
+		local label_suffix=""
+		if [[ -n "${step_label}" ]]; then
+			label_suffix=" (label: ${step_label})"
+		fi
+		echo "[$0] Reached configured end step ${end_step} at step ${current_step}${label_suffix}."
+		return 0
+	fi
+
+	return 1
+}
+export shouldStopAfterStep
+
 
 findAndReplace(){
 	sed_cmd=${1}

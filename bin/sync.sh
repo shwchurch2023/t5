@@ -100,9 +100,21 @@ detectChange(){
 	done
 }
 
+stopSyncIfRequested(){
+	local step_label=$1
+	if shouldStopAfterStep "${findAndReplace_base_step}" "${step_label}"; then
+		echo "[$0] Stop requested after step ${findAndReplace_base_step}. Exit sync.sh"
+		unlock_file main_entry_sync
+		executeStepAllDone
+		exit 0
+	fi
+}
+
 echo  "(cd /mnt/hugo; sudo -u hugo zsh -c '/mnt/hugo/github/t5/bin/sync.sh > ${log} 2>&1 ' &); tail -f ${log}"
 
 findAndReplace_base_step=40
+skip_detect_change="${HUGO_SYNC_SKIP_DETECT_CHANGE}"
+stopSyncIfRequested "update_repos"
 
 if [[ "$(shouldExecuteStep ${findAndReplace_base_step} update_repos )" = "true" ]];then
 	killLongRunningGit
@@ -114,11 +126,15 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} update_repos )" = "true" 
 fi
 
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step} detect_changes )" = "true" ]];then
+stopSyncIfRequested "detect_changes"
+if [[ -n "${skip_detect_change}" ]]; then
+	echo "[INFO] Skip detectChange since HUGO_SYNC_SKIP_DETECT_CHANGE is set"
+elif [[ "$(shouldExecuteStep ${findAndReplace_base_step} detect_changes )" = "true" ]];then
 	detectChange
 fi
 
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
+stopSyncIfRequested "cleanup_hugo_export_path"
 if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path )" = "true" ]];then
 
 	echo "[INFO] Cleanup ${hugoExportedPath}"
@@ -199,6 +215,7 @@ pwd
 ls
 
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
+stopSyncIfRequested "copy_content"
 if [[ "$(shouldExecuteStep ${findAndReplace_base_step} copy_content)" = "true" ]];then
 
 	echo "[INFO] Delete other unnecessary files"
@@ -238,6 +255,7 @@ for SpecialChar in "${SpecialCharsInTitle[@]}"; do
 		VALUE="${SpecialChar##*::}"
 		pattern="s#${KEY}#${VALUE}#g"
 		findAndReplace_base_step=$((findAndReplace_base_step + 1))
+		stopSyncIfRequested "replace_chars"
 		if [[ "$(shouldExecuteStep ${findAndReplace_base_step} replace_chars )" = "true" ]];then
 			findAndReplace "${pattern}" "." "*.md"
 		fi
@@ -251,11 +269,19 @@ done
 
 cd ${githubHugoPath}/bin/
 echo "[INFO] Deploy and publish to github pages"
+
+findAndReplace_base_step=290
+stopSyncIfRequested "deploy"
+
 ./deploy.sh
 exit_code_deploy=$?
 #./deploy-new.sh
 #echo "$(date)" >> ${log}
-mv $detectChange_file_tmp $detectChange_file
+if [[ -f "${detectChange_file_tmp}" ]]; then
+	mv $detectChange_file_tmp $detectChange_file
+else
+	echo "[INFO] detectChange output not updated (likely skipped)"
+fi
 
 end_seconds2=$(date +%s)
 
