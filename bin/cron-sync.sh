@@ -30,8 +30,8 @@ syncMonitorFile=${BASE_PATH}/bin/sync-monitor.sh
 logPath=${hugoGithubRoot}/sync.log
 logPath1=${hugoGithubRoot}/sync-monitor.log
 
-scriptToRun='/bin/bash '"${syncFile}"' "$(date +%s)-sync" > '"${logPath}"' 2>&1'
-scriptToRun1='/bin/bash '"${syncMonitorFile}"' "$(date +%s)-monitor" > '"${logPath1}"' 2>&1'
+scriptToRun="/bin/bash ${syncFile} \"\$(date +%s)-sync\" > ${logPath} 2>&1"
+scriptToRun1="/bin/bash ${syncMonitorFile} \"\$(date +%s)-monitor\" > ${logPath1} 2>&1"
 
 
 
