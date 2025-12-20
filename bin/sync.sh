@@ -192,9 +192,34 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 	echo "php hugo-export-cli.php ${tmpPathPrefix} "
 
 
-
+	watch_pid=""
+	if command -v watch >/dev/null 2>&1; then
+		if [[ -d "${tmpPathPrefix}" ]]; then
+			echo "[INFO] Running 'watch -n 300 ls -la' for ${tmpPathPrefix} (stdout only)"
+			(
+				cd "${tmpPathPrefix}" && env TERM=${TERM:-xterm} watch -n 300 ls -la
+			) &
+			watch_pid=$!
+		else
+			echo "[WARN] Skip watch logging because ${tmpPathPrefix} is not available"
+		fi
+	else
+		echo "[WARN] 'watch' command not found; skipping periodic ls logging"
+	fi
 
 	php hugo-export-cli.php ${tmpPathPrefix} 
+	php_status=$?
+
+	if [[ -n "${watch_pid}" ]]; then
+		echo "[INFO] Stopping background watch process ${watch_pid}"
+		kill "${watch_pid}" >/dev/null 2>&1 || true
+		wait "${watch_pid}" 2>/dev/null || true
+		watch_pid=""
+	fi
+
+	if [[ ${php_status} -ne 0 ]]; then
+		echo "[ERROR] hugo-export-cli.php exited with status ${php_status}"
+	fi
 
 	cd ${tmpPathPrefix}
 	echo "Unzip ${tmpPathPrefix}/wp-hugo.zip"
