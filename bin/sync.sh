@@ -10,6 +10,21 @@ source $BASE_PATH/bin/common-utils.sh
 
 cd $BASE_PATH
 
+ensure_no_hugo_export_process(){
+	local existing_pids=""
+	if command -v pgrep >/dev/null 2>&1; then
+		existing_pids=$(pgrep -f "php .*hugo-export-cli\\.php" 2>/dev/null || true)
+	else
+		existing_pids=$(ps aux | grep -F "php hugo-export-cli.php" | grep -v grep | awk '{print $2}')
+	fi
+
+	if [[ -n "${existing_pids}" ]]; then
+		echo "[$0] Detected running 'php hugo-export-cli.php' processes (${existing_pids}). Exit current sync."
+		exit 0
+	fi
+}
+
+ensure_no_hugo_export_process
 ensure_single_sync_instance(){
 	local current_pid=$$
 	local script_path="${BASE_PATH}/bin/sync.sh"
@@ -230,7 +245,18 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 		echo "[WARN] 'watch' command not found; skipping periodic ls logging"
 	fi
 
-	php hugo-export-cli.php ${tmpPathPrefix} 
+	php_cmd=(php hugo-export-cli.php "${tmpPathPrefix}")
+	"${php_cmd[@]}" &
+	php_pid=$!
+	echo "[INFO] hugo-export-cli.php started with PID ${php_pid}"
+	if command -v ps >/dev/null 2>&1; then
+		if ! ps -p "${php_pid}" -o pid,ppid,%cpu,%mem,etime,command; then
+			echo "[WARN] Unable to show process info for PID ${php_pid}"
+		fi
+	else
+		echo "[WARN] 'ps' command not available; cannot display process info"
+	fi
+	wait "${php_pid}"
 	php_status=$?
 
 	if [[ -n "${watch_pid}" ]]; then
