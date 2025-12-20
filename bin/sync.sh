@@ -18,6 +18,24 @@ source_website=https://t5.shwchurch.org/
 
 detectChange_file=${TMP_PATH}/hugo-sync-diff.log
 detectChange_file_tmp=${detectChange_file}.tmp
+syncStartEmailSent=0
+
+sendSyncNotification(){
+	local subject="$1"
+	local body="${2:-$1}"
+	${BASE_PATH}/bin/mail.sh "shwchurch3@gmail.com" "${subject}" "${body}"
+}
+
+sendSyncStartEmail(){
+	if [[ "${syncStartEmailSent}" = "1" ]]; then
+		return
+	fi
+	local timestamp
+	timestamp=$(date '+%Y-%m-%d %H:%M:%S %Z')
+	local subject="Start to sync at ${timestamp}"
+	sendSyncNotification "${subject}" "${subject}"
+	syncStartEmailSent=1
+}
 
 echo "[INFO] You could run deploy.sh if you just want to debug it. Normally, sync.sh doesn't have issue, but only deploy with hugo --minify"
 echo -ne "[INFO] You have 15s to cancel me\n\n"
@@ -66,8 +84,8 @@ detectChange(){
 		tmp_content=$(cat $detectChange_file_tmp)
 		if [[ ! -f "${detectChange_file_tmp}" || -z "${tmp_content}" ]];then
 			
-			if [[ "$detectChangeMaxRetry" -lt 0 ]];then
-				${BASE_PATH}/bin/mail.sh "shwchurch3@gmail.com" "[ERROR][$0] Failed in getting content from ${source_website}"
+				if [[ "$detectChangeMaxRetry" -lt 0 ]];then
+					sendSyncNotification "[ERROR][$0] Failed in getting content from ${source_website}"
 				unlock_file main_entry_sync
 				executeStepAllDone
 				exit 1023 
@@ -87,11 +105,13 @@ detectChange(){
 					exit
 				else
 					echo "[$0] Force synced even no changes"
+					sendSyncStartEmail
 					break
 				fi
 			else
 				echo "[$0] Change detected"
 				echo "[$0] ${detectChange_is_changed}"
+				sendSyncStartEmail
 				break
 			fi	
 		else
@@ -296,7 +316,7 @@ if [[ "$exit_code_deploy" != 0 ]];then
 	ret="Failed:"
 fi
 
-${BASE_PATH}/bin/mail.sh "shwchurch3@gmail.com" "[INFO][$0] ${ret} Hugo Sync for ${source_website} - Took $time_delta seconds"
+sendSyncNotification "[INFO][$0] ${ret} Hugo Sync for ${source_website} - Took $time_delta seconds"
 
 unlock_file main_entry_sync
 executeStepAllDone
