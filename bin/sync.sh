@@ -10,6 +10,29 @@ source $BASE_PATH/bin/common-utils.sh
 
 cd $BASE_PATH
 
+ensure_single_sync_instance(){
+	local current_pid=$$
+	local script_path="${BASE_PATH}/bin/sync.sh"
+	local other_pids=""
+
+	if command -v pgrep >/dev/null 2>&1; then
+		other_pids=$(pgrep -f "${script_path}" 2>/dev/null || true)
+	else
+		other_pids=$(ps aux | grep -F "${script_path}" | grep -v grep | awk '{print $2}')
+	fi
+
+	if [[ -n "${other_pids}" ]]; then
+		for pid in ${other_pids}; do
+			if [[ "${pid}" != "${current_pid}" ]]; then
+				echo "[$0] Another sync.sh instance (PID ${pid}) is running. Exit current invocation."
+				exit 0
+			fi
+		done
+	fi
+}
+
+ensure_single_sync_instance
+
 lock_file main_entry_sync
 
 git config --global core.quotePath false

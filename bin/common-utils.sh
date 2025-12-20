@@ -122,12 +122,12 @@ cleanupDeployEndStateIfNeeded(){
 		lock_process_id=$(cat "${lock_path}" 2>/dev/null | tr -d '[:space:]')
 		if [[ -n "${lock_process_id}" ]]; then
 			if kill -0 "${lock_process_id}" 2>/dev/null; then
-				echo "[$0] Force killing process ${lock_process_id} held by ${lock_path}"
-				kill -9 "${lock_process_id}" 2>/dev/null || true
+				echo "[$0] Detected running sync process ${lock_process_id}; keeping lock ${lock_path} intact"
+				return
 			fi
 		fi
 		rm -f "${lock_path}"
-		echo "[$0] Removed lock file ${lock_path}"
+		echo "[$0] Removed stale lock file ${lock_path}"
 	fi
 
 	if [[ -f "${step_file}" ]]; then
