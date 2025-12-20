@@ -72,7 +72,7 @@ ls -la $wodrePressHugoExportPath
 
 detectChange(){
 
-	detectChangeMaxRetry=10
+	detectChangeMaxRetry=5
 	detectChangeSleepGap=300
 
 	echo "[$0] Pull content from ${source_website} to ${detectChange_file_tmp}"
@@ -103,22 +103,25 @@ detectChange(){
 					executeStepAllDone
 
 					exit
+					else
+						echo "[$0] Force synced even no changes"
+						sendSyncStartEmail
+						cleanupDeployEndStateIfNeeded
+						break
+					fi
 				else
-					echo "[$0] Force synced even no changes"
+					echo "[$0] Change detected"
+					echo "[$0] ${detectChange_is_changed}"
 					sendSyncStartEmail
+					cleanupDeployEndStateIfNeeded
 					break
-				fi
+				fi	
 			else
-				echo "[$0] Change detected"
-				echo "[$0] ${detectChange_is_changed}"
-				sendSyncStartEmail
+				cleanupDeployEndStateIfNeeded
 				break
-			fi	
-		else
-			break
-		fi
-	done
-}
+			fi
+		done
+	}
 
 stopSyncIfRequested(){
 	local step_label=$1

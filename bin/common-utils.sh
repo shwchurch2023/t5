@@ -111,6 +111,32 @@ export is_lock_file_dead_unexpected
 
 step_file=/tmp/t5_shouldExecuteStep_step
 
+cleanupDeployEndStateIfNeeded(){
+	if [[ -z "${HUGO_SYNC_DEPLOY_END_STEP}" ]]; then
+		return
+	fi
+
+	local lock_path="/tmp/t5_lock_main_entry_sync"
+	if [[ -f "${lock_path}" ]]; then
+		local lock_process_id
+		lock_process_id=$(cat "${lock_path}" 2>/dev/null | tr -d '[:space:]')
+		if [[ -n "${lock_process_id}" ]]; then
+			if kill -0 "${lock_process_id}" 2>/dev/null; then
+				echo "[$0] Force killing process ${lock_process_id} held by ${lock_path}"
+				kill -9 "${lock_process_id}" 2>/dev/null || true
+			fi
+		fi
+		rm -f "${lock_path}"
+		echo "[$0] Removed lock file ${lock_path}"
+	fi
+
+	if [[ -f "${step_file}" ]]; then
+		rm -f "${step_file}"
+		echo "[$0] Removed step tracking file ${step_file}"
+	fi
+}
+export cleanupDeployEndStateIfNeeded
+
 time_diff_seconds(){
 	# date1=$(date +%s)
 	local date1=$1
