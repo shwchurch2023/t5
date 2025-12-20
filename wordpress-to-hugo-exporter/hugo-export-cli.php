@@ -25,6 +25,7 @@ $je = new Hugo_Export();
 if (isset($tmpFolder)) {
     if ('null' !== strtolower($tmpFolder) && is_dir($tmpFolder)) {
         echo "[INFO] Start to export data to configured folder $tmpFolder";
+        echo "[INFO] Wanna see changes? [watch -d ls -lah /mnt/hugo/tmp/wp-hugo.zip] ";
         $je->setTempDir($tmpFolder);
     } else {
         echo "[WARN] Passed TEMP folder $tmpFolder is not a valid folder. Remove the argument or create it as a folder before contiune";
