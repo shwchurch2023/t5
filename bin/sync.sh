@@ -205,6 +205,30 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 		exit 1
 	fi
 
+	exporterSource="${BASE_PATH}/wordpress-to-hugo-exporter"
+	if [[ ! -d "${exporterSource}" ]]; then
+		echo "[ERROR] Exporter submodule is missing at ${exporterSource}"
+		unlock_file main_entry_sync
+		executeStepAllDone
+		exit 1
+	fi
+
+	echo "[INFO] Updating exporter submodule at ${exporterSource}"
+	(
+		cd "${exporterSource}" && \
+		git pull --ff-only
+	)
+	if [[ "$?" -ne 0 ]]; then
+		echo "[WARN] Unable to update exporter submodule; continuing with current version"
+	fi
+
+	echo "[INFO] Refresh ${wodrePressHugoExportPath} with exporter submodule"
+	if [[ -d "${wodrePressHugoExportPath}" ]]; then
+		rmSafe "${wodrePressHugoExportPath}" "wordpress-to-hugo-exporter"
+	fi
+	mkdir -p "${wodrePressHugoExportPath}"
+	cp -a "${exporterSource}/." "${wodrePressHugoExportPath}/"
+
 	echo "[INFO] Generating Markdown files from Wordpress "
 	cd ${wodrePressHugoExportPath}
 	pwd
