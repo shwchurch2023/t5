@@ -10,43 +10,42 @@ source $BASE_PATH/bin/common-utils.sh
 
 cd $BASE_PATH
 
-ensure_no_hugo_export_process(){
-	local existing_pids=""
-	if command -v pgrep >/dev/null 2>&1; then
-		existing_pids=$(pgrep -f "php .*hugo-export-cli\\.php" 2>/dev/null || true)
-	else
-		existing_pids=$(ps aux | grep -F "php hugo-export-cli.php" | grep -v grep | awk '{print $2}')
-	fi
+SYNC_INSTANCE_ID="${1:-${HUGO_SYNC_RUN_ID:-manual-${start_seconds1}-${RANDOM}}}"
+export SYNC_INSTANCE_ID
+SYNC_INSTANCE_STATE_FILE=/tmp/t5_sync_instance_state
+echo "[$0] Run ID: ${SYNC_INSTANCE_ID}"
 
-	if [[ -n "${existing_pids}" ]]; then
-		echo "[$0] Detected running 'php hugo-export-cli.php' processes (${existing_pids}). Exit current sync."
-		exit 0
-	fi
-}
-
-ensure_no_hugo_export_process
-ensure_single_sync_instance(){
-	local current_pid=$$
-	local script_path="${BASE_PATH}/bin/sync.sh"
-	local other_pids=""
-
-	if command -v pgrep >/dev/null 2>&1; then
-		other_pids=$(pgrep -f "${script_path}" 2>/dev/null || true)
-	else
-		other_pids=$(ps aux | grep -F "${script_path}" | grep -v grep | awk '{print $2}')
-	fi
-
-	if [[ -n "${other_pids}" ]]; then
-		for pid in ${other_pids}; do
-			if [[ "${pid}" != "${current_pid}" ]]; then
-				echo "[$0] Another sync.sh instance (PID ${pid}) is running. Exit current invocation."
+register_sync_instance(){
+	local existing_id=""
+	local existing_pid=""
+	if [[ -f "${SYNC_INSTANCE_STATE_FILE}" ]]; then
+		local IFS=":"
+		read -r existing_id existing_pid < "${SYNC_INSTANCE_STATE_FILE}"
+		if [[ -n "${existing_pid}" ]] && kill -0 "${existing_pid}" 2>/dev/null; then
+			if [[ "${existing_id}" != "${SYNC_INSTANCE_ID}" ]]; then
+				echo "[$0] Another sync instance (ID ${existing_id}, PID ${existing_pid}) is running. Exit current invocation."
 				exit 0
 			fi
-		done
+		fi
+	fi
+
+	printf "%s:%s\n" "${SYNC_INSTANCE_ID}" "$$" > "${SYNC_INSTANCE_STATE_FILE}"
+}
+
+cleanup_sync_instance(){
+	if [[ -f "${SYNC_INSTANCE_STATE_FILE}" ]]; then
+		local recorded_id=""
+		local recorded_pid=""
+		local IFS=":"
+		read -r recorded_id recorded_pid < "${SYNC_INSTANCE_STATE_FILE}"
+		if [[ "${recorded_id}" = "${SYNC_INSTANCE_ID}" && "${recorded_pid}" = "$$" ]]; then
+			rm -f "${SYNC_INSTANCE_STATE_FILE}"
+		fi
 	fi
 }
 
-ensure_single_sync_instance
+trap cleanup_sync_instance EXIT
+register_sync_instance
 
 lock_file main_entry_sync
 
