@@ -67,10 +67,16 @@ sendSyncStartEmail(){
 	if [[ "${syncStartEmailSent}" = "1" ]]; then
 		return
 	fi
+	local reason="${1:-}"
 	local timestamp
 	timestamp=$(date '+%Y-%m-%d %H:%M:%S %Z')
 	local subject="Start to sync at ${timestamp}"
-	sendSyncNotification "${subject}" "${subject}"
+	local body="${subject}"
+	if [[ -n "${reason}" ]]; then
+		subject="${subject} - ${reason}"
+		body="${body}\nReason: ${reason}"
+	fi
+	sendSyncNotification "${subject}" "${body}"
 	syncStartEmailSent=1
 }
 
@@ -139,10 +145,9 @@ detectChange(){
 		if [[ ! -f "${detectChange_file_tmp}" || -z "${tmp_content}" ]];then
 			
 				if [[ "$detectChangeMaxRetry" -lt 0 ]];then
-					sendSyncNotification "[ERROR][$0] Failed in getting content from ${source_website}"
-				unlock_file main_entry_sync
-				executeStepAllDone
-				exit 1023 
+					unlock_file main_entry_sync
+					executeStepAllDone "error" "Failed to get content from ${source_website}"
+					exit 1023 
 			fi
 			echo "[$0] Retry left ${detectChangeMaxRetry}"
 			sleep $detectChangeSleepGap
@@ -151,22 +156,21 @@ detectChange(){
 		if [[ -f "${detectChange_file}" ]];then
 			detectChange_is_changed=$(diff ${detectChange_file} ${detectChange_file_tmp})
 			if [[ -z "${detectChange_is_changed}"  ]];then
-				if [[ -z "${HUGO_SYNC_FORCE}" ]];then
-					echo "[$0] $source_website is not changed. Skip sync. Set env var 'export HUGO_SYNC_FORCE=1' for force syncing "
-					unlock_file main_entry_sync
-					executeStepAllDone
-
-					exit
+					if [[ -z "${HUGO_SYNC_FORCE}" ]];then
+						echo "[$0] $source_website is not changed. Skip sync. Set env var 'export HUGO_SYNC_FORCE=1' for force syncing "
+						unlock_file main_entry_sync
+						executeStepAllDone "success" "${source_website} is not changed. Skip sync."
+						exit
 					else
 						echo "[$0] Force synced even no changes"
-						sendSyncStartEmail
+						sendSyncStartEmail "Force sync requested without detected changes"
 						cleanupDeployEndStateIfNeeded
 						break
 					fi
 				else
 					echo "[$0] Change detected"
 					echo "[$0] ${detectChange_is_changed}"
-					sendSyncStartEmail
+					sendSyncStartEmail "Content changes detected"
 					cleanupDeployEndStateIfNeeded
 					break
 				fi	
@@ -181,8 +185,9 @@ stopSyncIfRequested(){
 	local step_label=$1
 	if shouldStopAfterStep "${findAndReplace_base_step}" "${step_label}"; then
 		echo "[$0] Stop requested after step ${findAndReplace_base_step}. Exit sync.sh"
+		local step_id="${findAndReplace_base_step:-unknown}"
 		unlock_file main_entry_sync
-		executeStepAllDone
+		executeStepAllDone "success" "Stop requested after step ${step_label} (ID ${step_id})"
 		exit 0
 	fi
 }
@@ -218,7 +223,7 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 	else
 		echo "[ERROR] Hugo Export Path ${hugoExportedPath} is invalid"
 		unlock_file main_entry_sync
-		executeStepAllDone
+		executeStepAllDone "error" "Invalid Hugo export path ${hugoExportedPath}"
 		exit 1
 	fi
 
@@ -226,7 +231,7 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 	if [[ ! -d "${exporterSource}" ]]; then
 		echo "[ERROR] Exporter submodule is missing at ${exporterSource}"
 		unlock_file main_entry_sync
-		executeStepAllDone
+		executeStepAllDone "error" "Exporter submodule missing at ${exporterSource}"
 		exit 1
 	fi
 
@@ -328,7 +333,7 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 	if [[ ! -d "${exportedFolder}" ]]; then
 		echo "[ERROR] Unable to locate exported directory (${exportedFolder}) in ${tmpPathPrefix}"
 		unlock_file main_entry_sync
-		executeStepAllDone
+		executeStepAllDone "error" "Exported directory ${exportedFolder} missing in ${tmpPathPrefix}"
 		exit 1
 	fi
 	rmSafe "${hugoExportedPath}" "wp-hugo-delta-processing"
@@ -336,7 +341,7 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 	if ! rsync -a --exclude='.git/' "${exportedFolder}/" "${hugoExportedPath}/"; then
 		echo "[ERROR] Failed to copy exported files from ${exportedFolder} to ${hugoExportedPath}"
 		unlock_file main_entry_sync
-		executeStepAllDone
+		executeStepAllDone "error" "Failed to copy exported files from ${exportedFolder} to ${hugoExportedPath}"
 		exit 1
 	fi
 	
@@ -450,12 +455,12 @@ time_delta=$((end_seconds2 - start_seconds1 ))
 
 echo "[$0] Sync End: $(date), took $time_delta seconds"
 
-ret=Done
+completion_status="success"
+completion_reason="deploy.sh completed successfully"
 if [[ "$exit_code_deploy" != 0 ]];then
-	ret="Failed:"
+	completion_status="error"
+	completion_reason="deploy.sh exited with code ${exit_code_deploy}"
 fi
 
-sendSyncNotification "[INFO][$0] ${ret} Hugo Sync for ${source_website} - Took $time_delta seconds"
-
 unlock_file main_entry_sync
-executeStepAllDone
+executeStepAllDone "${completion_status}" "${completion_reason}" "$time_delta"

@@ -194,8 +194,41 @@ executeStepStart(){
 export executeStepStart
 
 executeStepAllDone(){
+	local status_arg="${1:-}"
+	local reason_arg="${2:-}"
+	local duration_arg="${3:-}"
+
 	rm -f $step_file
 	echo "[$0] Executing steps are all done and tracking file is removed at $(date)"
+	if [[ "${syncStartEmailSent:-0}" = "1" && "$(type -t sendSyncNotification)" = "function" ]]; then
+		local status="${status_arg:-${syncCompletionStatus:-success}}"
+		local status_label="INFO"
+		local status_phrase="Hugo Sync completed"
+		if [[ "${status}" = "error" ]]; then
+			status_label="ERROR"
+			status_phrase="Hugo Sync failed"
+		fi
+
+		local duration="${duration_arg:-${syncCompletionTimeSeconds:-}}"
+		if [[ -z "${duration}" && -n "${start_seconds1:-}" ]]; then
+			local now
+			now=$(date +%s)
+			duration=$((now - start_seconds1))
+		fi
+		local time_fragment=""
+		if [[ -n "${duration}" ]]; then
+			time_fragment=" - Took ${duration} seconds"
+		fi
+
+		local site_desc="${source_website:-sync run}"
+		local subject="[${status_label}][$0] ${status_phrase}${time_fragment}"
+		local body="${status_phrase} for ${site_desc}${time_fragment}"
+		local reason="${reason_arg:-${syncCompletionReason:-}}"
+		if [[ -n "${reason}" ]]; then
+			body="${body}\nReason: ${reason}"
+		fi
+		sendSyncNotification "${subject}" "${body}"
+	fi
 }
 export executeStepAllDone
 

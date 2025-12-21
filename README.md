@@ -41,6 +41,8 @@ cd /mnt/hugo/github/t5; sudo ./bin/cron-sync.sh
 cd /mnt/hugo/github/t5
 sudo rsync -a --exclude='.git/' "wordpress-to-hugo-exporter/" "/mnt/data/shwchurch/web/wp-content/plugins/wordpress-to-hugo-exporter/"
 sudo chown -R hugo:hugo /mnt/data/shwchurch/web/wp-content/plugins/  
+
+sudo -u hugo zsh -c 'HUGO_SYNC_FORCE=1 HUGO_SYNC_INCREMENTAL=1 HUGO_SYNC_DEPLOY_END_STEP=290 RUN_ID=$(date +%s)-sync /bin/bash /mnt/hugo/github/t5/bin/sync.sh "$RUN_ID" > /mnt/hugo/github/sync.log 2>&1' > /dev/null 2>&1 &; tail -f /mnt/hugo/github/sync.log
 ```
 
 ## Yearly tasks
@@ -63,6 +65,19 @@ useSSHKey shwchurch2023
 ## For migration AWS EC2 to new version
 [./migrate-aws](./migrate-aws/README.md)
 
+## Homebrew
+
+```sh
+
+sudo yum groupinstall "Development Tools" -y
+sudo yum install curl file git procps-ng -y
+
+NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+brew install glibc patchelf
+
+```
 
 ## Other SOPs
 
