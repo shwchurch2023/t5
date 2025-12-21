@@ -230,14 +230,14 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 		exit 1
 	fi
 
-	echo "[INFO] Updating exporter submodule at ${exporterSource}"
-	(
-		cd "${exporterSource}" && \
-		git pull --ff-only
-	)
-	if [[ "$?" -ne 0 ]]; then
-		echo "[WARN] Unable to update exporter submodule; continuing with current version"
-	fi
+	# echo "[INFO] Updating exporter submodule at ${exporterSource}"
+	# (
+	# 	cd "${exporterSource}" && \
+	# 	git pull --ff-only
+	# )
+	# if [[ "$?" -ne 0 ]]; then
+	# 	echo "[WARN] Unable to update exporter submodule; continuing with current version"
+	# fi
 
 	echo "[INFO] Refresh ${wodrePressHugoExportPath} with exporter submodule"
 	if [[ -d "${wodrePressHugoExportPath}" ]]; then
@@ -278,18 +278,20 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 
 
 	watch_pid=""
-	if command -v watch >/dev/null 2>&1; then
-		if [[ -d "${tmpPathPrefix}" ]]; then
-			echo "[INFO] Running 'watch -n 300 ls -la' for ${tmpPathPrefix} (stdout only)"
-			(
-				cd "${tmpPathPrefix}" && env TERM=${TERM:-xterm} watch -n 300 ls -la
-			) &
-			watch_pid=$!
-		else
-			echo "[WARN] Skip watch logging because ${tmpPathPrefix} is not available"
-		fi
+	if [[ -d "${tmpPathPrefix}" ]]; then
+		echo "[INFO] Starting periodic ls logging for ${tmpPathPrefix} after 120 seconds (append-only)"
+		(
+			sleep 120
+			while [[ -d "${tmpPathPrefix}" ]]; do
+				echo "[INFO][watch] $(date '+%Y-%m-%d %H:%M:%S') contents of ${tmpPathPrefix}:"
+				ls -la "${tmpPathPrefix}"
+				sleep 300
+			done
+			echo "[INFO][watch] ${tmpPathPrefix} no longer available; stopping periodic ls logging"
+		) &
+		watch_pid=$!
 	else
-		echo "[WARN] 'watch' command not found; skipping periodic ls logging"
+		echo "[WARN] Skip watch logging because ${tmpPathPrefix} is not available"
 	fi
 
 	php_cmd=(php hugo-export-cli.php "${tmpPathPrefix}" --no-zip)
