@@ -244,7 +244,7 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 		rmSafe "${wodrePressHugoExportPath}" "wordpress-to-hugo-exporter"
 	fi
 	mkdir -p "${wodrePressHugoExportPath}"
-	cp -a "${exporterSource}/." "${wodrePressHugoExportPath}/"
+	rsync -a --exclude='.git/' "${exporterSource}/" "${wodrePressHugoExportPath}/"
 
 	echo "[INFO] Generating Markdown files from Wordpress "
 	cd ${wodrePressHugoExportPath}
@@ -331,7 +331,7 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 	fi
 	rmSafe "${hugoExportedPath}" "wp-hugo-delta-processing"
 	mkdir -p "${hugoExportedPath}"
-	if ! cp -r "${exportedFolder}/." "${hugoExportedPath}/"; then
+	if ! rsync -a --exclude='.git/' "${exportedFolder}/" "${hugoExportedPath}/"; then
 		echo "[ERROR] Failed to copy exported files from ${exportedFolder} to ${hugoExportedPath}"
 		unlock_file main_entry_sync
 		executeStepAllDone
@@ -387,7 +387,7 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} copy_content)" = "true" ]
 		cd ${hugoExportedPath}
 		pwd
 		ls
-		cp -R ./ ${githubHugoPath}/content/
+		rsync -a --exclude='.git/' ./ "${githubHugoPath}/content/"
 		cd -
 	fi
 
