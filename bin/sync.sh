@@ -245,8 +245,11 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 
 	ls ${tmpPathPrefix}
 
-	rm -rf ${tmpPathPrefix}/wp-hugo.zip
+	rm -f "${tmpPathPrefix}/wp-hugo.zip"
 	rm -rf ${tmpPathPrefix}/wp-hugo*
+	if [[ -d "${tmpPathPrefix}/hugo-export-files" ]]; then
+		rmSafe "${tmpPathPrefix}/hugo-export-files" "hugo-export-files"
+	fi
 
 	ls ${tmpPathPrefix}
 
