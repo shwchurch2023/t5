@@ -15,12 +15,24 @@ hugo server
 open http://localhost:1313
 ```
 
-- debug
+- debug 
+ - normal change
+```sh
+ sudo -u hugo zsh -c 'cd /mnt/hugo/github/t5; git pull; git submodule update --recursive'; ps aux | grep -E 'sync|php' | grep -v www | grep -v fpm | grep -v grep | awk '{print $2}' | xargs -I{} sudo kill -9 {};
+
+sudo -u hugo zsh -c 'HUGO_SYNC_FORCE=1 HUGO_SYNC_DEPLOY_END_STEP=290 RUN_ID=$(date +%s)-sync /bin/bash /mnt/hugo/github/t5/bin/sync.sh "$RUN_ID" > /mnt/hugo/github/sync.log 2>&1' > /dev/null 2>&1 &; tail -f /mnt/hugo/github/sync.log
+
+```
+ - incremental change
 ```sh
  sudo -u hugo zsh -c 'cd /mnt/hugo/github/t5; git pull; git submodule update --recursive'; ps aux | grep -E 'sync|php' | grep -v www | grep -v fpm | grep -v grep | awk '{print $2}' | xargs -I{} sudo kill -9 {};
 
 sudo -u hugo zsh -c 'HUGO_SYNC_FORCE=1 HUGO_SYNC_INCREMENTAL=1 HUGO_SYNC_DEPLOY_END_STEP=290 RUN_ID=$(date +%s)-sync /bin/bash /mnt/hugo/github/t5/bin/sync.sh "$RUN_ID" > /mnt/hugo/github/sync.log 2>&1' > /dev/null 2>&1 &; tail -f /mnt/hugo/github/sync.log
 
+
+```
+- crontab change 
+```sh
 cd /mnt/hugo/github/t5; sudo ./bin/cron-sync.sh
 ```
 ## Yearly tasks
