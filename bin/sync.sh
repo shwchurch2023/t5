@@ -427,10 +427,9 @@ done
 cd ${githubHugoPath}/bin/
 echo "[INFO] Deploy and publish to github pages"
 
-findAndReplace_base_step=290
-stopSyncIfRequested "deploy"
 
 ./deploy.sh
+
 exit_code_deploy=$?
 #./deploy-new.sh
 #echo "$(date)" >> ${log}
