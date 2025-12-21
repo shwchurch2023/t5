@@ -107,6 +107,23 @@ githubHugoThemePath=${themeFolder}
 wodrePressHugoExportPath=/mnt/data/shwchurch/web/wp-content/plugins/wordpress-to-hugo-exporter
 ls -la $wodrePressHugoExportPath
 
+incrementalSyncEnabled=0
+case "${HUGO_SYNC_INCREMENTAL}" in
+	1|true|TRUE|yes|YES)
+		incrementalSyncEnabled=1
+		;;
+esac
+
+if [[ "${incrementalSyncEnabled}" -eq 1 ]]; then
+	echo "[INFO] HUGO_SYNC_INCREMENTAL enabled - incremental Wordpress export requested"
+else
+	echo "[INFO] Full Wordpress export (HUGO_SYNC_INCREMENTAL not set)"
+fi
+
+if [[ "${incrementalSyncEnabled}" -eq 1 && ! -d "${tmpPathPrefix}/hugo-export-files" ]]; then
+	echo "[WARN] Incremental sync requested but ${tmpPathPrefix}/hugo-export-files is missing. Fallback to full export."
+	incrementalSyncEnabled=0
+fi
 detectChange(){
 
 	detectChangeMaxRetry=5
@@ -245,10 +262,14 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 
 	ls ${tmpPathPrefix}
 
-	rm -f "${tmpPathPrefix}/wp-hugo.zip"
-	rm -rf ${tmpPathPrefix}/wp-hugo*
-	if [[ -d "${tmpPathPrefix}/hugo-export-files" ]]; then
-		rmSafe "${tmpPathPrefix}/hugo-export-files" "hugo-export-files"
+	if [[ "${incrementalSyncEnabled}" -eq 1 ]]; then
+		echo "[INFO] Preserving ${tmpPathPrefix}/hugo-export-files for incremental export"
+	else
+		rm -f "${tmpPathPrefix}/wp-hugo.zip"
+		rm -rf ${tmpPathPrefix}/wp-hugo*
+		if [[ -d "${tmpPathPrefix}/hugo-export-files" ]]; then
+			rmSafe "${tmpPathPrefix}/hugo-export-files" "hugo-export-files"
+		fi
 	fi
 
 	ls ${tmpPathPrefix}
@@ -272,6 +293,9 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 	fi
 
 	php_cmd=(php hugo-export-cli.php "${tmpPathPrefix}" --no-zip)
+	if [[ "${incrementalSyncEnabled}" -eq 1 ]]; then
+		php_cmd+=(--incremental)
+	fi
 	"${php_cmd[@]}" &
 	php_pid=$!
 	echo "[INFO] hugo-export-cli.php started with PID ${php_pid}"
@@ -306,7 +330,13 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 		exit 1
 	fi
 	rmSafe "${hugoExportedPath}" "wp-hugo-delta-processing"
-	mv "${exportedFolder}" "${hugoExportedPath}"
+	mkdir -p "${hugoExportedPath}"
+	if ! cp -r "${exportedFolder}/." "${hugoExportedPath}/"; then
+		echo "[ERROR] Failed to copy exported files from ${exportedFolder} to ${hugoExportedPath}"
+		unlock_file main_entry_sync
+		executeStepAllDone
+		exit 1
+	fi
 	
 	date2=$(date +%s)
 
