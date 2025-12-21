@@ -303,6 +303,7 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 	if [[ "${incrementalSyncEnabled}" -eq 1 ]]; then
 		php_cmd+=(--incremental)
 	fi
+	incremental_no_change_exit_code=3 # Keep in sync with wordpress-to-hugo-exporter/hugo-export-cli.php
 	"${php_cmd[@]}" &
 	php_pid=$!
 	echo "[INFO] hugo-export-cli.php started with PID ${php_pid}"
@@ -321,6 +322,14 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 		kill "${watch_pid}" >/dev/null 2>&1 || true
 		wait "${watch_pid}" 2>/dev/null || true
 		watch_pid=""
+	fi
+
+	if [[ "${incrementalSyncEnabled}" -eq 1 && "${php_status}" -eq "${incremental_no_change_exit_code}" ]]; then
+		no_change_reason="Wordpress incremental export found no updates after the last sync marker; skipping remaining steps"
+		echo "[INFO] ${no_change_reason}"
+		unlock_file main_entry_sync
+		executeStepAllDone "success" "${no_change_reason}"
+		exit 0
 	fi
 
 	if [[ ${php_status} -ne 0 ]]; then
