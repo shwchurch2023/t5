@@ -106,6 +106,7 @@ githubHugoThemePath=${themeFolder}
 
 wodrePressHugoExportPath=/mnt/data/shwchurch/web/wp-content/plugins/wordpress-to-hugo-exporter
 ls -la $wodrePressHugoExportPath
+wordpressExporterWorkers=${WORDPRESS_EXPORTER_WORKERS:-2}
 
 detectChange(){
 
@@ -250,7 +251,7 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 
 	ls ${tmpPathPrefix}
 
-	echo "php hugo-export-cli.php ${tmpPathPrefix} "
+	echo "php hugo-export-cli.php ${tmpPathPrefix} ${wordpressExporterWorkers}"
 
 
 	watch_pid=""
@@ -268,7 +269,7 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 		echo "[WARN] 'watch' command not found; skipping periodic ls logging"
 	fi
 
-	php_cmd=(php hugo-export-cli.php "${tmpPathPrefix}")
+	php_cmd=(php hugo-export-cli.php "${tmpPathPrefix}" "${wordpressExporterWorkers}")
 	"${php_cmd[@]}" &
 	php_pid=$!
 	echo "[INFO] hugo-export-cli.php started with PID ${php_pid}"
