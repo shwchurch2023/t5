@@ -598,6 +598,14 @@ export killLongRunningGit
 
 updateRepo(){
 	dir=$1
+	local push_mode=${2:-}
+	local skip_push=0
+	case "${push_mode}" in
+		pull_only|pull-only|pull|download|1|true|TRUE|yes|YES)
+			skip_push=1
+			;;
+	esac
+
 	echo "Update repo in $dir"
 	cd $dir
 
@@ -612,10 +620,20 @@ updateRepo(){
 	git add .
 	git commit -m "Add current changes"
 	git pull --no-edit
-	git push
+	if [[ "${skip_push}" -eq 1 ]]; then
+		echo "[INFO] Skip git push for $dir (pull-only mode)"
+	else
+		git push
+	fi
 
 	# echo "[DEBUG] Skipped [Try to update parent repo if any]"
 	echo "Try to update parent repo if any"
+	if [[ "${skip_push}" -eq 1 ]]; then
+		echo "[INFO] Skip parent repo git push for $dir (pull-only mode)"
+		cd ..
+		return
+	fi
+
 	cd ..
 	gitSetUser
 	git add .

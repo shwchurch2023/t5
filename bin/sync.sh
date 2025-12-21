@@ -200,7 +200,7 @@ stopSyncIfRequested "update_repos"
 if [[ "$(shouldExecuteStep ${findAndReplace_base_step} update_repos )" = "true" ]];then
 	killLongRunningGit
 	# echo "[DEBUG] Skipped updateRepo $githubHugoThemePath"
-	updateRepo $githubHugoThemePath
+	updateRepo $githubHugoThemePath pull_only
 
 	# echo "[DEBUG] Skipped updateRepo $githubHugoPath"
 	updateRepo $githubHugoPath
