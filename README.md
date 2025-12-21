@@ -15,6 +15,12 @@ hugo server
 open http://localhost:1313
 ```
 
+- debug
+```sh
+ sudo -u hugo zsh -c 'cd /mnt/hugo/github/t5; git pull; git submodule update --recursive'; ps aux | grep -E 'sync|php' | grep -v www | grep -v fpm | grep -v grep | awk '{print $2}' | xargs -I{} sudo kill -9 {};
+cd /mnt/hugo/github/t5; sudo ./bin/cron-sync.sh
+sudo -u hugo zsh -c 'flock -n /tmp/hugo-sync-weekend.lock -c "HUGO_SYNC_INCREMENTAL=1 HUGO_SYNC_DEPLOY_END_STEP=290 /bin/bash -lc 'RUN_ID=$(date +%s)-sync; /bin/bash /mnt/hugo/github/t5/bin/sync.sh "$RUN_ID"' > /mnt/hugo/github/sync.log 2>&1"' > /dev/null 2>&1 &; tail -f /mnt/hugo/github/sync.log
+```
 ## Yearly tasks
 - Should update the forked https://github.com/shwchurch2023/hugo-theme-stack from source to fix any issues
 
