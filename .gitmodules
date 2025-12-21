@@ -33,7 +33,7 @@
 # 	url = https://github.com/shwchurch2023/hugo-PaperMod
 [submodule "themes/hugo-theme-stack"]
 	path = themes/hugo-theme-stack
-	url = git@github.com:shwchurch2023/hugo-theme-stack.git
+	url = https://github.com/shwchurch2023/hugo-theme-stack.git
 # [submodule "hugo-theme-stack-starter"]
 # 	path = hugo-theme-stack-starter
 # 	url = git@github.com:shwchurch2023/hugo-theme-stack-starter.git
