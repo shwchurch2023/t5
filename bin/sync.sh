@@ -106,7 +106,6 @@ githubHugoThemePath=${themeFolder}
 
 wodrePressHugoExportPath=/mnt/data/shwchurch/web/wp-content/plugins/wordpress-to-hugo-exporter
 ls -la $wodrePressHugoExportPath
-wordpressExporterWorkers=${WORDPRESS_EXPORTER_WORKERS:-2}
 
 detectChange(){
 
@@ -251,7 +250,7 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 
 	ls ${tmpPathPrefix}
 
-	echo "php hugo-export-cli.php ${tmpPathPrefix} ${wordpressExporterWorkers}"
+	echo "php hugo-export-cli.php ${tmpPathPrefix} --no-zip"
 
 
 	watch_pid=""
@@ -269,7 +268,7 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 		echo "[WARN] 'watch' command not found; skipping periodic ls logging"
 	fi
 
-	php_cmd=(php hugo-export-cli.php "${tmpPathPrefix}" "${wordpressExporterWorkers}")
+	php_cmd=(php hugo-export-cli.php "${tmpPathPrefix}" --no-zip)
 	"${php_cmd[@]}" &
 	php_pid=$!
 	echo "[INFO] hugo-export-cli.php started with PID ${php_pid}"
@@ -295,11 +294,16 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 	fi
 
 	cd ${tmpPathPrefix}
-	echo "Unzip ${tmpPathPrefix}/wp-hugo.zip"
-	unzip wp-hugo.zip > /dev/null
+	echo "[INFO] Using folder-only export output"
+	exportedFolder="hugo-export-files"
+	if [[ ! -d "${exportedFolder}" ]]; then
+		echo "[ERROR] Unable to locate exported directory (${exportedFolder}) in ${tmpPathPrefix}"
+		unlock_file main_entry_sync
+		executeStepAllDone
+		exit 1
+	fi
 	rmSafe "${hugoExportedPath}" "wp-hugo-delta-processing"
-	mv hugo-export ${hugoExportedPath}
-	rm -rf wp-hugo.zip
+	mv "${exportedFolder}" "${hugoExportedPath}"
 	
 	date2=$(date +%s)
 
