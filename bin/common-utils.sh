@@ -265,12 +265,11 @@ export shouldStopAfterStep
 
 
 findAndReplace(){
-	sed_cmd=${1}
+	local sed_cmd="${1}"
+	local pathToFind="${2:-${publicFolderAbs}}"
+	local filePattern="${3:-"*.html"}"
 
-	pathToFind=${2:-"${publicFolderAbs}"}
-	filePattern=${3:-"*.html"}
-
-	minArg=1
+	local minArg=1
 	if [[ "$#" -lt "${minArg}" ]]; then
 		# TODO: print usage
 		echo "Need at least $minArg arguments"
