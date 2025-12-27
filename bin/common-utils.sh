@@ -200,6 +200,23 @@ executeStepAllDone(){
 
 	rm -f $step_file
 	echo "[$0] Executing steps are all done and tracking file is removed at $(date)"
+
+	local log_dir="/mnt/hugo/github"
+	local sync_log="${log_dir}/sync.log"
+	if [[ -f "${sync_log}" ]]; then
+		local today_stamp
+		today_stamp=$(date '+%Y%m%d')
+		local backup_log="${log_dir}/sync-bak-${today_stamp}.log"
+		if [[ ! -f "${backup_log}" ]]; then
+			cp "${sync_log}" "${backup_log}" && echo "[$0] Backed up sync log to ${backup_log}"
+		else
+			echo "[$0] Backup log ${backup_log} already exists; skip copy."
+		fi
+	fi
+	if [[ -d "${log_dir}" ]]; then
+		find "${log_dir}" -maxdepth 1 -name 'sync-bak-*.log' -type f -mtime +3 -delete
+	fi
+
 	if [[ "${syncStartEmailSent:-0}" = "1" && "$(type -t sendSyncNotification)" = "function" ]]; then
 		local status="${status_arg:-${syncCompletionStatus:-success}}"
 		local status_label="INFO"
