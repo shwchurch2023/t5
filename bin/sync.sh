@@ -53,8 +53,6 @@ git config --global core.quotePath false
 
 source_website=https://t5.shwchurch.org/
 
-detectChange_file=${TMP_PATH}/hugo-sync-diff.log
-detectChange_file_tmp=${detectChange_file}.tmp
 syncStartEmailSent=0
 
 sendSyncNotification(){
@@ -130,57 +128,6 @@ if [[ "${incrementalSyncEnabled}" -eq 1 && ! -d "${tmpPathPrefix}/hugo-export-fi
 	echo "[WARN] Incremental sync requested but ${tmpPathPrefix}/hugo-export-files is missing. Fallback to full export."
 	incrementalSyncEnabled=0
 fi
-detectChange(){
-
-	detectChangeMaxRetry=5
-	detectChangeSleepGap=300
-
-	echo "[$0] Pull content from ${source_website} to ${detectChange_file_tmp}"
-
-	while [[  "1" = "1" ]];do
-		detectChangeMaxRetry=$((detectChangeMaxRetry - 1))
-
-		curl ${source_website} | sed 's/[a-zA-Z0-9<>"\\=\/_&%:\.#,\{\}\(\);\?!\[@|* -]//g' > ${detectChange_file_tmp}
-		tmp_content=$(cat $detectChange_file_tmp)
-		if [[ ! -f "${detectChange_file_tmp}" || -z "${tmp_content}" ]];then
-			
-				if [[ "$detectChangeMaxRetry" -lt 0 ]];then
-					unlock_file main_entry_sync
-					executeStepAllDone "error" "Failed to get content from ${source_website}"
-					exit 1023 
-			fi
-			echo "[$0] Retry left ${detectChangeMaxRetry}"
-			sleep $detectChangeSleepGap
-			continue
-		fi
-		if [[ -f "${detectChange_file}" ]];then
-			detectChange_is_changed=$(diff ${detectChange_file} ${detectChange_file_tmp})
-			if [[ -z "${detectChange_is_changed}"  ]];then
-					if [[ -z "${HUGO_SYNC_FORCE}" ]];then
-						echo "[$0] $source_website is not changed. Skip sync. Set env var 'export HUGO_SYNC_FORCE=1' for force syncing "
-						unlock_file main_entry_sync
-						executeStepAllDone "success" "${source_website} is not changed. Skip sync."
-						exit
-					else
-						echo "[$0] Force synced even no changes"
-						sendSyncStartEmail "Force sync requested without detected changes"
-						cleanupDeployEndStateIfNeeded
-						break
-					fi
-				else
-					echo "[$0] Change detected"
-					echo "[$0] ${detectChange_is_changed}"
-					sendSyncStartEmail "Content changes detected"
-					cleanupDeployEndStateIfNeeded
-					break
-				fi	
-			else
-				cleanupDeployEndStateIfNeeded
-				break
-			fi
-		done
-	}
-
 stopSyncIfRequested(){
 	local step_label=$1
 	if shouldStopAfterStep "${findAndReplace_base_step}" "${step_label}"; then
@@ -204,12 +151,6 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} update_repos )" = "true" 
 
 	# echo "[DEBUG] Skipped updateRepo $githubHugoPath"
 	updateRepo $githubHugoPath
-fi
-
-findAndReplace_base_step=$((findAndReplace_base_step + 10))
-stopSyncIfRequested "detect_changes"
-if [[ "$(shouldExecuteStep ${findAndReplace_base_step} detect_changes )" = "true" ]];then
-	detectChange
 fi
 
 findAndReplace_base_step=$((findAndReplace_base_step + 10))
@@ -334,6 +275,11 @@ if [[ "$(shouldExecuteStep ${findAndReplace_base_step} cleanup_hugo_export_path 
 
 	if [[ ${php_status} -ne 0 ]]; then
 		echo "[ERROR] hugo-export-cli.php exited with status ${php_status}"
+		sendSyncNotification \
+			"Hugo sync failed - hugo-export-cli.php exit ${php_status}" \
+			"hugo-export-cli.php exited with status ${php_status}. Inspect logs on the sync host for details."
+	else
+		sendSyncStartEmail "Wordpress export completed successfully"
 	fi
 
 	cd ${tmpPathPrefix}
@@ -445,18 +391,6 @@ echo "[INFO] Deploy and publish to github pages"
 ./deploy.sh
 
 exit_code_deploy=$?
-#./deploy-new.sh
-#echo "$(date)" >> ${log}
-if [[ -f "${detectChange_file_tmp}" ]]; then
-	mv $detectChange_file_tmp $detectChange_file
-else
-	if [[ -n "${HUGO_SYNC_FORCE}" ]]; then
-		echo "[INFO] detectChange output not updated since HUGO_SYNC_FORCE skipped detection"
-	else
-		echo "[INFO] detectChange output not updated (step skipped)"
-	fi
-fi
-
 end_seconds2=$(date +%s)
 
 # standard sh integer arithmetics
