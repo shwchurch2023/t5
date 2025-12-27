@@ -58,7 +58,11 @@ syncStartEmailSent=0
 sendSyncNotification(){
 	local subject="$1"
 	local body="${2:-$1}"
-	${BASE_PATH}/bin/mail.sh "shwchurch3@gmail.com" "${subject}" "${body}"
+	if ${BASE_PATH}/bin/mail.sh "shwchurch3@gmail.com" "${subject}" "${body}"; then
+		recordWeeklyEmailSent "${subject}"
+	else
+		echo "[WARN] Failed to send email with subject '${subject}'"
+	fi
 }
 
 sendSyncStartEmail(){
@@ -76,6 +80,51 @@ sendSyncStartEmail(){
 	fi
 	sendSyncNotification "${subject}" "${body}"
 	syncStartEmailSent=1
+}
+
+currentWeekToken(){
+	date +%G-%V
+}
+
+recordWeeklyEmailSent(){
+	if [[ -z "${weeklyEmailStateFile}" ]]; then
+		return
+	fi
+	local week_token
+	week_token=$(currentWeekToken)
+	local timestamp
+	timestamp=$(date '+%Y-%m-%d %H:%M:%S %Z')
+	mkdir -p "$(dirname "${weeklyEmailStateFile}")"
+	printf "%s %s\n" "${week_token}" "${timestamp}" > "${weeklyEmailStateFile}"
+}
+
+hasSentEmailThisWeek(){
+	if [[ -z "${weeklyEmailStateFile}" || ! -f "${weeklyEmailStateFile}" ]]; then
+		return 1
+	fi
+	local recorded_week=""
+	read -r recorded_week _ < "${weeklyEmailStateFile}"
+	if [[ -z "${recorded_week}" ]]; then
+		return 1
+	fi
+	[[ "${recorded_week}" = "$(currentWeekToken)" ]]
+}
+
+ensureWeeklyHeartbeatEmail(){
+	local dow
+	dow=$(date +%u)
+	if [[ "${dow}" -ne 6 ]]; then
+		return
+	fi
+	if hasSentEmailThisWeek; then
+		echo "[INFO] Weekly email already sent for week $(currentWeekToken); skip heartbeat"
+		return
+	fi
+	local timestamp
+	timestamp=$(date '+%Y-%m-%d %H:%M:%S %Z')
+	sendSyncNotification \
+		"Weekly Hugo sync heartbeat - ${timestamp}" \
+		"Heartbeat notification sent because no other sync emails were sent during ISO week $(currentWeekToken)."
 }
 
 echo "[INFO] You could run deploy.sh if you just want to debug it. Normally, sync.sh doesn't have issue, but only deploy with hugo --minify"
@@ -102,6 +151,8 @@ ensureRequiredFolders
 protectedMp3FromDeletedRequiredInMarkdownFileNamePattern="\.\/(2019|202|203|204).{0,1}-"
 
 tmpPathPrefix=/mnt/hugo/tmp/
+weeklyEmailStateFile="${WEEKLY_EMAIL_STATE_FILE:-${tmpPathPrefix}/t5-weekly-email.state}"
+ensureWeeklyHeartbeatEmail
 hugoExportedPath=${tmpPathPrefix}/wp-hugo-delta-processing
 
 githubHugoPath=/mnt/hugo/github/t5/
