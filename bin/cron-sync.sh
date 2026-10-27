@@ -44,7 +44,7 @@ ls -la $hugoGithubRoot
 sudo bash -c "cat <<EOF > \"${cronScriptPath}_1\"
 1 0,6,12,18 * * 1,2,4 hugo HUGO_SYNC_INCREMENTAL=1 ${scriptToRun}
 1 1 * * 3 hugo ${scriptToRun}
-1 * * * 5,6,0 hugo flock -n /tmp/hugo-sync-weekend.lock -c \"HUGO_SYNC_INCREMENTAL=1 HUGO_SYNC_DEPLOY_END_STEP=300 ${scriptToRun}\"
+1 * * * 5,6,0 hugo flock -n /tmp/hugo-sync-weekend.lock env HUGO_SYNC_INCREMENTAL=1 HUGO_SYNC_DEPLOY_END_STEP=300 ${scriptToRun}
 EOF"
 sudo bash -c "echo \"*/5 * * * * hugo ${scriptToRun1}\" > \"${cronScriptPath1}_1\""
 
